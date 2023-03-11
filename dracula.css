@@ -1,18 +1,18 @@
 html,
 body {
-	background-image: none !important;
-	background-color: rgba(40, 42, 54, 1) !important;
+	background-image: none;
+	background-color: rgba(40, 42, 54, 1);
 }
 
 body * {
-	color: rgba(248, 248, 242, 1) !important;
-	background-color: rgba(40, 42, 54, 1) !important;
+	color: rgba(248, 248, 242, 1);
+	background-color: rgba(40, 42, 54, 1);
 }
 
 a,
 a * {
-	color: rgba(80, 250, 123, 1) !important;
-	background-color: transparent !important;
+	color: rgba(80, 250, 123, 1);
+	background-color: transparent;
 }
 
 a:hover,
@@ -28,12 +28,12 @@ div[onclick]:hover,
 [role="menuitem"]:hover *,
 .link:hover,
 .link:hover * {
-	color: rgba(241, 250, 140, 1) !important;
+	color: rgba(241, 250, 140, 1);
 }
 
 a:visited,
 a:visited * {
-	color: rgba(98, 114, 164, 1) !important;
+	color: rgba(98, 114, 164, 1);
 }
 
 h1,
@@ -48,22 +48,22 @@ strong,
 [id*="header"],
 [class*="header"],
 [class*="header"] td {
-	color: rgba(255, 184, 108, 1) !important;
+	color: rgba(255, 184, 108, 1);
 }
 
 table {
-	background-color: rgba(40, 42, 54, 1) !important;
+	background-color: rgba(40, 42, 54, 1);
 }
 
 [id*="overlay"],
 [id*="lightbox"],
 blockquote {
-	background-color: rgba(68, 71, 90, 1) !important;
+	background-color: rgba(68, 71, 90, 1);
 }
 
 pre,
 dl {
-	background-color: rgba(68, 71, 90, 1) !important;
+	background-color: rgba(68, 71, 90, 1);
 }
 
 input,
@@ -76,23 +76,23 @@ a.BigButton,
 a.TabLink,
 .install[onclick] {
 	text-indent: 5px;
-	appearance: none !important;
-	-moz-appearance: none !important;
-	-webkit-appearance: none !important;
-	background: rgba(68, 71, 90, 1) !important;
+	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	background: rgba(68, 71, 90, 1);
 }
 
 textarea {
-	appearance: none !important;
-	-moz-appearance: none !important;
-	-webkit-appearance: none !important;
-	background: rgba(68, 71, 90, 1) !important;
+	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	background: rgba(68, 71, 90, 1);
 }
 
 div,
 ul,
 li {
-	background-image: none !important;
+	background-image: none;
 }
 
 a.highlight,
@@ -102,7 +102,7 @@ a.active *,
 .selected,
 .selected *,
 [href="#"] {
-	font-weight: bold !important;
-	color: rgba(139, 233, 253, 1) !important;
+	font-weight: bold;
+	color: rgba(139, 233, 253, 1);
 }
 
