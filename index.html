@@ -1,1 +1,110 @@
-Hello World!
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Illusion Diffusion: Hiding Images in Plain Sight</title>
+
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Century+Gothic|Open+Sans">
+
+    <link rel="stylesheet" href="dracula.css">
+
+    <style>
+      /* Apply font to various page elements */
+      h1, h2, h3 {
+        font-family: 'Century Gothic', sans-serif;
+        text-align: center;
+      }
+      body {
+        font-family: 'Open Sans', sans-serif;
+		margin: 0 15%;
+      }
+
+      /* p, li, and other text elements will inherit the font-family from the body */
+    </style>
+
+  </head>
+  <body>
+    <h1>Illusion Diffusion: Hiding Images in Plain Sight</h1>
+
+	<p>Please note that this website is under construction and will be finished on March 13!,</p>
+    <p>We're excited to share our demo of how optical illusions and stenography can be created using text to image diffusion models. Our demo, named "Diffusion Illusions: Hiding Images in Plain Sight" is now available on <a href="ryanndagreat.github.io/diffusion-illusions">ryanndagreat.github.io/diffusion-illusions</a> and a video demonstration is coming soon!</p>
+
+    <h2>Introduction</h2>
+	   <p>We're excited to share our demo, "Diffusion Illusions: Hiding Images in Plain Sight," which showcases how optical illusions and stenography can be created using text to image diffusion models. The demo is available at <a href="ryanndagreat.github.io/diffusion-illusions">ryanndagreat.github.io/diffusion-illusions</a> and a video demonstration is coming soon! Our demo demonstrates how the Score Distillation Loss, introduced in DreamFusion, can be used for more than just creating 3D models. As shown in our paper "Peekaboo: Text to Image Diffusion Models are Zero Shot Segmentors," the Score Distillation Loss can even be adapted for segmentation. In this demo, we optimize different optical illusions to hide images in plain sight.</p>
+
+    <!-- <p>In this demo, we demonstrate how the Score Distillation Loss, introduced in DreamFusion, can be adapted to create more than just 3D models. As shown in our paper "Peekaboo: Text to Image Diffusion Models are Zero Shot Segmentors", the Score Distillation Loss can even be used for segmentation. In this demo, we optimize different optical illusions and show how they can be used to hide images in plain sight.</p> -->
+
+    <h2>Project Overview</h2>
+    <p>The project is comprised of three demonstrations:</p>
+    <ol>
+    	<li><strong>Generating images that appear as different objects when flipped upside down</strong> - For example, a giraffe could look like a penguin.</li>
+    	<li><strong>Revealing a hidden image through image overlay</strong> - Overlaying four images, such as Hatsune Miku, a bear in a field, Mario, and a pumpkin, to reveal a fifth image, Darth Vader, when light is shone behind it. The four images are optimized to look like the original objects when viewed individually, but when combined, they reveal the hidden image of Darth Vader.</li>
+    	<li><strong>Revealing multiple images through image rotation</strong> - Overlaying two images to reveal four different images when rotated. The top image, when overlayed on the bottom image and light shines through, will reveal an image such as Darth Vader. When the top image is rotated 90 degrees, it becomes a different picture such as Pikachu. Another 90-degree rotation reveals another image and a final 90-degree rotation reveals a fourth image.</li>
+    </ol>
+
+    <h2>Interactive Experience</h2>
+    <p>The project will include physical items such as transparencies for people to interact with, as well as a live demonstration that will allow people to create their own illusions on the spot. The source code will also be released to the public, including a Google Colab for easy use.</p>
+	</body>
+
+
+	<style>
+		.images {
+		  display: flex;
+		  flex-wrap: wrap;
+		  justify-content: center;
+		  margin: 0 5%;
+		}
+		.image {
+		  flex: 1;
+		  margin: 10px;
+		}
+		.row {
+		  display: flex;
+		  flex-wrap: nowrap;
+		  justify-content: center;
+		}
+	  </style>
+	  
+	  <style>
+.images {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 90vw;
+  margin: 0 auto;
+}
+
+.image {
+  flex: 1;
+  max-width: 30vw;
+  max-height: 30vh;
+  margin: 1vh;
+  object-fit: cover;
+}
+
+.row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+	  </style>
+	  
+	  <div class="images">
+		<div class="row">
+		  <img src="images/flippers/angel.png" class="image" alt="Angel">
+		  <img src="images/flippers/boatboat.png" class="image" alt="Boatboat">
+		  <img src="images/flippers/bubblefairy.png" class="image" alt="Bubblefairy">
+		</div>
+		<div class="row">
+		  <img src="images/flippers/bunnybomber.jpeg" class="image" alt="Bunnybomber">
+		  <img src="images/flippers/bunnyduck.png" class="image" alt="Bunnyduck">
+		  <img src="images/flippers/dogephant.png" class="image" alt="Dogephant">
+		</div>
+	  </div>
+	  
+
+
+  </html>
+
+
