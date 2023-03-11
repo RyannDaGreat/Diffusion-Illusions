@@ -147,29 +147,43 @@
 		</div>
 	</div>
 
+	<br>
+	<br>
+	<br>
+	<br>
+	
+	<div class="images">
+		<div class="row">
+	
+			<div class="rot-image-container">
+				<img src="images/rotaters/mikupb.png" alt="Bottom Image">
+				<img src="images/rotaters/mikupr.png" alt="Top Image" class="rotating-image">
+			</div>
+			<div style="width: 50px"></div>
+			<div class="rot-image-container">
+				<img src="images/rotaters/dolfob.png" alt="Bottom Image">
+				<img src="images/rotaters/dolfor.png" alt="Top Image" class="rotating-image">
+			</div>
+		</div>
+	</div>
 
-	<div class="rot-image-container">
-		<img src="images/rotaters/mikupb.png" alt="Bottom Image">
-		<img src="images/rotaters/mikupr.png" alt="Top Image" class="rotating-image">
-	  </div>
-	  
-	  <style>
+	<style>
 		.rot-image-container {
-		  display: inline-block;
-		  position: relative;
-		  filter: brightness(300%);
+			display: inline-block;
+			position: relative;
+			filter: brightness(300%);
 
-		  
+
 		}
-	  
+
 		.rotating-image {
-		  position: absolute;
-		  top: 0;
-		  left: 0;
-		  animation: rotate 12s linear infinite;
-		  mix-blend-mode: multiply;
+			position: absolute;
+			top: 0;
+			left: 0;
+			animation: rotate 12s linear infinite;
+			mix-blend-mode: multiply;
 		}
-	  
+
 		@keyframes rotate {
 			0% {
 				transform: rotateZ(0deg);
@@ -185,20 +199,20 @@
 				transform: rotateZ(180deg);
 			}
 
-			
+
 			62.5%,
 			75% {
 				transform: rotateZ(270deg);
 			}
 
 
-			
+
 			87.5%,
 			100% {
 				transform: rotateZ(360deg);
 			}
 		}
-	  </style>
+	</style>
 </body>
 
 </html>
