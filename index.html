@@ -369,10 +369,13 @@
 
 	<h3>Interactive Experience</h3>
 	<p>The project will include physical items such as transparencies for people to interact with, as well as a live
-		demonstration that will allow people to create their own illusions on the spot. If space permits, we might bring a printer to let people play with the illusions they create. And if we have even more space, perhaps a robot arm to automatically demo the flippy images. The source code will also be
+		demonstration that will allow people to create their own illusions on the spot. If space permits, we might bring
+		a printer to let people play with the illusions they create. And if we have even more space, perhaps a robot arm
+		to automatically demo the flippy images. The source code will also be
 		released to the public, including a Google Colab for easy use.</p>
 
-		<p>In this website you'll find multiple interactive exhibits where you can drag images around as if they were pieces of paper / transparencies. Until we demo at CVPR, this is the next best thing to the physical demo! </p>
+	<p>In this website you'll find multiple interactive exhibits where you can drag images around as if they were pieces
+		of paper / transparencies. Until we demo at CVPR, this is the next best thing to the physical demo! </p>
 
 	<h3>Similar Projects</h3>
 	<p>Another project with a similar goal was released in February: <a
@@ -524,8 +527,11 @@
 	<br>
 	<h4>A real-life demo:</h4>
 	<div style="text-align:center;">
-		<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/NWEUaXHWyI0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-	  </div>
+		<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/NWEUaXHWyI0"
+			title="YouTube video player" frameborder="0"
+			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+			allowfullscreen></iframe>
+	</div>
 	<hr>
 	<h2>Hidden Characters</h2>
 	<p>In this section, we have sets of 4 images. You can click and drag them on top of each other! They will all be
@@ -594,7 +600,8 @@
 	<!-- Javascript Goes Here -->
 	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
 	<script>
 		$(function () {
 			$('.draggable-image').draggable({ snap: '.draggable-image, .lightbox .rot-image-container' });
@@ -633,7 +640,7 @@
 		// Start the wiggle animation with an interval time of 5000 milliseconds (5 seconds)
 		startWiggle(500);
 		// Stop the wiggle animation when any wiggly image is clicked
-		$('.wiggly-image').click(function () {
+		$('.wiggly-image').on('click touchend', function () {
 			stop_wiggle = true;
 		});
 
