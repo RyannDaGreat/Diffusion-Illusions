@@ -103,7 +103,7 @@
 
 		.quad-overlay {
 			mix-blend-mode: multiply;
-			/* filter: brightness(125%); */
+			filter: brightness(100%);
 		}
 
 		@keyframes quad_rotate {
@@ -236,30 +236,38 @@
 	<div class="col">
 		<div class="row">
 			<div class="image-container">
-				<img src="images/flippers/angel.png" class="flip_image" alt="Angel">
+				<img src="images/flippers/angel.png" class="flip_image">
 				<div class="caption">An Angel</div>
 			</div>
 			<div class="image-container">
-				<img src="images/flippers/boatboat.png" class="flip_image" alt="Boatboat">
+				<img src="images/flippers/boatboat.png" class="flip_image">
 				<div class="caption">A boat</div>
 			</div>
 			<div class="image-container">
-				<img src="images/flippers/bubblefairy.png" class="flip_image" alt="Bubblefairy">
+				<img src="images/flippers/bubblefairy.png" class="flip_image">
 				<div class="caption">Bubble Fairy</div>
+			</div>
+			<div class="image-container">
+				<img src="images/flippers/lolo2.png" class="flip_image">
+				<div class="caption">Victorian Dress</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="image-container">
-				<img src="images/flippers/bunnybomber.jpeg" class="flip_image" alt="Bunnybomber">
+				<img src="images/flippers/bunnybomber.jpeg" class="flip_image">
 				<div class="caption">Bomber-Jacket Bunny</div>
 			</div>
 			<div class="image-container">
-				<img src="images/flippers/bunnyduck.png" class="flip_image" alt="Bunnyduck">
+				<img src="images/flippers/bunnyduck.png" class="flip_image">
 				<div class="caption">Duck Bunny</div>
 			</div>
 			<div class="image-container">
-				<img src="images/flippers/dogephant.png" class="flip_image" alt="Dogephant">
+				<img src="images/flippers/dogephant.png" class="flip_image">
 				<div class="caption">Dog Elephant</div>
+			</div>
+			<div class="image-container">
+				<img src="images/flippers/dogsloth.png" class="flip_image">
+				<div class="caption">Dog Sloth</div>
 			</div>
 		</div>
 	</div>
@@ -272,13 +280,13 @@
 	<div class="col">
 		<div class="row">
 			<div class="rot-image-container">
-				<img src="images/rotaters/mikupb.png" alt="Bottom Image">
-				<img src="images/rotaters/mikupr.png" alt="Top Image" class="quad-rotating-image">
+				<img src="images/rotaters/mikupb.png">
+				<img src="images/rotaters/mikupr.png" class="quad-rotating-image draggable-image">
 			</div>
 			<div style="width: 50px"></div>
 			<div class="rot-image-container">
-				<img src="images/rotaters/dolfob.png" alt="Bottom Image">
-				<img src="images/rotaters/dolfor.png" alt="Top Image" class="quad-rotating-image">
+				<img src="images/rotaters/dolfob.png">
+				<img src="images/rotaters/dolfor.png" class="quad-rotating-image draggable-image">
 			</div>
 		</div>
 	</div>
@@ -291,40 +299,61 @@
 
 
 	<div>
-	<div class="row lightbox">
-		<img src="images/quad_overlays/tanky0.png" class="draggable-image quad-overlay glow-hover-element wiggly-image"
-			alt="Draggable Image">
-		<img src="images/quad_overlays/tanky1.png" class="draggable-image quad-overlay glow-hover-element wiggly-image"
-			alt="Draggable Image">
-		<img src="images/quad_overlays/tanky2.png" class="draggable-image quad-overlay glow-hover-element wiggly-image"
-			alt="Draggable Image">
-		<img src="images/quad_overlays/tanky3.png" class="draggable-image quad-overlay glow-hover-element wiggly-image"
-			alt="Draggable Image">
-	</div>
-	<div class="caption">Click and drag these pictures together! Can you find the hidden fifth picture?</div>
+		<div class="row lightbox">
+			<img src="images/quad_overlays/tanky0.png"
+				class="draggable-image quad-overlay glow-hover-element wiggly-image">
+			<img src="images/quad_overlays/tanky1.png"
+				class="draggable-image quad-overlay glow-hover-element wiggly-image">
+			<img src="images/quad_overlays/tanky2.png"
+				class="draggable-image quad-overlay glow-hover-element wiggly-image">
+			<img src="images/quad_overlays/tanky3.png"
+				class="draggable-image quad-overlay glow-hover-element wiggly-image">
+		</div>
+		<div class="caption">Click and drag these 4 pictures together! Can you find the hidden 5th picture? <br> (hint:
+			it's easiest to see on the white background!)</div>
 	</div>
 
 	<br>
 	<br>
 	<br>
 	<br>
+
+
+
+	<div>
+		<div class="row lightbox">
+			<img src="images/quad_overlays/darthy00.png"
+				class="draggable-image quad-overlay glow-hover-element wiggly-image">
+			<img src="images/quad_overlays/darthy01.png"
+				class="draggable-image quad-overlay glow-hover-element wiggly-image">
+			<img src="images/quad_overlays/darthy02.png"
+				class="draggable-image quad-overlay glow-hover-element wiggly-image">
+			<img src="images/quad_overlays/darthy03.png"
+				class="draggable-image quad-overlay glow-hover-element wiggly-image">
+		</div>
+		<div class="caption">Try it with these too!</div>
+
+	</div>
+
+
 	<br>
 	<br>
 	<br>
 	<br>
+
 
 	<!-- Javascript Goes Here -->
 	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 	<script>
 		$(function () {
-			$('.draggable-image').draggable({ snap: '.draggable-image, .lightbox' });
+			$('.draggable-image').draggable({ snap: '.draggable-image, .lightbox .rot-image-container' });
 		});
 
 		var stop_wiggle = false;
 
 
-
+		//Make the draggable images wiggle, indicating they should be click/dragged!
 		function startWiggle(intervalTime) {
 			setInterval(function () {
 				if (stop_wiggle) {
@@ -351,7 +380,6 @@
 			}, intervalTime);
 
 		}
-
 		// Start the wiggle animation with an interval time of 5000 milliseconds (5 seconds)
 		startWiggle(500);
 		// Stop the wiggle animation when any wiggly image is clicked
