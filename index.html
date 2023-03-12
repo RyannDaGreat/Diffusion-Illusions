@@ -123,6 +123,31 @@
 			mix-blend-mode: multiply;
 		}
 
+		.season-rotating-image {
+			position: absolute;
+			top: 0;
+			left: 0;
+			animation: season_rotate 6s linear infinite;
+			mix-blend-mode: multiply;
+		}
+
+		.skelly-rotating-image {
+			position: absolute;
+			top: 0;
+			left: 0;
+			animation: skelly_rotate 9s linear infinite;
+			mix-blend-mode: multiply;
+		}
+
+
+		.elf-rotating-image {
+			position: absolute;
+			top: 0;
+			left: 0;
+			animation: elf_rotate 9s linear infinite;
+			mix-blend-mode: multiply;
+		}
+
 		.quad-overlay {
 			mix-blend-mode: multiply;
 			filter: brightness(100%);
@@ -149,6 +174,74 @@
 			}
 
 			87.5%,
+			100% {
+				transform: rotateZ(360deg);
+			}
+		}
+
+		@keyframes season_rotate {
+			0% {
+				transform: rotateZ(0deg);
+			}
+
+			25%,
+			50% {
+				transform: rotateZ(-90deg);
+			}
+
+
+			75%,
+			100% {
+				transform: rotateZ(0deg);
+			}
+		}
+
+		.draggable-image {
+			cursor: -webkit-grab;
+			cursor: grab;
+			user-select: none;
+		}
+
+		@keyframes skelly_rotate {
+			0% {
+				transform: rotateZ(0deg);
+			}
+
+			16.666%,
+			33.333% {
+				transform: rotateZ(180deg);
+			}
+
+
+			50%,
+			66.6666% {
+				transform: rotateZ(270deg);
+			}
+
+			83.3333%,
+			100% {
+				transform: rotateZ(360deg);
+			}
+		}
+
+
+		@keyframes elf_rotate {
+			0% {
+				transform: rotateZ(0deg);
+			}
+
+			16.666%,
+			33.333% {
+				transform: rotateZ(90deg);
+			}
+
+
+			50%,
+			66.6666% {
+				transform: rotateZ(180deg);
+			}
+
+			83.3333%,
 			100% {
 				transform: rotateZ(360deg);
 			}
@@ -275,6 +368,10 @@
 	<div class="col">
 		<div class="row">
 			<div class="image-container">
+				<div class="caption">Bomber-Jacket Bunny</div>
+				<img src="images/flippers/bunnybomber.jpeg" class="flip_image">
+			</div>
+			<div class="image-container">
 				<div class="caption">An Angel</div>
 				<img src="images/flippers/angel.png" class="flip_image">
 			</div>
@@ -283,26 +380,26 @@
 				<img src="images/flippers/boatboat.png" class="flip_image">
 			</div>
 			<div class="image-container">
-				<div class="caption">Bubble Fairy</div>
-				<img src="images/flippers/bubblefairy.png" class="flip_image">
-			</div>
-			<div class="image-container">
 				<div class="caption">Victorian Dress</div>
 				<img src="images/flippers/lolo2.png" class="flip_image">
+			</div>
+			<div class="image-container">
+				<div class="caption">Bubble Fairy</div>
+				<img src="images/flippers/bubblefairy.png" class="flip_image">
 			</div>
 		</div>
 		<div class="row">
 			<div class="image-container">
-				<div class="caption">Bomber-Jacket Bunny</div>
-				<img src="images/flippers/bunnybomber.jpeg" class="flip_image">
-			</div>
-			<div class="image-container">
-				<div class="caption">Bunny Seagull</div>
-				<img src="images/flippers/bunnyduck.png" class="flip_image">
+				<div class="caption">Giraffe Penguin</div>
+				<img src="images/flippers/giraffepenguin.png" class="flip_image">
 			</div>
 			<div class="image-container">
 				<div class="caption">Dog Elephant</div>
 				<img src="images/flippers/dogephant.png" class="flip_image">
+			</div>
+			<div class="image-container">
+				<div class="caption">Bunny Seagull</div>
+				<img src="images/flippers/bunnyduck.png" class="flip_image">
 			</div>
 			<div class="image-container">
 				<div class="caption">Dog Sloth</div>
@@ -313,16 +410,12 @@
 
 	<hr>
 	<h2>Rotating Overlays</h2>
-	<p>In this section, we have examples with two images. The one on the top is multiplied by the one on the bottom
-		(pixelwise), simulating how light would be filtered through two transparent sheets with images printed on them.
-		Effectively, we've made 4 images out of 2! This works in real life too: you can overlay printouts of these
-		images on top of each other for the same results, as seen in the youtube video.
-
-		<br>
-		<br>
-		As the one on the top is rotated, the image changes! You can click and drag them to inspect each one, or right
-		click and open image in new tab to print them out for yourself.
-
+	<p>In this section, we have examples with two images. The one on the top is multiplied by the one on the bottom (pixelwise), simulating how light would be filtered through two transparent sheets with images printed on them. Effectively, we've made 4 images out of 2!</p> 
+	<p>This works in real life too: you can overlay printouts of these images on top of each other for the same results, as seen in the youtube video.</p> 
+	<p>As the one on the top is rotated, the image changes! You can click and drag them to inspect each one, or right click and open image in new tab to print them out for yourself.</p>
+	
+	
+	
 	</p>
 
 
@@ -342,21 +435,40 @@
 				<img src="images/rotaters/dolfob.png">
 				<img src="images/rotaters/dolfor.png" class="quad-rotating-image draggable-image glow-hover-element">
 			</div>
+			<div style="width: 50px"></div>
+			<div class="rot-image-container" style="filter: brightness(200%);">
+				<img src="images/rotaters/pikavaderb.png">
+				<img src="images/rotaters/pikavaderr.png" class="quad-rotating-image draggable-image glow-hover-element">
+			</div>
+		</div>
+		<br>
+		<br>
+		<div class="row">
+			<div class="rot-image-container" style="filter: brightness(150%);">
+				<img src="images/rotaters/seasonb.png">
+				<img src="images/rotaters/seasonr.png" class="season-rotating-image draggable-image glow-hover-element">
+			</div>
+			<div style="width: 50px"></div>
+			<div class="rot-image-container" style="filter: brightness(150%);">
+				<img src="images/rotaters/rotablenderb.png">
+				<img src="images/rotaters/rotablenderr.png" class="elf-rotating-image draggable-image glow-hover-element">
+			</div>
+			<div style="width: 50px"></div>
+			<div class="rot-image-container" style="filter: brightness(150%);">
+				<img src="images/rotaters/skellyb.png">
+				<img src="images/rotaters/skellyr.png" class="skelly-rotating-image draggable-image glow-hover-element">
+			</div>
 		</div>
 	</div>
-
+	
 	<br>
 	<hr>
 	<h2>Hidden Characters</h2>
-	<p>In this section, we have sets of 4 images. You can click and drag them on top of each other! They will all be
-		multiplied together, and when they're all on top of each other they will reveal a secret 5th image. I won't
-		spoil it for you in this paragraph; try it out!
-		<br>
-		<br>
-		This works in real life too: you can overlay printouts of these images on top of each other for the same
-		results, as seen in the youtube video.
-
-
+<p>In this section, we have sets of 4 images. You can click and drag them on top of each other! They will all be multiplied together, and when they're all on top of each other they will reveal a secret 5th image.
+	
+	<p>This works in real life too: you can overlay printouts of these images on top of each other for the same results, as seen in the youtube video.</p>
+</p><p>I won't spoil it for you in this paragraph; try it out!</p>
+	
 
 		<br>
 		<br>

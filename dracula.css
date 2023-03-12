@@ -6,7 +6,7 @@ body {
 
 body * {
 	color: rgba(248, 248, 242, 1);
-	background-color: rgba(40, 42, 54, 1);
+	/* background-color: rgba(40, 42, 54, 1); */
 }
 
 a,
