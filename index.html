@@ -27,7 +27,8 @@
 
 		h1,
 		h2,
-		h3,h4 {
+		h3,
+		h4 {
 			font-family: 'Didact Gothic', sans-serif;
 			text-align: center;
 		}
@@ -57,7 +58,7 @@
 			/* enlarged size - double the original width */
 			cursor: zoom-out;
 			/* change the cursor to a zoom-out icon when enlarged */
-			
+
 		}
 
 		.flip_image {
@@ -333,19 +334,22 @@
 <body>
 	<h1>Diffusion Illusions: Hiding Images in Plain Sight</h1>
 
-	<h2>CVPR Demo Summary</h2>
-	<h4>By Ryan Burgert, Kanchana Ranasinge, Xiang Li, and Michael Ryoo</h4>
+	<h2>CVPR Demo Proposal Summary</h2>
+	<h4>By Ryan Burgert, Kanchana Ranasinghe, Xiang Li, and Michael Ryoo</h4>
 
 	<h3>Introduction</h3>
 	<p>We're excited to share our demo, "Diffusion Illusions: Hiding Images in Plain Sight," which showcases how optical
-		illusions and steganography can be created using text-to-image diffusion models. The demo is available at <a
-			href="https://ryanndagreat.github.io/Diffusion-Illusions/">ryanndagreat.github.io/Diffusion-Illusions</a>
-		and a video
+		illusions and steganography can be created using text-to-image diffusion models.
+		<!-- The demo is available at <a -->
+		<!-- href="https://ryanndagreat.github.io/Diffusion-Illusions/">ryanndagreat.github.io/Diffusion-Illusions</a> -->
+		A video
 		demonstration is coming soon! Our demo shows how Score Distillation Loss, introduced in DreamFusion,
-		can be used for more than just creating 3D models. As shown in our paper <a href="https://ryanndagreat.github.io/peekaboo/">"Peekaboo: Text to Image Diffusion
-		Models are Zero Shot Segmentors"</a>, that loss can even be adapted for segmentation. In this
+		can be used for more than just creating 3D models. As shown in our paper <a
+			href="https://ryanndagreat.github.io/peekaboo/">"Peekaboo: Text to Image Diffusion
+			Models are Zero Shot Segmentors"</a>, that loss can even be adapted for segmentation. In this
 		demo, we use a variant of score distillation loss to optimize different optical illusions - hiding images in
-		plain sight.</p>
+		plain sight.
+	</p>
 
 	<h3>Project Overview</h3>
 	<p>The project is comprised of three demonstrations:</p>
@@ -365,8 +369,10 @@
 
 	<h3>Interactive Experience</h3>
 	<p>The project will include physical items such as transparencies for people to interact with, as well as a live
-		demonstration that will allow people to create their own illusions on the spot. The source code will also be
+		demonstration that will allow people to create their own illusions on the spot. If space permits, we might bring a printer to let people play with the illusions they create. And if we have even more space, perhaps a robot arm to automatically demo the flippy images. The source code will also be
 		released to the public, including a Google Colab for easy use.</p>
+
+		<p>In this website you'll find multiple interactive exhibits where you can drag images around as if they were pieces of paper / transparencies. Until we demo at CVPR, this is the next best thing to the physical demo! </p>
 
 	<h3>Similar Projects</h3>
 	<p>Another project with a similar goal was released in February: <a
@@ -515,6 +521,11 @@
 	</div>
 
 	<br>
+	<br>
+	<h4>A real-life demo:</h4>
+	<div style="text-align:center;">
+		<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/NWEUaXHWyI0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+	  </div>
 	<hr>
 	<h2>Hidden Characters</h2>
 	<p>In this section, we have sets of 4 images. You can click and drag them on top of each other! They will all be
