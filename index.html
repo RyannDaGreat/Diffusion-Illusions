@@ -10,17 +10,26 @@
 
 
 	<style>
+		@font-face {
+			font-family: "Didact Gothic";
+			src: url("fonts/DidactGothic-Regular.ttf");
+		}
+		@font-face {
+			font-family: "Mukta";
+			src: url("fonts/MuktaMalar-Light.ttf");
+		}
+
 		/* Apply font to various page elements */
 		h1,
 		h2,
 		h3 {
-			font-family: 'Century Gothic', sans-serif;
+			font-family: 'Didact Gothic', sans-serif;
 			text-align: center;
 		}
 
 		/* p, li, and other text elements will inherit the font-family from the body */
 		body {
-			font-family: 'Open Sans', sans-serif;
+			font-family: 'Mukta', sans-serif;
 			margin: 0 15%;
 		}
 
@@ -84,7 +93,6 @@
 			font-weight: bold;
 			margin-top: 5px;
 			background-color: transparent;
-			font-family: 'Century Gothic', sans-serif;
 		}
 
 		.rot-image-container {
@@ -199,6 +207,11 @@
 			margin: 40px 0;
 			margin-top: 100px;
 		}
+
+		.smaller-text {
+			font-size: 0.8em;
+			background-color: transparent;
+		}
 	</style>
 </head>
 
@@ -287,7 +300,9 @@
 	<hr>
 	<h2>Rotating Overlays</h2>
 	<p>In this section, we have examples with two images. The one on the top is multiplied by the one on the bottom
-		(pixelwise), simulating how light would be filtered through two transparent sheets with images printed on them. Effectively, we've made 4 images out of 2! This works in real life too: you can overlay printouts of these images on top of each other for the same results, as seen in the youtube video.
+		(pixelwise), simulating how light would be filtered through two transparent sheets with images printed on them.
+		Effectively, we've made 4 images out of 2! This works in real life too: you can overlay printouts of these
+		images on top of each other for the same results, as seen in the youtube video.
 
 		<br>
 		<br>
@@ -324,7 +339,8 @@
 		spoil it for you in this paragraph; try it out!
 		<br>
 		<br>
-		This works in real life too: you can overlay printouts of these images on top of each other for the same results, as seen in the youtube video.
+		This works in real life too: you can overlay printouts of these images on top of each other for the same
+		results, as seen in the youtube video.
 
 
 
@@ -346,8 +362,11 @@
 			<img src="images/quad_overlays/tanky3.png"
 				class="draggable-image quad-overlay glow-hover-element wiggly-image">
 		</div>
-		<div class="caption">Click and drag these 4 pictures together! Can you find the hidden 5th picture? <br> (hint:
-			it's easiest to see on the white background!)</div>
+		<div class="caption">Click and drag these 4 pictures together! Can you find the hidden 5th picture? <br>
+
+			<span class="smaller-text">(hint:
+				it's easiest to see on the white background!)</span>
+		</div>
 	</div>
 
 	<br>
