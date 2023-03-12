@@ -266,8 +266,8 @@
 
 	<hr>
 	<h2>Flippy Illusions</h2>
-	<p>If you wait a few seconds, the below images will flip upside-down - to reveal a new image! You can open the
-		images in a new tab if you right click them and select that option in your browser.
+	<p>If you wait a few seconds, the below images will flip upside-down - to reveal a new image! You can zoom into the
+		images in a new tab if you click them.
 	</p>
 
 	<br><br>
@@ -297,7 +297,7 @@
 				<img src="images/flippers/bunnybomber.jpeg" class="flip_image">
 			</div>
 			<div class="image-container">
-				<div class="caption">Duck Bunny</div>
+				<div class="caption">Bunny Seagull</div>
 				<img src="images/flippers/bunnyduck.png" class="flip_image">
 			</div>
 			<div class="image-container">
@@ -455,6 +455,15 @@
 		// Stop the wiggle animation when any wiggly image is clicked
 		$('.wiggly-image').click(function () {
 			stop_wiggle = true;
+		});
+
+		// Make all flippy images zoomable
+		$(".image-container img").wrap(function () {
+			return $("<a>", {
+				href: this.src,
+				// Set the target attribute to "_blank" to open in a new tab
+				target: "_blank"
+			});
 		});
 	</script>
 
