@@ -21,6 +21,10 @@
 		}
 
 		/* Apply font to various page elements */
+		h1 {
+			font-size: 35pt
+		}
+
 		h1,
 		h2,
 		h3 {
@@ -34,6 +38,9 @@
 			margin: 0 15%;
 		}
 
+		p {
+			font-size: large;
+		}
 
 		/* Image styles */
 		.images {
@@ -332,10 +339,11 @@
 		illusions and steganography can be created using text-to-image diffusion models. The demo is available at <a
 			href="https://ryanndagreat.github.io/Diffusion-Illusions/">ryanndagreat.github.io/Diffusion-Illusions</a>
 		and a video
-		demonstration is coming soon! Our demo demonstrates how the Score Distillation Loss, introduced in DreamFusion,
+		demonstration is coming soon! Our demo shows how Score Distillation Loss, introduced in DreamFusion,
 		can be used for more than just creating 3D models. As shown in our paper "Peekaboo: Text to Image Diffusion
-		Models are Zero Shot Segmentors," the Score Distillation Loss can even be adapted for segmentation. In this
-		demo, we optimize different optical illusions to hide images in plain sight.</p>
+		Models are Zero Shot Segmentors," that loss can even be adapted for segmentation. In this
+		demo, we use a variant of score distillation loss to optimize different optical illusions - hiding images in
+		plain sight.</p>
 
 	<h3>Project Overview</h3>
 	<p>The project is comprised of three demonstrations:</p>
@@ -359,7 +367,9 @@
 		released to the public, including a Google Colab for easy use.</p>
 
 	<h3>Similar Projects</h3>
-	<p>Another project with a similar goal was released in February: <a href="https://github.com/tancik/Illusion-Diffusion">Illusion-Diffusion</a>, authored by Matthew Tanick. That project only achieves the first part of this demo, aka image flipping.</p>
+	<p>Another project with a similar goal was released in February: <a
+			href="https://github.com/tancik/Illusion-Diffusion">Illusion-Diffusion</a>, authored by Matthew Tanick. That
+		project only achieves the first part of this demo, aka image flipping.</p>
 
 
 	<hr>
@@ -435,20 +445,50 @@
 
 	<div class="col">
 		<div class="row">
+
+			<div class="rot-image-container" style="filter: brightness(200%);">
+				<img src="images/rotaters/4girlb.png">
+				<img src="images/rotaters/4girlr.png" class="quad-rotating-image draggable-image glow-hover-element">
+			</div>
+
+			<div style="width: 50px"></div>
+
+			<div class="rot-image-container" style="filter: brightness(200%);">
+				<img src="images/rotaters/affatab.png">
+				<img src="images/rotaters/affatar.png" class="quad-rotating-image draggable-image glow-hover-element">
+			</div>
+
+			<div style="width: 50px"></div>
+
 			<div class="rot-image-container">
 				<img src="images/rotaters/mikupb.png">
 				<img src="images/rotaters/mikupr.png" class="quad-rotating-image draggable-image glow-hover-element">
 			</div>
-			<div style="width: 50px"></div>
+
+		</div>
+		<br>
+		<br>
+		<div class="row">
+
 			<div class="rot-image-container">
 				<img src="images/rotaters/dolfob.png">
 				<img src="images/rotaters/dolfor.png" class="quad-rotating-image draggable-image glow-hover-element">
 			</div>
+
 			<div style="width: 50px"></div>
+
 			<div class="rot-image-container" style="filter: brightness(200%);">
 				<img src="images/rotaters/pikavaderb.png">
 				<img src="images/rotaters/pikavaderr.png"
 					class="quad-rotating-image draggable-image glow-hover-element">
+			</div>
+
+			<div style="width: 50px"></div>
+
+
+			<div class="rot-image-container" style="filter: brightness(150%);">
+				<img src="images/rotaters/cowerr.png">
+				<img src="images/rotaters/cowerb.png" class="quad-rotating-image draggable-image glow-hover-element">
 			</div>
 		</div>
 		<br>
