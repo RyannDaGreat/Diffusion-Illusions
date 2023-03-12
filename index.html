@@ -191,19 +191,23 @@
 			-moz-box-shadow: 0px 0px 51px 5px rgba(255, 255, 255, 0.62);
 			box-shadow: 0px 0px 51px 5px rgba(255, 255, 255, 0.62);
 		}
+
+		hr {
+			border: none;
+			border-top: 3px solid rgba(255, 255, 255, 0.49);
+			border-radius: 50px;
+			margin: 40px 0;
+			margin-top: 100px;
+		}
 	</style>
 </head>
 
 <body>
 	<h1>Illusion Diffusion: Hiding Images in Plain Sight</h1>
 
-	<p>Please note that this website is under construction and will be finished on March 13!</p>
-	<p>We're excited to share our demo of how optical illusions and stenography can be created using text to image
-		diffusion models. Our demo, named "Diffusion Illusions: Hiding Images in Plain Sight" is now available on <a
-			href="ryanndagreat.github.io/diffusion-illusions">ryanndagreat.github.io/diffusion-illusions</a> and a video
-		demonstration is coming soon!</p>
+	<h2>CVPR Demo Summary</h2>
 
-	<h2>Introduction</h2>
+	<h3>Introduction</h3>
 	<p>We're excited to share our demo, "Diffusion Illusions: Hiding Images in Plain Sight," which showcases how optical
 		illusions and steganography can be created using text-to-image diffusion models. The demo is available at <a
 			href="ryanndagreat.github.io/diffusion-illusions">ryanndagreat.github.io/diffusion-illusions</a> and a video
@@ -212,7 +216,7 @@
 		Models are Zero Shot Segmentors," the Score Distillation Loss can even be adapted for segmentation. In this
 		demo, we optimize different optical illusions to hide images in plain sight.</p>
 
-	<h2>Project Overview</h2>
+	<h3>Project Overview</h3>
 	<p>The project is comprised of three demonstrations:</p>
 	<ol>
 		<li><strong>Generating images that appear as different objects when flipped upside down</strong> - For example,
@@ -228,10 +232,18 @@
 			reveals a fourth image.</li>
 	</ol>
 
-	<h2>Interactive Experience</h2>
+	<h3>Interactive Experience</h3>
 	<p>The project will include physical items such as transparencies for people to interact with, as well as a live
 		demonstration that will allow people to create their own illusions on the spot. The source code will also be
 		released to the public, including a Google Colab for easy use.</p>
+
+	<hr>
+	<h2>Flippy Illusions</h2>
+	<p>If you wait a few seconds, the below images will flip upside-down - to reveal a new image! You can open the
+		images in a new tab if you right click them and select that option in your browser.
+	</p>
+
+	<br><br>
 
 	<div class="col">
 		<div class="row">
@@ -272,6 +284,19 @@
 		</div>
 	</div>
 
+	<hr>
+	<h2>Rotating Overlays</h2>
+	<p>In this section, we have examples with two images. The one on the top is multiplied by the one on the bottom
+		(pixelwise), simulating how light would be filtered through two transparent sheets with images printed on them. Effectively, we've made 4 images out of 2! This works in real life too: you can overlay printouts of these images on top of each other for the same results, as seen in the youtube video.
+
+		<br>
+		<br>
+		As the one on the top is rotated, the image changes! You can click and drag them to inspect each one, or right
+		click and open image in new tab to print them out for yourself.
+
+	</p>
+
+
 	<br>
 	<br>
 	<br>
@@ -292,10 +317,22 @@
 	</div>
 
 	<br>
-	<br>
-	<br>
-	<br>
-	<br>
+	<hr>
+	<h2>Hidden Characters</h2>
+	<p>In this section, we have sets of 4 images. You can click and drag them on top of each other! They will all be
+		multiplied together, and when they're all on top of each other they will reveal a secret 5th image. I won't
+		spoil it for you in this paragraph; try it out!
+		<br>
+		<br>
+		This works in real life too: you can overlay printouts of these images on top of each other for the same results, as seen in the youtube video.
+
+
+
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
 
 
 	<div>
