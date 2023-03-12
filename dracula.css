@@ -1,7 +1,8 @@
 html,
 body {
-	background-image: none;
-	background-color: rgba(40, 42, 54, 1);
+	/* background-image: none; */
+	/* background-color: rgba(40, 42, 54, 1); */
+	background-image: linear-gradient(to top, #09203f 0%, rgba(40, 42, 54, 1) 100%);
 }
 
 body * {
