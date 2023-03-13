@@ -6,10 +6,25 @@
 	<title>Diffusion Illusions: Hiding Images in Plain Sight</title>
 
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Century+Gothic|Open+Sans">
-	<link rel="stylesheet" href="dracula.css">
+	<!-- <link rel="stylesheet" href="dracula.css"> -->
 
 
 	<style>
+		html,
+		body {
+			background-image: linear-gradient(to top, #09203f 0%, rgba(40, 42, 54, 1) 100%);
+		}
+
+		body * {
+			color: rgba(248, 248, 242, 1);
+		}
+
+		a,
+		a * {
+			color: rgba(80, 250, 123, 1);
+			background-color: transparent;
+		}
+
 		@font-face {
 			font-family: "Didact Gothic";
 			src: url("fonts/DidactGothic-Regular.ttf");
@@ -161,6 +176,15 @@
 			animation: season_rotate 6s linear infinite;
 			mix-blend-mode: multiply;
 		}
+
+		<style>
+
+		/* Add smooth scrolling to all links */
+		a {
+			scroll-behavior: smooth;
+			transition: scroll-behavior 4s;
+		}
+
 
 		.skelly-rotating-image {
 			position: absolute;
@@ -362,7 +386,7 @@
 		<a href="https://scholar.google.com/citations?user=vcw0TJIAAAAJ&hl=en">Michael Ryoo</a>
 	</h4>
 
-	
+
 	<h3>Introduction</h3>
 	<p>We're excited to share our demo, "Diffusion Illusions: Hiding Images in Plain Sight," which showcases how optical
 		illusions and steganography can be created using text-to-image diffusion models.
@@ -376,16 +400,18 @@
 		demo, we use a variant of score distillation loss to optimize different optical illusions - hiding images in
 		plain sight.
 	</p>
-	<p>We'll keep this brief so we can dive right into the pictures - <a href="#summary">check the bottom of the page</a> for more details about this submission!</p>
-	<p>There are three kinds of illusions presented: <a href="#flippy_illusions">Flippy Illusions</a>, 
-		<a href="#rotating_overlays">Rotating Overlays</a>, and 
-		<a href="#hidden_characters">Hidden Characters</a></p>
+	<p>We'll keep this brief so we can dive right into the pictures - <a class="scroll-to" href="#summary">check the bottom of the
+			page</a> for more details about this submission!</p>
+	<p>There are three kinds of illusions presented: <a class="scroll-to" href="#flippy_illusions">Flippy Illusions</a>,
+		<a class="scroll-to" href="#rotating_overlays">Rotating Overlays</a>, and
+		<a class="scroll-to" href="#hidden_characters">Hidden Characters</a>
+	</p>
 	<!-- <ol>
-	  <li><a href="#flippy_illusions">Flippy Illusions</a></li>
-	  <li><a href="#rotating_overlays">Rotating Overlays</a></li>
-	  <li><a href="#hidden_characters">Hidden Characters</a></li>
+	  <li><a class="scroll-to" href="#flippy_illusions">Flippy Illusions</a></li>
+	  <li><a class="scroll-to" href="#rotating_overlays">Rotating Overlays</a></li>
+	  <li><a class="scroll-to" href="#hidden_characters">Hidden Characters</a></li>
 	</ol> -->
-	
+
 
 
 	<h2 id="flippy_illusions">Flippy Illusions</h2>
@@ -717,6 +743,20 @@
 				target: "_blank"
 			});
 		});
+
+		// Smooth scrolling effect for all links with class "scroll-to"
+		$(document).ready(function () {
+			// Listen for clicks on elements with the class "scroll-to"
+			$('.scroll-to').click(function () {
+				// Animate the scrolling to the target element
+				$('html, body').animate({
+					scrollTop: $($(this).attr('href')).offset().top // Get the target element's position from the href attribute
+				}, 500); // 500ms animation duration
+
+				// Prevent the default link behavior
+				return false;
+			});
+		});
 	</script>
 
 
@@ -727,7 +767,7 @@
 			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 			allowfullscreen></iframe>
 	</div>
-<hr>
+	<hr>
 
 	<h2 id="summary">CVPR Demo Proposal Summary</h2>
 
