@@ -36,7 +36,7 @@ a:visited,
 a:visited * {
 	color: rgba(98, 114, 164, 1);
 }
-
+/* 
 h1,
 h2,
 h3,
@@ -50,21 +50,21 @@ strong,
 [class*="header"],
 [class*="header"] td {
 	color: rgba(255, 184, 108, 1);
-}
+} */
 
 table {
-	background-color: rgba(40, 42, 54, 1);
+	/* background-color: rgba(40, 42, 54, 1); */
 }
 
 [id*="overlay"],
 [id*="lightbox"],
 blockquote {
-	background-color: rgba(68, 71, 90, 1);
+	/* background-color: rgba(68, 71, 90, 1); */
 }
 
 pre,
 dl {
-	background-color: rgba(68, 71, 90, 1);
+	/* background-color: rgba(68, 71, 90, 1); */
 }
 
 input,
