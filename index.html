@@ -10,6 +10,35 @@
 
 
 	<style>
+		/* Gist Dark Mode Start */
+
+		/* https://github.com/lonekorean/gist-syntax-themes */
+		@import url('https://cdn.rawgit.com/lonekorean/gist-syntax-themes/d49b91b3/stylesheets/cobalt.css');
+		@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+		body .gist .gist-file {
+			border-color: #555 #555 #444
+		}
+
+		body .gist .gist-data {
+			border-color: #555
+		}
+
+		body .gist .gist-meta {
+			color: #ffffff;
+			background: #373737;
+		}
+
+		body .gist .gist-meta a {
+			color: #ffffff
+		}
+
+		body .gist .gist-data .pl-s .pl-s1 {
+			color: #a5c261
+		}
+
+		/* Gist Dark Mode End */
+
 		html,
 		body {
 			background-image: linear-gradient(to top, #09203f 0%, rgba(40, 42, 54, 1) 100%);
@@ -612,14 +641,12 @@
 			<div style="width: 50px"></div>
 			<div class="rot-image-container" style="filter: brightness(180%);">
 				<img src="images/rotaters/tardyb.png">
-				<img src="images/rotaters/tardyr.png"
-					class="quad-rotating-image draggable-image glow-hover-element">
+				<img src="images/rotaters/tardyr.png" class="quad-rotating-image draggable-image glow-hover-element">
 			</div>
 			<div style="width: 50px"></div>
 			<div class="rot-image-container" style="filter: brightness(180%);">
 				<img src="images/rotaters/bbadb.png">
-				<img src="images/rotaters/bbadr.png"
-					class="quad-rotating-image draggable-image glow-hover-element">
+				<img src="images/rotaters/bbadr.png" class="quad-rotating-image draggable-image glow-hover-element">
 			</div>
 			<!-- <div style="width: 50px"></div>
 			<div class="rot-image-container" style="filter: brightness(150%);">
@@ -803,7 +830,12 @@
 	<p>The project is comprised of three demonstrations:</p>
 	<ol>
 		<li><strong>Generating images that appear as different objects when flipped upside down</strong> - For example,
-			a giraffe could look like a penguin.</li>
+			a giraffe could look like a penguin. <br>
+			Top accomplish this, let's define some functions and variables. We want to create an image "Image" such that
+			when viewed right side up, "Image" matches "Prompt1" (in this case 'Giraffe'). And when Image is upside
+			down, we want it to match the prompt "Penguin"
+			We optimize an image we'll call "Image" using score distillation loss "SD". We optimize SD(Image,prompt_1)
+		</li>
 		<li><strong>Revealing a hidden image through image overlay</strong> - Overlaying four images, such as Hatsune
 			Miku, a bear in a field, Mario, and a pumpkin, to reveal a fifth image, Darth Vader, when light is shone
 			behind it. The four images are optimized to look like the original objects when viewed individually, but
@@ -830,6 +862,18 @@
 			href="https://github.com/tancik/Illusion-Diffusion">Illusion-Diffusion</a>, authored by Matthew Tanick. That
 		project only achieves the first part of this demo, aka image flipping.</p>
 
+	<h3>Pseudocode</h3>
+	<p>To help explain how these were calculated, I've included some easy-to-read pseudocode that covers how each of
+		these illusions were made. Soon there will be runnable python code posted to this website as well, letting you
+		make your own - likely in a Google Colab.</p>
+	<h4>Flippy Images</h4>
+	<script src="https://gist.github.com/RyannDaGreat/fde3d6c05fb4d6d0cf31e7477658d3fd.js"></script>
+	<br>
+	<h4>Rotating Overlays</h4>
+	<script src="https://gist.github.com/RyannDaGreat/0cb428a7d0a839249f058ef8273b9faf.js"></script>
+	<br>
+	<h4>Hidden Characters</h4>
+	<script src="https://gist.github.com/RyannDaGreat/9dc5d591ec7bbba3743eab69e964b8db.js"></script>
 
 </body>
 
