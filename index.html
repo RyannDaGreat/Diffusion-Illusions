@@ -24,6 +24,18 @@
 			border-color: #555
 		}
 
+		b {
+			/* font-size: 48px; */
+			font-weight: bold;
+			text-shadow: 0 0 20px rgba(255, 255, 255, 0.3),
+				0 0 3px rgba(255, 77, 166, 0.3),
+				0 0 4px rgba(255, 77, 166, 0.3),
+				0 0 5px rgba(255, 77, 166, 0.3),
+				0 0 6px rgba(255, 77, 166, 0.3),
+				0 0 7px rgba(255, 77, 166, 0.3),
+				0 0 8px rgba(255, 77, 166, 0.3);
+		}
+
 		body .gist .gist-meta {
 			color: #ffffff;
 			background: #373737;
@@ -375,12 +387,24 @@
 			transition: box-shadow 0.1s ease-in-out;
 		}
 
+		.glow-hover-element {
+			--shadow-opacity: .4;
+			/* Opacity value ranging from 0 to 1 */
+			--shadow-size: 15px;
+			/* Base size of the shadow */
+			--shadow-saturation: 400%;
+			/* Saturation value ranging from 0% to 100% */
+		}
+
 		.glow-hover-element:hover {
-			box-shadow: 0 0 10px rgba(4, 0, 255, 0.8),
-				0 0 20px rgba(255, 0, 0, 0.6),
-				0 0 30px rgba(255, 255, 255, 0.4),
-				0 0 40px rgba(255, 255, 255, 0.2);
-			/* filter: brightness(100%); */
+			box-shadow:
+				0 0 calc(var(--shadow-size) * 1) hsla(0, 0%, 100%, var(--shadow-opacity)),
+				0 0 calc(var(--shadow-size) * 1.5) hsla(330, var(--shadow-saturation), 62%, var(--shadow-opacity)),
+				0 0 calc(var(--shadow-size) * 2) hsla(330, var(--shadow-saturation), 62%, var(--shadow-opacity)),
+				0 0 calc(var(--shadow-size) * 2.5) hsla(330, var(--shadow-saturation), 62%, var(--shadow-opacity)),
+				0 0 calc(var(--shadow-size) * 3) hsla(330, var(--shadow-saturation), 62%, var(--shadow-opacity)),
+				0 0 calc(var(--shadow-size) * 3.5) hsla(330, var(--shadow-saturation), 62%, var(--shadow-opacity)),
+				0 0 calc(var(--shadow-size) * 4) hsla(330, var(--shadow-saturation), 62%, var(--shadow-opacity));
 		}
 
 		.lightbox {
@@ -523,12 +547,13 @@
 	<hr>
 
 	<h2 id="rotating_overlays">Rotating Overlays</h2>
-	<p>In this section, we have examples with two images. The one on the top is multiplied by the one on the bottom
+	<p>In this section, we have examples with two images. As the one on the top is rotated, the image changes! The one
+		on the top is multiplied by the one on the bottom
 		(pixelwise), simulating how light would be filtered through two transparent sheets with images printed on them.
 		Effectively, we've made 4 images out of 2!</p>
 	<p>This works in real life too: you can overlay printouts of these images on top of each other for the same results,
 		as seen in the youtube video.</p>
-	<p>As the one on the top is rotated, the image changes! You can click and drag them to inspect each one, or right
+	<p>You can <it><b>click and drag</b></it> them to inspect the top and bottom images separately, or right
 		click and open image in new tab to print them out for yourself.</p>
 
 
@@ -702,7 +727,8 @@
 
 	<hr>
 	<h2 id="hidden_characters">Hidden Characters</h2>
-	<p>In this section, we have sets of 4 images. You can click and drag them on top of each other! They will all be
+	<p>In this section, we have sets of 4 images. You can <it><b>click and drag</b></it> them on top of each other! They
+		will all be
 		multiplied together, and when they're all on top of each other they will reveal a secret 5th image.
 
 	<p>This works in real life too: you can overlay printouts of these images on top of each other for the same results,
