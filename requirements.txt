@@ -1,0 +1,15 @@
+accelerate==0.12.0
+diffusers==0.2.4
+einops==0.4.1
+icecream==2.1.2
+imageio==2.21.3
+matplotlib==3.5.3
+opencv-python==4.6.0.66
+pandas==1.4.3
+rich==12.3.0
+rp==0.1.880
+scikit-learn==0.22.2.post1
+scipy==1.9.1
+tensorboardX==2.5
+tqdm==4.64.0
+transformers==4.19.2
