@@ -8,7 +8,6 @@ opencv-python==4.6.0.66
 pandas==1.4.3
 rich==12.3.0
 rp==0.1.880
-scikit-learn==0.22.2.post1
 scipy==1.9.1
 tensorboardX==2.5
 tqdm==4.64.0
