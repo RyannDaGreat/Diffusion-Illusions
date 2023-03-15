@@ -1,3 +1,6 @@
 *.un~
 *.swp
 *.DS_STORE
+*.pyc
+untracked
+.ipynb_checkpoints
