@@ -518,7 +518,8 @@
 	<h2 id="flippy_illusions">Flippy Illusions</h2>
 	<p>If you wait a few seconds, the below images will flip upside-down - to reveal a new image!
 
-		You can <it><b>click and drag</b></it> an image to rotate it by yourself, and <b>double click</b> to reset it.</p>
+		You can <it><b>click and drag</b></it> an image to rotate it by yourself, and <b>double click</b> to reset it.
+	</p>
 
 	<br>
 	<div style="text-align: center;">
@@ -581,7 +582,8 @@
 
 	</div>
 	<br>
-	<a target="_blank" href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/flippy_illusions_for_colab.ipynb">
+	<a target="_blank"
+		href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/flippy_illusions_for_colab.ipynb">
 		<h3><img src="images/colab_logo.svg" alt="Google Colab logo" width="30pt" height="30pt"
 				style="vertical-align: middle; margin-right: 10pt;">Try it on Colab!</h3>
 	</a>
@@ -766,11 +768,13 @@
 			allowfullscreen></iframe>
 	</div>
 	<div class="caption">
-		<a target="_blank" href="assets/rotating_overlays.pdf">Click here for a printable PDF</a> full of these images, so you can try
+		<a target="_blank" href="assets/rotating_overlays.pdf">Click here for a printable PDF</a> full of these images,
+		so you can try
 		it yourself!
 	</div>
 
-	<a target="_blank" href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/rotation_overlays_for_colab.ipynb">
+	<a target="_blank"
+		href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/rotation_overlays_for_colab.ipynb">
 		<h3><img src="images/colab_logo.svg" alt="Google Colab logo" width="30pt" height="30pt"
 				style="vertical-align: middle; margin-right: 10pt;">Try it on Colab!</h3>
 	</a>
@@ -917,27 +921,27 @@
 			}
 
 			function resetFlipImagesPositions() {
-    $('.reset-all-flip-images-button').click(function () {
-        $('.flip_image').each(function () {
-            var originalPosition = $(this).data('originalPosition');
+				$('.reset-all-flip-images-button').click(function () {
+					$('.flip_image').each(function () {
+						var originalPosition = $(this).data('originalPosition');
 
-            $(this).removeClass('flip_image_animated');
-            $(this).css({
-                'transform': 'rotateZ(0deg)',
-                'transition': 'transform 1s'
-            });
+						$(this).removeClass('flip_image_animated');
+						$(this).css({
+							'transform': 'rotateZ(0deg)',
+							'transition': 'transform 1s'
+						});
 
-            setTimeout(() => {
-                $(this).css('transition', ''); // Clear the transition property
-                $(this).addClass('flip_image_animated');
-            }, 1000); // Wait for the 1-second animation to finish before adding the class
-        });
+						setTimeout(() => {
+							$(this).css('transition', ''); // Clear the transition property
+							$(this).addClass('flip_image_animated');
+						}, 1000); // Wait for the 1-second animation to finish before adding the class
+					});
 
-        $(this).addClass('inactive_button');
-    });
-}
+					$(this).addClass('inactive_button');
+				});
+			}
 
-function startWiggle(intervalTime) {
+			function startWiggle(intervalTime) {
 				setInterval(function () {
 					if (stop_wiggle) {
 						return;
@@ -1151,7 +1155,8 @@ function startWiggle(intervalTime) {
 	</div>
 
 	<br>
-	<a target="_blank" href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/hidden_characters_for_colab.ipynb">
+	<a target="_blank"
+		href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/hidden_characters_for_colab.ipynb">
 		<h3><img src="images/colab_logo.svg" alt="Google Colab logo" width="30pt" height="30pt"
 				style="vertical-align: middle; margin-right: 10pt;">Try it on Colab!</h3>
 	</a>
