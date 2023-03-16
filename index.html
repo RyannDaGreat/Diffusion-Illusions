@@ -924,16 +924,22 @@
             var originalPosition = $(this).data('originalPosition');
 
             $(this).removeClass('flip_image_animated');
-            $(this).css('transform', 'rotateZ(0deg)');
-            
+            $(this).css({
+                'transform': 'rotateZ(0deg)',
+                'transition': 'transform 1s'
+            });
+
             setTimeout(() => {
+                $(this).css('transition', ''); // Clear the transition property
                 $(this).addClass('flip_image_animated');
-            }, 0); // Use setTimeout to wait for the DOM to render the changes
+            }, 1000); // Wait for the 1-second animation to finish before adding the class
         });
 
         $(this).addClass('inactive_button');
     });
 }
+
+
 
 
 			function setButtonsInactive() {
