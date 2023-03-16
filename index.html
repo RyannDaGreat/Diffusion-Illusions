@@ -204,16 +204,20 @@
 
 		.rot-image-container {
 			display: inline-block;
-			position: relative;
+			/* position: -webkit-sticky; */
+  position: sticky;
 			filter: brightness(300%);
-			margin: 0;
-			border: 0;
-			height:2006px;
+			/* height:256px; */
+			/* width: 256px; */
 		}
 
 		.hidden-character-image-container {
 			display: inline-block;
 			position: relative;
+			margin: 0;
+			border: 0;
+			height:256px;
+			width: 256px;
 		}
 
 		.quad-rotating-image {
@@ -779,13 +783,13 @@
 
 	<div>
 		<div class="row lightbox">
-			<div class="hidden-character-image-container"></div><img src="images/quad_overlays/darthy00.png"
+			<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy00.png"
 				class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
-			<div class="hidden-character-image-container"></div><img src="images/quad_overlays/darthy01.png"
+			<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy01.png"
 				class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
-			<div class="hidden-character-image-container"></div><img src="images/quad_overlays/darthy02.png"
+			<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy02.png"
 				class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
-			<div class="hidden-character-image-container"></div><img src="images/quad_overlays/darthy03.png"
+			<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy03.png"
 				class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
 		</div>
 		<div class="caption">Try it with these too!</div>
