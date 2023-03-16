@@ -868,7 +868,7 @@
 
 			// Make the images draggable
 			$('.draggable-image').draggable({
-				snap: '.draggable-image, .lightbox .rot-image-container',
+				snap: '.hidden-character-image, .lightbox',
 				drag: function (event, ui) {
 					// Get the current transformation matrix
 					var transformMatrix = $(this).css('transform');
@@ -936,19 +936,21 @@
 			},
 		});
 
-		// Add a function to hide the buttons after resetting positions
-		function hideResetButtons() {
-			$('.reset-all-rotaters-button, .reset-all-hidden-characters-button').hide();
-		}
+		// // Add a function to hide the buttons after resetting positions
+		// function hideResetButtons() {
+		// 	$('.reset-all-rotaters-button, .reset-all-hidden-characters-button').hide();
+		// }
 
-		// Call the hideResetButtons function after resetting positions
-		$('.reset-all-rotaters-button').click(function () {
-			$('.quad-rotating-image').promise().addClass('inactive_button');
-		});
+		// // Call the hideResetButtons function after resetting positions
+		// $('.reset-all-rotaters-button').click(function () {
+		// 	$('.reset-all-rotaters-button').promise().addClass('inactive_button');
+		// 	// $('.reset-all-rotaters-button').addClass('inactive_button');
+		// });
 
-		$('.reset-all-hidden-characters-button').click(function () {
-			$('.hidden-character-image').promise().done('inactive_button');
-		});
+		// $('.reset-all-hidden-characters-button').click(function () {
+		// 	$('.hidden-character-image').promise().done('inactive_button');
+
+		// });
 
 
 
@@ -967,17 +969,21 @@
 
 		// Reset all hidden-character-image elements' positions when reset-all-hidden-characters-button is clicked
 		$('.reset-all-hidden-characters-button').click(function () {
+			$('.reset-all-hidden-characters-button').addClass('inactive_button');
 			$('.hidden-character-image').each(function () {
 				// Get the original position
 				var originalPosition = $(this).data('originalPosition');
 
 				// Move the draggable image back to its original position with a 2-second tween
-				window.alert("HOI")
 				$(this).animate({
 					top: originalPosition.top,
 					left: originalPosition.left
 				}, 1000);
 			});
+		});
+
+		$('.reset-all-rotaters-button').click(function () {
+			$('.reset-all-rotaters-button').addClass('inactive_button');
 		});
 
 		// ... (rest of your code)
