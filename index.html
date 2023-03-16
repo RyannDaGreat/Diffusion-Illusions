@@ -24,6 +24,7 @@
 			border-color: #555
 		}
 
+		.reset-all-flip-images-button,
 		.reset-all-hidden-characters-button,
 		.reset-all-rotaters-button {
 			background-color: rgba(248, 248, 242, .2);
@@ -520,7 +521,7 @@
 
 	<br><br>
 	<div style="text-align: center;">
-		<span class="reset-all-rotaters-button">
+		<span class="reset-all-flip-images-button">
 			<b>Click here to reset all rotations</b>
 		</span>
 	</div>
@@ -959,6 +960,7 @@
 				}
 
 				$('.flip_image').mousedown(function (e) {
+					$('.reset-all-flip-images-button').removeClass('inactive_button');
 					dragging = true;
 					currentElement = $(this);
 					centerX = currentElement.offset().left + (currentElement.width() / 2);
