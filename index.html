@@ -514,12 +514,18 @@ animation: none;
 
 
 	<h2 id="flippy_illusions">Flippy Illusions</h2>
-	<p>If you wait a few seconds, the below images will flip upside-down - to reveal a new image! You can zoom into the
-		images in a new tab if you click them.
-	</p>
+	<p>If you wait a few seconds, the below images will flip upside-down - to reveal a new image! 
+	
+	You can <it><b>click and drag</b></it> them to rotate by yourself, and <b>double click</b> to reset.</p>
 
 	<br><br>
-
+	<div style="text-align: center;">
+		<span class="reset-all-rotaters-button">
+			<b>Click here to reset all rotations</b>
+		</span>
+	</div>
+	<br>
+	<br>
 	<div class="col">
 		<div class="row">
 			<div class="image-container">
@@ -973,32 +979,7 @@ animation: none;
 			smoothScrolling();
 		});
 
-
 		(function() {
-			// immediatly invoked function to make images rotatable when you drag them
-    var dragging = false;
-    var currentElement;
-    var centerX;
-    var centerY;
-    var initialAngle;
-    var currentRotation;
-
-    function getCurrentRotation(elem) {
-        var matrix = elem.css('transform');
-        var angle;
-
-        if (matrix !== 'none') {
-            var values = matrix.split('(')[1].split(')')[0].split(',');
-            var a = values[0];
-            var b = values[1];
-            angle = Math.atan2(b, a) * (180 / Math.PI);
-        } else {
-            angle = 0;
-        }
-
-        return angle;
-    }
-	(function() {
     var dragging = false;
     var currentElement;
     var centerX;
