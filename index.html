@@ -147,28 +147,28 @@
 
 
 		.flip_image {
+			-webkit-user-drag: none;
+			user-select: none;
+			-webkit-user-drag: none;
+			-webkit-user-select: none;
+			-moz-user-drag: none;
+			-moz-user-select: none;
+			-ms-user-drag: none;
+			-ms-user-select: none;
+			flex: 1;
+			max-width: 30vw;
+			max-height: 30vh;
+			margin: 1vh;
+			object-fit: cover;
+			width: 256px;
+			height: 256px;
+			cursor: grab;
+			animation: none;
+		}
 
-user-drag: none;
-user-select: none;
--webkit-user-drag: none;
--webkit-user-select: none;
--moz-user-drag: none;
--moz-user-select: none;
--ms-user-drag: none;
--ms-user-select: none;
-flex: 1;
-max-width: 30vw;
-max-height: 30vh;
-margin: 1vh;
-object-fit: cover;
-width: 256px;
-height: 256px;
-cursor:grab;
-animation: none;
-}
-.flip_image_animated{
-	animation:flip 12s linear infinite;
-}
+		.flip_image_animated {
+			animation: flip 12s linear infinite;
+		}
 
 
 		/* Flip animation */
@@ -514,9 +514,9 @@ animation: none;
 
 
 	<h2 id="flippy_illusions">Flippy Illusions</h2>
-	<p>If you wait a few seconds, the below images will flip upside-down - to reveal a new image! 
-	
-	You can <it><b>click and drag</b></it> them to rotate by yourself, and <b>double click</b> to reset.</p>
+	<p>If you wait a few seconds, the below images will flip upside-down - to reveal a new image!
+
+		You can <it><b>click and drag</b></it> them to rotate by yourself, and <b>double click</b> to reset.</p>
 
 	<br><br>
 	<div style="text-align: center;">
@@ -855,16 +855,13 @@ animation: none;
 	<!-- Javascript Goes Here -->
 	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
 	<script>
 		$(function () {
 			function storeOriginalPositions() {
 				$('.draggable-image').each(function () {
 					$(this).data('originalPosition', $(this).position());
-
-					if ($(this).hasClass('quad-rotating-image')) {
-						$(this).addClass('quad-rotating-animation');
-					}
 				});
 			}
 
@@ -879,7 +876,6 @@ animation: none;
 					drag: function (event, ui) {
 						var transformMatrix = $(this).css('transform');
 						ui.helper.css('transform', transformMatrix);
-
 						$('.reset-all-rotaters-button, .reset-all-hidden-characters-button').removeClass('inactive_button');
 					},
 					stop: function () {
@@ -920,128 +916,95 @@ animation: none;
 				});
 			}
 
-			function setButtonsInactive() {
-				$('.reset-all-rotaters-button, .reset-all-hidden-characters-button').addClass('inactive_button');
-			}
-
-			function startWiggle(intervalTime) {
-				setInterval(function () {
-					if (stop_wiggle) {
-						return;
-					}
-
-					var images = $('.wiggly-image');
-					var randomIndex = Math.floor(Math.random() * images.length);
-					var randomImage = images.eq(randomIndex);
-
-					if (Math.random() > .5) {
-						randomImage.css('animation', 'wiggle .5s');
-						randomImage.one('animationend', function () {
-							randomImage.css('animation', '');
-						});
-					}
-				}, intervalTime);
-			}
-
-			function makeImagesZoomable() {
-				$(".image-container img").wrap(function () {
-					return $("<a>", {
-						href: this.src,
-						target: "_blank"
+			function resetFlipImagesPositions() {
+				$('.reset-all-flip-images-button').click(function () {
+					$('.flip_image').each(function () {
+						var originalPosition = $(this).data('originalPosition');
+						$(this).animate({
+							top: originalPosition.top,
+							left: originalPosition.left
+						}, 1000);
+						$(this).css('transform', 'rotate(0deg)');
 					});
+					setButtonsInactive();
 				});
 			}
 
-			function smoothScrolling() {
-				$('.scroll-to').click(function () {
-					$('html, body').animate({
-						scrollTop: $($(this).attr('href')).offset().top
-					}, 500);
+			function setButtonsInactive() {
+				$('.reset-all-rotaters-button, .reset-all-hidden-characters-button, .reset-all-flip-images-button').addClass('inactive_button');
+			}
 
-					return false;
+			function initFlipImageRotation() {
+				var dragging = false;
+				var currentElement;
+				var centerX;
+				var centerY;
+				var initialAngle;
+				var currentRotation;
+
+				function getCurrentRotation(elem) {
+					var matrix = elem.css('transform');
+					var angle;
+
+					if (matrix !== 'none') {
+						var values = matrix.split('(')[1].split(')')[0].split(',');
+						var a = values[0];
+						var b = values[1];
+						angle = Math.atan2(b, a) * (180 / Math.PI);
+					} else {
+						angle = 0;
+					}
+
+					return angle;
+				}
+
+				$('.flip_image').mousedown(function (e) {
+					dragging = true;
+					currentElement = $(this);
+					centerX = currentElement.offset().left + (currentElement.width() / 2);
+					centerY = currentElement.offset().top + (currentElement.height() / 2);
+					var mouseX = e.pageX;
+					var mouseY = e.pageY;
+					initialAngle = Math.atan2(mouseX -
+						centerY, mouseY - centerY);
+					currentRotation = getCurrentRotation(currentElement);
+					currentElement.css('cursor', 'grabbing'); // closed hand cursor while dragging
+					currentElement.removeClass('flip_image_animated'); // remove the animated class when clicked or dragged
+				});
+
+				$('.flip_image').dblclick(function () {
+					$(this).addClass('flip_image_animated'); // add the animated class when double-clicked
+				});
+
+				$(document).mouseup(function () {
+					if (dragging && currentElement) {
+						currentElement.css('cursor', 'grab'); // open hand cursor after dragging
+					}
+					dragging = false;
+				});
+
+				$(document).mousemove(function (e) {
+					if (dragging && currentElement) {
+						var mouseX = e.pageX;
+						var mouseY = e.pageY;
+						var currentAngle = Math.atan2(mouseX - centerX, mouseY - centerY);
+						var deltaAngle = initialAngle - currentAngle;
+						var newRotation = currentRotation + (deltaAngle * (180 / Math.PI));
+						currentElement.css('transform', 'rotate(' + newRotation + 'deg)');
+						currentElement.css('transform-origin', '50% 50%');
+					}
 				});
 			}
 
-			var stop_wiggle = false;
-
-
+			// Initialize functions
 			storeOriginalPositions();
 			makeImagesDraggable();
 			resetRotatersPositions();
 			resetHiddenCharactersPositions();
+			resetFlipImagesPositions();
 			setButtonsInactive();
-
-			setTimeout(() => {
-				startWiggle(500);
-			}, 500);
-
-			// makeImagesZoomable();
-			smoothScrolling();
+			initFlipImageRotation();
 		});
-
-		(function() {
-    var dragging = false;
-    var currentElement;
-    var centerX;
-    var centerY;
-    var initialAngle;
-    var currentRotation;
-
-    function getCurrentRotation(elem) {
-        var matrix = elem.css('transform');
-        var angle;
-
-        if (matrix !== 'none') {
-            var values = matrix.split('(')[1].split(')')[0].split(',');
-            var a = values[0];
-            var b = values[1];
-            angle = Math.atan2(b, a) * (180 / Math.PI);
-        } else {
-            angle = 0;
-        }
-
-        return angle;
-    }
-
-    $(function() {
-        $('.flip_image').mousedown(function(e) {
-            dragging = true;
-            currentElement = $(this);
-            centerX = currentElement.offset().left + (currentElement.width() / 2);
-            centerY = currentElement.offset().top + (currentElement.height() / 2);
-            var mouseX = e.pageX;
-            var mouseY = e.pageY;
-            initialAngle = Math.atan2(mouseX - centerX, mouseY - centerY);
-            currentRotation = getCurrentRotation(currentElement);
-            currentElement.css('cursor', 'grabbing'); // closed hand cursor while dragging
-            currentElement.removeClass('flip_image_animated'); // remove the animated class when clicked or dragged
-        });
-
-        $('.flip_image').dblclick(function() {
-            $(this).addClass('flip_image_animated'); // add the animated class when double-clicked
-        });
-
-        $(document).mouseup(function() {
-            if (dragging && currentElement) {
-                currentElement.css('cursor', 'grab'); // open hand cursor after dragging
-            }
-            dragging = false;
-        });
-
-        $(document).mousemove(function(e) {
-            if (dragging && currentElement) {
-                var mouseX = e.pageX;
-                var mouseY = e.pageY;
-                var currentAngle = Math.atan2(mouseX - centerX, mouseY - centerY);
-                var deltaAngle = initialAngle - currentAngle;
-                var newRotation = currentRotation + (deltaAngle * (180 / Math.PI)); // add the new angle instead of subtracting it
-                currentElement.css('transform', 'rotate(' + newRotation + 'deg)');
-                currentElement.css('transform-origin', '50% 50%');
-            }
-        });
-    });
-})();
-
 
 	</script>
 
