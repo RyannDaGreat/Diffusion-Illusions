@@ -174,18 +174,18 @@
 
 		/* Flip animation */
 		@keyframes flip {
-			0% {
-				transform: rotateZ(0deg);
+			100% {
+				transform: rotateZ(360deg);
 			}
 
-			12.5%,
+			87.5%,
 			50% {
 				transform: rotateZ(180deg);
 			}
 
-			62.5%,
-			100% {
-				transform: rotateZ(360deg);
+			37.5%,
+			0% {
+				transform: rotateZ(0deg);
 			}
 		}
 
@@ -565,7 +565,7 @@
 				<img src="images/flippers/dogsloth.png" class="flip_image flip_image_animated glow-hover-element">
 			</div>
 			<div class="image-container">
-				<div class="caption">Bunny Seagull</div>
+				<div class="caption">Seagull Bunny</div>
 				<img src="images/flippers/bunnyduck.png" class="flip_image flip_image_animated glow-hover-element">
 			</div>
 		</div>
@@ -919,19 +919,22 @@
 			}
 
 			function resetFlipImagesPositions() {
-				$('.reset-all-flip-images-button').click(function () {
-					$('.flip_image').each(function () {
-						var originalPosition = $(this).data('originalPosition');
+    $('.reset-all-flip-images-button').click(function () {
+        $('.flip_image').each(function () {
+            var originalPosition = $(this).data('originalPosition');
 
-						$(this).removeClass('flip_image_animated');
-						$(this).addClass('flip_image_animated');
+            $(this).removeClass('flip_image_animated');
+            $(this).css('transform', 'rotateZ(0deg)');
+            
+            setTimeout(() => {
+                $(this).addClass('flip_image_animated');
+            }, 0); // Use setTimeout to wait for the DOM to render the changes
+        });
 
-					});
-					// $('.reset-all-flip-images-button').addClass('inactive_button');
-					$(this).addClass('inactive_button')
-					// setButtonsInactive();
-				});
-			}
+        $(this).addClass('inactive_button');
+    });
+}
+
 
 			function setButtonsInactive() {
 				$('.reset-all-rotaters-button, .reset-all-hidden-characters-button, .reset-all-flip-images-button').addClass('inactive_button');
@@ -1054,6 +1057,16 @@
 					currentRotation = getCurrentRotation(currentElement);
 					currentElement.css('cursor', 'grabbing'); // closed hand cursor while dragging
 					currentElement.removeClass('flip_image_animated'); // remove the animated class when clicked or dragged
+					if (dragging && currentElement) {
+						//Copied from mousemove; lets us catch it mid-spin without glitching
+						var mouseX = e.pageX;
+						var mouseY = e.pageY;
+						var currentAngle = Math.atan2(mouseX - centerX, mouseY - centerY);
+						var deltaAngle = initialAngle - currentAngle;
+						var newRotation = currentRotation + (deltaAngle * (180 / Math.PI)); // add the new angle instead of subtracting it
+						currentElement.css('transform', 'rotate(' + newRotation + 'deg)');
+						currentElement.css('transform-origin', '50% 50%');
+					}
 				});
 
 				$('.flip_image').dblclick(function () {
