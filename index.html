@@ -939,7 +939,45 @@
     });
 }
 
+function startWiggle(intervalTime) {
+				setInterval(function () {
+					if (stop_wiggle) {
+						return;
+					}
 
+					var images = $('.wiggly-image');
+					var randomIndex = Math.floor(Math.random() * images.length);
+					var randomImage = images.eq(randomIndex);
+
+					if (Math.random() > .5) {
+						randomImage.css('animation', 'wiggle .5s');
+						randomImage.one('animationend', function () {
+							randomImage.css('animation', '');
+						});
+					}
+				}, 500);
+			}
+
+			function makeImagesZoomable() {
+				$(".image-container img").wrap(function () {
+					return $("<a>", {
+						href: this.src,
+						target: "_blank"
+					});
+				});
+			}
+
+			function smoothScrolling() {
+				$('.scroll-to').click(function () {
+					$('html, body').animate({
+						scrollTop: $($(this).attr('href')).offset().top
+					}, 500);
+
+					return false;
+				});
+			}
+
+			var stop_wiggle = false;
 
 
 			function setButtonsInactive() {
@@ -1016,6 +1054,8 @@
 			resetHiddenCharactersPositions();
 			resetFlipImagesPositions();
 			setButtonsInactive();
+			smoothScrolling();
+			startWiggle();
 			// initFlipImageRotation();
 
 
