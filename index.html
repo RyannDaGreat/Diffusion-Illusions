@@ -1193,6 +1193,27 @@
 			}
 		});
 
+		//Bibtex section
+		$(document).ready(function () {
+			var today = new Date();
+			var yyyy = today.getFullYear();
+			var mm = String(today.getMonth() + 1).padStart(2, "0");
+			var dd = String(today.getDate()).padStart(2, "0");
+			var currentDate = `${yyyy}-${mm}-${dd}`;
+
+			var citation = `@misc{diffusion_illusions,
+    title = {Diffusion Illusions},
+    author = {Burgert, Ryan and Ranasinghe, Kanchana and Li, Xiang and Ryoo, Michael},
+    year = {2023},
+    month = mar,
+    howpublished = {\\url{https://ryanndagreat.github.io/Diffusion-Illusions}},
+    note = {Accessed: ${currentDate}}
+}`;
+
+			$("#citation-text").text(citation);
+		});
+
+
 
 
 	</script>
@@ -1305,6 +1326,14 @@
 			</div>
 		</div>
 	</div>
+<br>
+<br>
+<br>
+	<h3>Bibtex Citation</h3>
+	<div class="citation-box">
+		<pre id="citation-text"></pre>
+	  </div>
+	  <br>
 
 </body>
 
