@@ -797,28 +797,38 @@
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
 	<script>
-$(function () {
-  $('.draggable-image').draggable({
-    snap: '.draggable-image, .lightbox .rot-image-container',
-    start: function (event, ui) {
-      // Store the original position when starting to drag
-      $(this).data('originalPosition', $(this).position());
-    }
-  }).dblclick(function () {
-    // Get the original position
-    var originalPosition = $(this).data('originalPosition');
+		$(function () {
+			// Store the original positions of the draggable images when the window is loaded
+			$('.draggable-image').each(function () {
+				$(this).data('originalPosition', $(this).position());
+			});
 
-    // Move the draggable image back to its original position with a 2-second tween
-    $(this).animate({
-      top: originalPosition.top,
-      left: originalPosition.left
-    }, 2000);
-  });
-});
+			// Make the images draggable
+			$('.draggable-image').draggable({
+				snap: '.draggable-image, .lightbox .rot-image-container',
+				drag: function (event, ui) {
+					// Get the current transformation matrix
+					var transformMatrix = $(this).css('transform');
 
-// ... 
+					// Apply the transformation matrix to the helper element used for dragging
+					ui.helper.css('transform', transformMatrix);
+				}
+			}).dblclick(function () {
+				// Get the original position
+				var originalPosition = $(this).data('originalPosition');
+
+				// Move the draggable image back to its original position with a 2-second tween
+				$(this).animate({
+					top: originalPosition.top,
+					left: originalPosition.left
+				}, 1000);
+			});
+		});
 
 		var stop_wiggle = false;
+
+		// ... (rest of your code)
+
 
 
 		//Make the draggable images wiggle, indicating they should be click/dragged!
@@ -936,8 +946,9 @@ $(function () {
 
 	<h3>Pseudocode</h3>
 	<p>To help explain how these were calculated, I've included some easy-to-read pseudocode that covers how each of
-		these illusions were made. The full source code can be found at  <a
-		href="https://github.com/RyannDaGreat/Diffusion-Illusions">github.com/RyannDaGreat/Diffusion-Illusions</a>, or at any of the Google Colab links throughout this webpage.</p>
+		these illusions were made. The full source code can be found at <a
+			href="https://github.com/RyannDaGreat/Diffusion-Illusions">github.com/RyannDaGreat/Diffusion-Illusions</a>,
+		or at any of the Google Colab links throughout this webpage.</p>
 	<h4>Flippy Illusions</h4>
 	<script src="https://gist.github.com/RyannDaGreat/fde3d6c05fb4d6d0cf31e7477658d3fd.js"></script>
 	<br>
