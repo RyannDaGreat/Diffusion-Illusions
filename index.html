@@ -266,6 +266,9 @@
 			/* animation: skelly_rotate 9s linear infinite; */
 			mix-blend-mode: multiply;
 		}
+		.center_text{
+			text-align: center;
+		}
 
 
 		.elf-rotating-image {
@@ -501,7 +504,7 @@
 		If you like it, please give it a star!</p>
 	<p>We'll keep this brief so we can dive right into the pictures - <a class="scroll-to" href="#summary">check the
 			bottom of the
-			page</a> for more details about this submission!</p>
+			page</a> for more details about this project!</p>
 	<p>There are three kinds of illusions presented: <a class="scroll-to" href="#flippy_illusions">Flippy Illusions</a>,
 		<a class="scroll-to" href="#rotating_overlays">Rotating Overlays</a>, and
 		<a class="scroll-to" href="#hidden_characters">Hidden Characters</a>
@@ -549,7 +552,7 @@
 				<img src="images/flippers/boatboat.png" class="flip_image flip_image_animated glow-hover-element">
 			</div>
 			<div class="image-container">
-				<div class="caption">Giraffe Penguin</div>
+				<div class="caption">Giraffe / Penguin</div>
 				<img src="images/flippers/giraffepenguin.png" class="flip_image flip_image_animated glow-hover-element">
 			</div>
 			<div class="image-container">
@@ -559,15 +562,15 @@
 		</div>
 		<div class="row">
 			<div class="image-container">
-				<div class="caption">Dog Elephant</div>
+				<div class="caption">Dog / Elephant</div>
 				<img src="images/flippers/dogephant.png" class="flip_image flip_image_animated glow-hover-element">
 			</div>
 			<div class="image-container">
-				<div class="caption">Dog Sloth</div>
+				<div class="caption">Dog / Sloth</div>
 				<img src="images/flippers/dogsloth.png" class="flip_image flip_image_animated glow-hover-element">
 			</div>
 			<div class="image-container">
-				<div class="caption">Seagull Bunny</div>
+				<div class="caption">Seagull / Bunny</div>
 				<img src="images/flippers/bunnyduck.png" class="flip_image flip_image_animated glow-hover-element">
 			</div>
 		</div>
@@ -1256,14 +1259,34 @@
 
 	<h3>Timelapses</h3>
 
-	<p>Generating these images is an iterative process. Here are some timelapses showing how they evolve over time.</p>
+	<p>Diffusion illisions are generated through an iterative process: we optimize the output images with gradient descent, starting from pure noise. Here are some timelapses showing how they evolve over time.</p>
 
+	<h4>Flippy Illusion Timelapses</h4>
 	<div style="text-align:center;">
-		<iframe width="393.5" height="700"
-			src="https://www.youtube.com/embed/hmV_J3p2KVo?autoplay=1&loop=1&playlist=hmV_J3p2KVo&rel=0"
+		<iframe width="700" height="700"
+			src="https://www.youtube.com/embed/YRWd4nVcZlA?autoplay=1&loop=1&playlist=YRWd4nVcZlA&rel=0"
 			title="YouTube video player" frameborder="0"
 			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 			allowfullscreen></iframe>
+	</div>
+	<p class="center_text">For reference, here are the end results of the above timelapse video:</p>
+	<div style="text-align: center;">
+		<span class="reset-all-flip-images-button">
+			<b>Click here to reset all rotations</b>
+		</span>
+	</div>
+	<br>
+	<div class="col">
+		<div class="row">
+			<div class="image-container">
+				<div class="caption">Giraffe / Penguin</div>
+				<img src="images/flippers/giraffepenguin_timelapse.png" class="flip_image flip_image_animated glow-hover-element">
+			</div>
+			<div class="image-container">
+				<div class="caption">Angelic Pretty / Victorian Dress</div>
+				<img src="images/flippers/lolo_timelapse.png" class="flip_image flip_image_animated glow-hover-element">
+			</div>
+		</div>
 	</div>
 
 </body>
