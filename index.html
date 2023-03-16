@@ -923,13 +923,17 @@
 
 			function resetRotatersPositions() {
 				$('.reset-all-rotaters-button').click(function () {
-					$('.quad-rotating-image').each(function () {
+					function func() {
 						var originalPosition = $(this).data('originalPosition');
 						$(this).animate({
 							top: originalPosition.top,
 							left: originalPosition.left
 						}, 1000);
-					});
+					}
+					$('.quad-rotating-image').each(func);
+					$('.season-rotating-image').each(func);
+					$('.skelly-rotating-image').each(func);
+					$('.elf-rotating-image').each(func);
 					$(this).addClass('inactive_button')
 					// setButtonsInactive();
 				});
