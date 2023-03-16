@@ -797,9 +797,26 @@
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
 	<script>
-		$(function () {
-			$('.draggable-image').draggable({ snap: '.draggable-image, .lightbox .rot-image-container' });
-		});
+$(function () {
+  $('.draggable-image').draggable({
+    snap: '.draggable-image, .lightbox .rot-image-container',
+    start: function (event, ui) {
+      // Store the original position when starting to drag
+      $(this).data('originalPosition', $(this).position());
+    }
+  }).dblclick(function () {
+    // Get the original position
+    var originalPosition = $(this).data('originalPosition');
+
+    // Move the draggable image back to its original position with a 2-second tween
+    $(this).animate({
+      top: originalPosition.top,
+      left: originalPosition.left
+    }, 2000);
+  });
+});
+
+// ... 
 
 		var stop_wiggle = false;
 
