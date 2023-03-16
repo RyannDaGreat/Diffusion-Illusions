@@ -145,32 +145,31 @@
 			margin: 0 auto;
 		}
 
-		.flip_image.big {
-			width: 200%;
-			height: 200%;
-			/* enlarged size - double the original width */
-			cursor: zoom-out;
-			/* change the cursor to a zoom-out icon when enlarged */
-
-		}
 
 		.flip_image {
-			flex: 1;
-			max-width: 30vw;
-			max-height: 30vh;
-			margin: 1vh;
-			object-fit: cover;
-			width: 256px;
-			height: 256px;
-			transition: height 0.3s ease;
-			/* animate the size change */
-			transition: width 0.3s ease;
-			/* animate the size change */
-			cursor: zoom-in;
-			/* change the cursor to a zoom-in icon when not enlarged */
-			transition: transform 1s;
-			animation: flip 12s linear infinite;
-		}
+
+user-drag: none;
+user-select: none;
+-webkit-user-drag: none;
+-webkit-user-select: none;
+-moz-user-drag: none;
+-moz-user-select: none;
+-ms-user-drag: none;
+-ms-user-select: none;
+flex: 1;
+max-width: 30vw;
+max-height: 30vh;
+margin: 1vh;
+object-fit: cover;
+width: 256px;
+height: 256px;
+cursor:grab;
+animation: none;
+}
+.flip_image_animated{
+	animation:flip 12s linear infinite;
+}
+
 
 		/* Flip animation */
 		@keyframes flip {
@@ -525,43 +524,43 @@
 		<div class="row">
 			<div class="image-container">
 				<div class="caption">An Angel</div>
-				<img src="images/flippers/angel.png" class="flip_image">
+				<img src="images/flippers/angel.png" class="flip_image flip_image_animated glow-hover-element">
 			</div>
 			<div class="image-container">
 				<div class="caption">A Bunny in a Bomber-Jacket</div>
-				<img src="images/flippers/bunnybomber.jpeg" class="flip_image">
+				<img src="images/flippers/bunnybomber.jpeg" class="flip_image flip_image_animated glow-hover-element">
 			</div>
 			<div class="image-container">
 				<div class="caption">Victorian Dress</div>
-				<img src="images/flippers/lolo2.png" class="flip_image">
+				<img src="images/flippers/lolo2.png" class="flip_image flip_image_animated glow-hover-element">
 			</div>
 		</div>
 		<div class="row">
 			<div class="image-container">
 				<div class="caption">A boat</div>
-				<img src="images/flippers/boatboat.png" class="flip_image">
+				<img src="images/flippers/boatboat.png" class="flip_image flip_image_animated glow-hover-element">
 			</div>
 			<div class="image-container">
 				<div class="caption">Giraffe Penguin</div>
-				<img src="images/flippers/giraffepenguin.png" class="flip_image">
+				<img src="images/flippers/giraffepenguin.png" class="flip_image flip_image_animated glow-hover-element">
 			</div>
 			<div class="image-container">
 				<div class="caption">Bubble Fairy</div>
-				<img src="images/flippers/bubblefairy.png" class="flip_image">
+				<img src="images/flippers/bubblefairy.png" class="flip_image flip_image_animated glow-hover-element">
 			</div>
 		</div>
 		<div class="row">
 			<div class="image-container">
 				<div class="caption">Dog Elephant</div>
-				<img src="images/flippers/dogephant.png" class="flip_image">
+				<img src="images/flippers/dogephant.png" class="flip_image flip_image_animated glow-hover-element">
 			</div>
 			<div class="image-container">
 				<div class="caption">Dog Sloth</div>
-				<img src="images/flippers/dogsloth.png" class="flip_image">
+				<img src="images/flippers/dogsloth.png" class="flip_image flip_image_animated glow-hover-element">
 			</div>
 			<div class="image-container">
 				<div class="caption">Bunny Seagull</div>
-				<img src="images/flippers/bunnyduck.png" class="flip_image">
+				<img src="images/flippers/bunnyduck.png" class="flip_image flip_image_animated glow-hover-element">
 			</div>
 		</div>
 	</div>
@@ -970,9 +969,99 @@
 				startWiggle(500);
 			}, 500);
 
-			makeImagesZoomable();
+			// makeImagesZoomable();
 			smoothScrolling();
 		});
+
+
+		(function() {
+			// immediatly invoked function to make images rotatable when you drag them
+    var dragging = false;
+    var currentElement;
+    var centerX;
+    var centerY;
+    var initialAngle;
+    var currentRotation;
+
+    function getCurrentRotation(elem) {
+        var matrix = elem.css('transform');
+        var angle;
+
+        if (matrix !== 'none') {
+            var values = matrix.split('(')[1].split(')')[0].split(',');
+            var a = values[0];
+            var b = values[1];
+            angle = Math.atan2(b, a) * (180 / Math.PI);
+        } else {
+            angle = 0;
+        }
+
+        return angle;
+    }
+	(function() {
+    var dragging = false;
+    var currentElement;
+    var centerX;
+    var centerY;
+    var initialAngle;
+    var currentRotation;
+
+    function getCurrentRotation(elem) {
+        var matrix = elem.css('transform');
+        var angle;
+
+        if (matrix !== 'none') {
+            var values = matrix.split('(')[1].split(')')[0].split(',');
+            var a = values[0];
+            var b = values[1];
+            angle = Math.atan2(b, a) * (180 / Math.PI);
+        } else {
+            angle = 0;
+        }
+
+        return angle;
+    }
+
+    $(function() {
+        $('.flip_image').mousedown(function(e) {
+            dragging = true;
+            currentElement = $(this);
+            centerX = currentElement.offset().left + (currentElement.width() / 2);
+            centerY = currentElement.offset().top + (currentElement.height() / 2);
+            var mouseX = e.pageX;
+            var mouseY = e.pageY;
+            initialAngle = Math.atan2(mouseX - centerX, mouseY - centerY);
+            currentRotation = getCurrentRotation(currentElement);
+            currentElement.css('cursor', 'grabbing'); // closed hand cursor while dragging
+            currentElement.removeClass('flip_image_animated'); // remove the animated class when clicked or dragged
+        });
+
+        $('.flip_image').dblclick(function() {
+            $(this).addClass('flip_image_animated'); // add the animated class when double-clicked
+        });
+
+        $(document).mouseup(function() {
+            if (dragging && currentElement) {
+                currentElement.css('cursor', 'grab'); // open hand cursor after dragging
+            }
+            dragging = false;
+        });
+
+        $(document).mousemove(function(e) {
+            if (dragging && currentElement) {
+                var mouseX = e.pageX;
+                var mouseY = e.pageY;
+                var currentAngle = Math.atan2(mouseX - centerX, mouseY - centerY);
+                var deltaAngle = initialAngle - currentAngle;
+                var newRotation = currentRotation + (deltaAngle * (180 / Math.PI)); // add the new angle instead of subtracting it
+                currentElement.css('transform', 'rotate(' + newRotation + 'deg)');
+                currentElement.css('transform-origin', '50% 50%');
+            }
+        });
+    });
+})();
+
+
 	</script>
 
 
