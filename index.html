@@ -881,7 +881,10 @@
 
 		}
 		// Start the wiggle animation with an interval time of 5000 milliseconds (5 seconds)
-		startWiggle(500);
+		setTimeout(() => {
+			startWiggle(500);
+		}, 500); //wait 500ms first so the initial pos of the character images isn't corrupted if its animated by coincidence on the first frames
+
 		// Stop the wiggle animation when any wiggly image is clicked
 		$('.wiggly-image').on('click touchend', function () {
 			stop_wiggle = true;
