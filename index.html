@@ -522,12 +522,14 @@
 	<h2 id="flippy_illusions">Flippy Illusions</h2>
 	<p>If you wait a few seconds, the below images will flip upside-down - to reveal a new image!
 
-		You can <it><b>click and drag</b></it> an image to rotate it by yourself, and <b>double click</b> to reset it.
+		<span class="no_mobile">
+			You can <it><b>click and drag</b></it> an image to rotate it by yourself, and <b>double click</b> to reset
+			it.</span>
 	</p>
 
 	<br>
 	<div style="text-align: center;">
-		<span class="reset-all-flip-images-button">
+		<span class="reset-all-flip-images-button no_mobile">
 			<b>Click here to reset all rotations</b>
 		</span>
 	</div>
@@ -1181,6 +1183,18 @@
 		})();
 
 
+		function isMobileDevice() {
+			var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+			return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+		}
+		$(document).ready(function () {
+			if (isMobileDevice()) {
+				$('.no_mobile').css('display', 'none');
+			}
+		});
+
+
+
 	</script>
 
 
@@ -1272,7 +1286,7 @@
 			allowfullscreen></iframe>
 	</div>
 	<p class="center_text">For reference, here are the end results of the above timelapse video:</p>
-	<div style="text-align: center;">
+	<div style="text-align: center;" class="no_mobile">
 		<span class="reset-all-flip-images-button">
 			<b>Click here to reset all rotations</b>
 		</span>
