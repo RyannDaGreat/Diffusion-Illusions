@@ -519,13 +519,12 @@
 
 		You can <it><b>click and drag</b></it> them to rotate by yourself, and <b>double click</b> to reset.</p>
 
-	<br><br>
+	<br>
 	<div style="text-align: center;">
 		<span class="reset-all-flip-images-button">
 			<b>Click here to reset all rotations</b>
 		</span>
 	</div>
-	<br>
 	<br>
 	<div class="col">
 		<div class="row">
@@ -900,7 +899,8 @@
 							left: originalPosition.left
 						}, 1000);
 					});
-					setButtonsInactive();
+					$(this).addClass('inactive_button')
+					// setButtonsInactive();
 				});
 			}
 
@@ -913,7 +913,8 @@
 							left: originalPosition.left
 						}, 1000);
 					});
-					setButtonsInactive();
+					// setButtonsInactive();
+					$(this).addClass('inactive_button')
 				});
 			}
 
@@ -921,13 +922,14 @@
 				$('.reset-all-flip-images-button').click(function () {
 					$('.flip_image').each(function () {
 						var originalPosition = $(this).data('originalPosition');
-						$(this).animate({
-							top: originalPosition.top,
-							left: originalPosition.left
-						}, 1000);
-						$(this).css('transform', 'rotate(0deg)');
+
+						$(this).removeClass('flip_image_animated');
+						$(this).addClass('flip_image_animated');
+						
 					});
-					setButtonsInactive();
+					// $('.reset-all-flip-images-button').addClass('inactive_button');
+					$(this).addClass('inactive_button')
+					// setButtonsInactive();
 				});
 			}
 
@@ -1005,8 +1007,80 @@
 			resetHiddenCharactersPositions();
 			resetFlipImagesPositions();
 			setButtonsInactive();
-			initFlipImageRotation();
+			// initFlipImageRotation();
+
+
+
+
+			
 		});
+
+
+		
+(function () {
+	var dragging = false;
+	var currentElement;
+	var centerX;
+	var centerY;
+	var initialAngle;
+	var currentRotation;
+
+	function getCurrentRotation(elem) {
+		var matrix = elem.css('transform');
+		var angle;
+
+		if (matrix !== 'none') {
+			var values = matrix.split('(')[1].split(')')[0].split(',');
+			var a = values[0];
+			var b = values[1];
+			angle = Math.atan2(b, a) * (180 / Math.PI);
+		} else {
+			angle = 0;
+		}
+
+		return angle;
+	}
+
+	$(function () {
+		$('.flip_image').mousedown(function (e) {
+			$('.reset-all-flip-images-button').removeClass('inactive_button');
+			dragging = true;
+			currentElement = $(this);
+			centerX = currentElement.offset().left + (currentElement.width() / 2);
+			centerY = currentElement.offset().top + (currentElement.height() / 2);
+			var mouseX = e.pageX;
+			var mouseY = e.pageY;
+			initialAngle = Math.atan2(mouseX - centerX, mouseY - centerY);
+			currentRotation = getCurrentRotation(currentElement);
+			currentElement.css('cursor', 'grabbing'); // closed hand cursor while dragging
+			currentElement.removeClass('flip_image_animated'); // remove the animated class when clicked or dragged
+		});
+
+		$('.flip_image').dblclick(function () {
+			$(this).addClass('flip_image_animated'); // add the animated class when double-clicked
+		});
+
+		$(document).mouseup(function () {
+			if (dragging && currentElement) {
+				currentElement.css('cursor', 'grab'); // open hand cursor after dragging
+			}
+			dragging = false;
+		});
+
+		$(document).mousemove(function (e) {
+			if (dragging && currentElement) {
+				var mouseX = e.pageX;
+				var mouseY = e.pageY;
+				var currentAngle = Math.atan2(mouseX - centerX, mouseY - centerY);
+				var deltaAngle = initialAngle - currentAngle;
+				var newRotation = currentRotation + (deltaAngle * (180 / Math.PI)); // add the new angle instead of subtracting it
+				currentElement.css('transform', 'rotate(' + newRotation + 'deg)');
+				currentElement.css('transform-origin', '50% 50%');
+			}
+		});
+	});
+})();
+
 
 	</script>
 
