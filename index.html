@@ -205,8 +205,8 @@
 		.rot-image-container {
 			display: inline-block;
 			/* position: -webkit-sticky; */
-  /* position: sticky; */
-  position: relative;
+			/* position: sticky; */
+			position: relative;
 			filter: brightness(300%);
 			/* height:256px; */
 			/* width: 256px; */
@@ -217,7 +217,7 @@
 			position: relative;
 			margin: 0;
 			border: 0;
-			height:256px;
+			height: 256px;
 			width: 256px;
 		}
 
@@ -237,11 +237,6 @@
 			mix-blend-mode: multiply;
 		}
 
-
-		/* .draggable-image:hover {
-  transform: rotateZ(0deg) !important;
-  animation: none;
-} */
 		/* Add smooth scrolling to all links */
 		a {
 			scroll-behavior: smooth;
@@ -270,9 +265,10 @@
 			mix-blend-mode: multiply;
 			filter: brightness(100%);
 		}
+
 		.quad-rotating-animation {
-  animation: quad_rotate 12s linear infinite;
-}
+			animation: quad_rotate 12s linear infinite;
+		}
 
 
 		@keyframes quad_rotate {
@@ -767,13 +763,13 @@
 	<div>
 		<div class="row lightbox">
 			<div class="hidden-character-image-container"><img src="images/quad_overlays/tanky0.png"
-				class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
+					class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
 			<div class="hidden-character-image-container"><img src="images/quad_overlays/tanky1.png"
-				class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
+					class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
 			<div class="hidden-character-image-container"><img src="images/quad_overlays/tanky2.png"
-				class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
+					class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
 			<div class="hidden-character-image-container"><img src="images/quad_overlays/tanky3.png"
-				class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
+					class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
 		</div>
 		<div class="caption">Click and drag these 4 pictures together! Can you find the hidden 5th picture? <br>
 
@@ -792,13 +788,13 @@
 	<div>
 		<div class="row lightbox">
 			<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy00.png"
-				class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
+					class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
 			<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy01.png"
-				class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
+					class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
 			<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy02.png"
-				class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
+					class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
 			<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy03.png"
-				class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
+					class="draggable-image quad-overlay glow-hover-element wiggly-image"></div>
 		</div>
 		<div class="caption">Try it with these too!</div>
 
@@ -820,14 +816,14 @@
 		$(function () {
 			// Store the original positions of the draggable images when the window is loaded
 			$('.draggable-image').each(function () {
-    $(this).data('originalPosition', $(this).position());
+				$(this).data('originalPosition', $(this).position());
 
-    // Check if the element has the .quad-rotating-image class
-    if ($(this).hasClass('quad-rotating-image')) {
-      // Add the CSS class that applies the animation
-      $(this).addClass('quad-rotating-animation');
-    }
-  });
+				// Check if the element has the .quad-rotating-image class
+				if ($(this).hasClass('quad-rotating-image')) {
+					// Add the CSS class that applies the animation
+					$(this).addClass('quad-rotating-animation');
+				}
+			});
 
 			// Make the images draggable
 			$('.draggable-image').draggable({
