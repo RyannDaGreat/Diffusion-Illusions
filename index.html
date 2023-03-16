@@ -205,7 +205,8 @@
 		.rot-image-container {
 			display: inline-block;
 			/* position: -webkit-sticky; */
-  position: sticky;
+  /* position: sticky; */
+  position: relative;
 			filter: brightness(300%);
 			/* height:256px; */
 			/* width: 256px; */
@@ -224,7 +225,7 @@
 			position: absolute;
 			top: 0;
 			left: 0;
-			animation: quad_rotate 12s linear infinite;
+			/* animation: quad_rotate 12s linear infinite; */
 			mix-blend-mode: multiply;
 		}
 
@@ -236,8 +237,11 @@
 			mix-blend-mode: multiply;
 		}
 
-		<style>
 
+		/* .draggable-image:hover {
+  transform: rotateZ(0deg) !important;
+  animation: none;
+} */
 		/* Add smooth scrolling to all links */
 		a {
 			scroll-behavior: smooth;
@@ -266,6 +270,10 @@
 			mix-blend-mode: multiply;
 			filter: brightness(100%);
 		}
+		.quad-rotating-animation {
+  animation: quad_rotate 12s linear infinite;
+}
+
 
 		@keyframes quad_rotate {
 			0% {
@@ -812,8 +820,14 @@
 		$(function () {
 			// Store the original positions of the draggable images when the window is loaded
 			$('.draggable-image').each(function () {
-				$(this).data('originalPosition', $(this).position());
-			});
+    $(this).data('originalPosition', $(this).position());
+
+    // Check if the element has the .quad-rotating-image class
+    if ($(this).hasClass('quad-rotating-image')) {
+      // Add the CSS class that applies the animation
+      $(this).addClass('quad-rotating-animation');
+    }
+  });
 
 			// Make the images draggable
 			$('.draggable-image').draggable({
