@@ -24,6 +24,8 @@
 			border-color: #555
 		}
 
+
+		.generic_pause_button,
 		.reset-all-flip-images-button,
 		.reset-all-hidden-characters-button,
 		.reset-all-rotaters-button {
@@ -37,9 +39,18 @@
 			/* text-justify: center;
 			text-align: center;
 			justify-content: center; */
+
+
+			-webkit-user-select: none;
+			/* Safari */
+			-ms-user-select: none;
+			/* IE 10 and IE 11 */
+			user-select: none;
+			/* Standard syntax */
 		}
 
 		b {
+
 			/* font-size: 48px; */
 			font-weight: bold;
 			text-shadow: 0 0 20px rgba(255, 255, 255, 0.3),
@@ -169,7 +180,9 @@
 
 		.flip_image_animated {
 			animation: flip 12s linear infinite;
+			/* animation-play-state: paused; */
 		}
+
 
 
 		/* Flip animation */
@@ -242,6 +255,7 @@
 			left: 0;
 			/* animation: quad_rotate 12s linear infinite; */
 			mix-blend-mode: multiply;
+			/* animation-play-state: paused; */
 		}
 
 		.season-rotating-image {
@@ -314,6 +328,10 @@
 			100% {
 				transform: rotateZ(360deg);
 			}
+		}
+
+		.paused {
+			animation-play-state: paused;
 		}
 
 		@keyframes season_rotate {
@@ -529,8 +547,11 @@
 
 	<br>
 	<div style="text-align: center;">
-		<span class="reset-all-flip-images-button no_mobile">
+		<span class="reset-all-flip-images-button no_mobile" style="margin-right:30px">
 			<b>Click here to reset all rotations</b>
+		</span>
+		<span class="generic_pause_button flippy_pause_button" style="display: inline-block; width: 40pt;">
+			<b>Pause</b>
 		</span>
 	</div>
 	<br>
@@ -620,8 +641,12 @@
 
 	<div class="col">
 		<div style="text-align: center;">
-			<span class="reset-all-rotaters-button">
+			<span class="reset-all-rotaters-button" style="margin-right:30px">
 				<b>Click here to reset all positions</b>
+			</span>
+			<span class="generic_pause_button rotation_overlay_pause_button"
+				style="display: inline-block; width: 40pt;">
+				<b>Pause</b>
 			</span>
 		</div>
 		<br>
@@ -1214,6 +1239,52 @@
 		});
 
 
+		//Play and Pause Buttons
+		$(document).ready(function () {
+			$('.rotation_overlay_pause_button').data('state', 'pause').on('click', function () {
+				var button = $(this);
+				var currentState = button.data('state');
+
+				if (currentState === 'pause') {
+					button.data('state', 'play');
+					button.html('<b>Play</b>'); // Replace this with your image code when needed
+					// $('.quad-rotating-image, .season-rotating-image, .skelly-rotating-image, .elf-rotating-image').addClass('paused');
+					$('.quad-rotating-image, .season-rotating-image, .skelly-rotating-image, .elf-rotating-image').css('animation-play-state', 'paused');
+
+				} else if (currentState === 'play') {
+					button.data('state', 'pause');
+					button.html('<b>Pause</b>'); // Replace this with your image code when needed
+					// $('.quad-rotating-image, .season-rotating-image, .skelly-rotating-image, .elf-rotating-image').removeClass('paused');
+					$('.quad-rotating-image, .season-rotating-image, .skelly-rotating-image, .elf-rotating-image').css('animation-play-state', 'unset');
+				}
+			});
+		});
+
+		$(document).ready(function () {
+			//TODO: Why doesn't this work?
+			$('.flippy_pause_button').data('state', 'pause').on('click', function () {
+				var button = $(this);
+				var currentState = button.data('state');
+
+				if (currentState === 'pause') {
+					button.data('state', 'play');
+					button.html('<b>Play</b>'); // Replace this with your image code when needed
+					// $('flip_image, flip_image_animated').addClass('paused');
+					$('.flip_image').css('animation-play-state', 'paused');
+
+				} else if (currentState === 'play') {
+
+					button.data('state', 'pause');
+					button.html('<b>Pause</b>'); // Replace this with your image code when needed
+					// $('flip_image, flip_image_animated').removeClass('paused');
+					$('.flip_image').css('animation-play-state', 'unset');
+				}
+
+			});
+
+		});
+
+
 
 
 	</script>
@@ -1308,8 +1379,11 @@
 	</div>
 	<p class="center_text">For reference, here are the end results of the above timelapse video:</p>
 	<div style="text-align: center;" class="no_mobile">
-		<span class="reset-all-flip-images-button">
+		<span class="reset-all-flip-images-button" style="margin-right:30px">
 			<b>Click here to reset all rotations</b>
+		</span>
+		<span class="generic_pause_button flippy_pause_button" style="display: inline-block; width: 40pt;">
+			<b>Pause</b>
 		</span>
 	</div>
 	<br>
@@ -1321,10 +1395,12 @@
 					class="flip_image flip_image_animated glow-hover-element">
 			</div>
 			<div class="image-container">
+
 				<div class="caption">Angelic Pretty / Victorian Dress</div>
 				<img src="images/flippers/lolo_timelapse.png" class="flip_image flip_image_animated glow-hover-element">
 			</div>
 		</div>
+
 	</div>
 	<br>
 	<br>
