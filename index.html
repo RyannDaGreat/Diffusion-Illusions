@@ -1088,13 +1088,13 @@
 					var randomIndex = Math.floor(Math.random() * images.length);
 					var randomImage = images.eq(randomIndex);
 
-					if (Math.random() > .5) {
+					if (Math.random() > .0) {
 						randomImage.css('animation', 'wiggle .5s');
 						randomImage.one('animationend', function () {
 							randomImage.css('animation', '');
 						});
 					}
-				}, 500);
+				}, 250);
 			}
 
 			function makeImagesZoomable() {
