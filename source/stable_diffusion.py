@@ -83,6 +83,8 @@ class StableDiffusion(nn.Module):
         self.scheduler    = pipe.scheduler                    ; #assert isinstance(self.scheduler    , PNDMScheduler       ),type(self.scheduler    )
         
         self.vae_scale_factor = pipe.vae_scale_factor # Is always 8 in Stable Diffusion 1.x and 2.x
+
+        self.height=self.width=512 #The preferred Stable Diffusion height and width. TODO: infer this from the stable diffusion model somehow!
         
         self.uncond_text=''
 
@@ -156,12 +158,17 @@ class StableDiffusion(nn.Module):
                    noise_coef=1,
                    latent_coef=0,
                    image_coef=0,
+                   height=None,
+                   width=None,
                   ):
         
         # This method is responsible for generating the dream-loss gradients.
         
-        # interp to 512x512 to be fed into vae
-        pred_rgb_512 = F.interpolate(pred_rgb, (512, 512), mode='bilinear', align_corners=False)
+        if height is None:height=self.height
+        if width  is None:width =self.width
+
+        # interp to (height, width) to be fed into vae
+        pred_rgb_scaled = F.interpolate(pred_rgb, (height, width), mode='bilinear', align_corners=False)
 
         if t is None:
             t = torch.randint(self.min_step, self.max_step + 1, [1], dtype=torch.long, device=self.device)
@@ -169,7 +176,7 @@ class StableDiffusion(nn.Module):
         assert 0<=t<self.num_train_timesteps, 'invalid timestep t=%i'%t
 
         # encode image into latents with vae, requires grad!
-        latents = self.encode_imgs(pred_rgb_512)
+        latents = self.encode_imgs(pred_rgb_scaled)
 
         
         # predict the noise residual with unet, NO grad!
@@ -214,8 +221,8 @@ class StableDiffusion(nn.Module):
             # Ryan's Image Guidance
             image_pred_uncond, image_pred_text = image_pred.chunk(2)
             image_pred = image_pred_uncond + guidance_scale * (image_pred_text - image_pred_uncond)
-            image_delta=image_pred - pred_rgb_512
-            pred_rgb_512.backward(gradient = w * image_delta * image_coef, retain_graph=True)
+            image_delta=image_pred - pred_rgb_scaled
+            pred_rgb_scaled.backward(gradient = w * image_delta * image_coef, retain_graph=True)
 
 
         # w(t), sigma_t^2
@@ -226,7 +233,17 @@ class StableDiffusion(nn.Module):
 
         return output
 
-    def produce_latents(self, text_embeddings:torch.Tensor, height:int=512, width:int=512, num_inference_steps=50, guidance_scale=7.5, latents=None)->torch.Tensor:
+    def produce_latents(self,
+                        text_embeddings:torch.Tensor,
+                        height:int=None,
+                        width:int=None,
+                        num_inference_steps=50,
+                        guidance_scale=7.5,
+                        latents=None) ->torch.Tensor:
+        
+        if height is None:height=self.height
+        if width  is None:width =self.width
+
         assert len(text_embeddings.shape)==3 # and text_embeddings.shape[-2:]==(77,768)
         assert not len(text_embeddings)%2
         num_prompts = len(text_embeddings)//2
@@ -287,7 +304,7 @@ class StableDiffusion(nn.Module):
 
         imgs = 2 * imgs - 1
         posterior = self.vae.encode(imgs)
-        latents = posterior.sample() * 0.18215
+        latents = posterior.sample() * 0.18215 #What the fuck is this number? Where is it coming from?
         
         assert len(latents.shape)==4 and latents.shape[1]==4 #[B, 4, H, W]
 
@@ -314,12 +331,15 @@ class StableDiffusion(nn.Module):
         return latent
     
     def embeddings_to_imgs(self, text_embeddings:torch.Tensor, 
-                     height:int=512, 
-                     width:int=512,
+                     height:int=None, 
+                     width:int=None,
                      num_inference_steps:int=50,
                      guidance_scale:float=7.5, 
                      latents:Optional[torch.Tensor]=None)->torch.Tensor:
-        
+
+        if height is None:height=self.height
+        if width  is None:width =self.width
+    
         assert len(text_embeddings.shape)==3# and text_embeddings.shape[1:]==(77,768)
         assert not len(text_embeddings)%2
         num_prompts=len(text_embeddings)//2
@@ -336,20 +356,23 @@ class StableDiffusion(nn.Module):
         # img latents -> imgs
         with torch.no_grad():
             imgs = self.decode_latents(latents) 
-        assert imgs.shape==(num_prompts,3,512,512)
+        assert imgs.shape==(num_prompts,3,height,width)
 
         # torch imgs -> numpy imgs
         imgs = rp.as_numpy_images(imgs)
-        assert imgs.shape==(num_prompts,512,512,3)
+        assert imgs.shape==(num_prompts,height,width,3)
  
         return imgs
     
     def prompts_to_imgs(self, prompts: List[str], 
-                        height:int=512, 
-                        width:int=512, 
+                        height:int=None, 
+                        width:int=None, 
                         num_inference_steps:int=50, 
                         guidance_scale:float=7.5, 
                         latents:Optional[torch.Tensor]=None)->torch.Tensor:
+
+        if height is None:height=self.height
+        if width  is None:width =self.width
 
         if isinstance(prompts, str):
             prompts = [prompts]
