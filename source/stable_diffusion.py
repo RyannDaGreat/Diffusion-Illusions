@@ -82,6 +82,8 @@ class StableDiffusion(nn.Module):
         self.unet         = pipe.unet        .to(self.device) ; assert isinstance(self.unet         , UNet2DConditionModel),type(self.unet         )
         self.scheduler    = pipe.scheduler                    ; #assert isinstance(self.scheduler    , PNDMScheduler       ),type(self.scheduler    )
         
+        self.vae_scale_factor = pipe.vae_scale_factor # Is always 8 in Stable Diffusion 1.x and 2.x
+        
         self.uncond_text=''
 
         self.checkpoint_path=checkpoint_path
@@ -329,7 +331,7 @@ class StableDiffusion(nn.Module):
                                        latents=latents, 
                                        num_inference_steps=num_inference_steps,
                                        guidance_scale=guidance_scale)
-        assert latents.shape==(num_prompts, 4, 64, 64)
+        assert latents.shape==(num_prompts, 4, height//self.vae_scale_factor, width//self.vae_scale_factor)
         
         # img latents -> imgs
         with torch.no_grad():
