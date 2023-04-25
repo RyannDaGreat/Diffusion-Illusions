@@ -257,7 +257,7 @@ class StableDiffusion(nn.Module):
         num_prompts = len(text_embeddings)//2
 
         if latents is None:
-            latents = torch.randn((num_prompts, self.unet.in_channels, height//self.vae_resolution_factor, width//self.vae_resolution_factor), device=self.device)
+            latents = torch.randn((num_prompts, self.unet.config.in_channels, height//self.vae_resolution_factor, width//self.vae_resolution_factor), device=self.device)
 
         assert 0 <= num_inference_steps <= 1000, 'Stable diffusion appears to be trained with 1000 timesteps'
 
