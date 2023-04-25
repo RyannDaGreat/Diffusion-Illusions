@@ -36,11 +36,27 @@ def _get_stable_diffusion_singleton():
 
 class StableDiffusion(nn.Module):
     def __init__(self, device='cuda', checkpoint_path="CompVis/stable-diffusion-v1-4"):
+        """
+        Some suggested checkpoint_path:
+            CompVis/stable-diffusion-v1-4      # Base model 1.4
+            runwayml/stable-diffusion-v1-5     # Base model 1.5
+            stabilityai/stable-diffusion-2     # Base model 2.0
+            stabilityai/stable-diffusion-2-1   # Base model 2.1
+            sd-dreambooth-library/fashion      # Fashion stuff?
+            nitrosocke/mo-di-diffusion         # Dreambooth: Use 'modern disney style' in prompt. Pixar style.
+            Envvi/Inkpunk-Diffusion            # Dreambooth: Use 'nvinkpunk' in prompt. Looks kinda like borderlands, but more dramatic and artistic.
+            nitrosocke/classic-anim-diffusion  # Dreambooth: Use 'classic disney style' in prompt. Old timey disney style.
+            nitrosocke/Ghibli-Diffusion        # Dreambooth: Use 'ghibli style' in prompt. Studio Ghibli anime style.
+            nitrosocke/archer-diffusion        # Dreambooth: Use 'archer style' in prompt. Thick outline clean cartoon style.
+            hakurei/waifu-diffusion            # Fine Tuned: No special prompting needed
+            hakurei/artstation-diffusion       # Fine Tuned: No special prompting needed
+            prompthero/openjourney-v4          # Fine Tuned: No special prompting needed
+        """
         
+        #Set the singleton. Other classes such as Label need this.
         global _stable_diffusion_singleton
         if _stable_diffusion_singleton is not None:
             rp.fansi_print('WARNING! StableDiffusion was instantiated twice!','yellow','bold')
-        #Set the singleton. Other classes such as Label need this.
         _stable_diffusion_singleton=self
             
         super().__init__()
@@ -55,8 +71,7 @@ class StableDiffusion(nn.Module):
         print('[INFO] sd.py: loading stable diffusion...please make sure you have run `huggingface-cli login`.')
         
         # Unlike the original code, I'll load these from the pipeline. This lets us use dreambooth models.
-        pipe = StableDiffusionPipeline.from_pretrained(checkpoint_path, torch_dtype=torch.float)
-        pipe.safety_checker = lambda images, _: images, False # Disable the NSFW checker (slows things down)
+        pipe = StableDiffusionPipeline.from_pretrained(pretrained_model_name_or_path=checkpoint_path, torch_dtype=torch.float, safety_checker=None, requires_safety_checker=False)
     
         pipe.scheduler = PNDMScheduler(beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear", num_train_timesteps=self.num_train_timesteps) #Error from scheduling_lms_discrete.py
         
