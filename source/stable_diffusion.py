@@ -82,9 +82,14 @@ class StableDiffusion(nn.Module):
         self.unet         = pipe.unet        .to(self.device) ; assert isinstance(self.unet         , UNet2DConditionModel),type(self.unet         )
         self.scheduler    = pipe.scheduler                    ; #assert isinstance(self.scheduler    , PNDMScheduler       ),type(self.scheduler    )
         
-        self.vae_scale_factor = pipe.vae_scale_factor # Is always 8 in Stable Diffusion 1.x and 2.x
+        self.vae_resolution_factor = self.pipe.vae_scale_factor # Is always 8 in Stable Diffusion 1.x and 2.x. Refers to the resolution factor between latent and pixel space.
+        self.vae_scaling_factor = self.vae.scaling_factor # Is 0.18215  in Stable Diffusion 1.x and 2.x. See AutoencoderKL's docstring for more info about this magic number.
+        self.height=self.width=self.vae.sample_size # Will be 512x512 for Stable Diffusion 1.x, and 768x768 for Stable Diffusion 2.x. The preferred Stable Diffusion height and width.
 
-        self.height=self.width=512 #The preferred Stable Diffusion height and width. TODO: infer this from the stable diffusion model somehow!
+        #Some unnesecary assertions; these just reflect what I currently know about the Stable Diffusion models currently out.
+        assert self.vae_resolution_factor==8
+        assert self.vae_scaling_factor==0.18215
+        assert (self.height,self.width) in {(512,512), (768,768)}
         
         self.uncond_text=''
 
@@ -249,7 +254,7 @@ class StableDiffusion(nn.Module):
         num_prompts = len(text_embeddings)//2
 
         if latents is None:
-            latents = torch.randn((num_prompts, self.unet.in_channels, height // 8, width // 8), device=self.device)
+            latents = torch.randn((num_prompts, self.unet.in_channels, height//self.vae_resolution_factor, width//self.vae_resolution_factor), device=self.device)
 
         assert 0 <= num_inference_steps <= 1000, 'Stable diffusion appears to be trained with 1000 timesteps'
 
@@ -270,14 +275,14 @@ class StableDiffusion(nn.Module):
                     assert len(latent_model_input)==len(text_embeddings)==len(noise_pred)
 
                 # perform guidance
-                assert noise_pred.shape == (2*num_prompts, 4, 64, 64)
+                assert noise_pred.shape == (2*num_prompts, 4, height//self.vae_resolution_factor, width//self.vae_resolution_factor)
                 noise_pred_uncond, noise_pred_text = noise_pred.chunk(2)
                 noise_pred = noise_pred_uncond + guidance_scale * (noise_pred_text - noise_pred_uncond)
-                assert noise_pred.shape == (1*num_prompts, 4, 64, 64)
+                assert noise_pred.shape == (1*num_prompts, 4, height//self.vae_resolution_factor, width//self.vae_resolution_factor)
 
                 # compute the previous noisy sample x_t -> x_t-1
                 latents = self.scheduler.step(noise_pred, t, latents)['prev_sample'] #It's a dict with nothing but 'prev_sample' in it
-                assert latents.shape==noise_pred.shape == (num_prompts, 4, 64, 64)
+                assert latents.shape==noise_pred.shape == (num_prompts, 4, height//self.vae_resolution_factor, width//self.vae_resolution_factor)
 
         return latents
 
@@ -285,7 +290,7 @@ class StableDiffusion(nn.Module):
 
         assert len(latents.shape) == 4 and latents.shape[1] == 4  # [B, 4, H, W]
         
-        latents = 1 / 0.18215 * latents
+        latents = 1 / self.vae_scaling_factor * latents
         
         imgs = self.vae.decode(latents)
         if hasattr(imgs,'sample'):
@@ -304,8 +309,8 @@ class StableDiffusion(nn.Module):
 
         imgs = 2 * imgs - 1
         posterior = self.vae.encode(imgs)
-        latents = posterior.sample() * 0.18215 #What the fuck is this number? Where is it coming from?
-        
+        latents = posterior.sample() * self.vae_scaling_factor
+
         assert len(latents.shape)==4 and latents.shape[1]==4 #[B, 4, H, W]
 
         return latents
@@ -351,7 +356,7 @@ class StableDiffusion(nn.Module):
                                        latents=latents, 
                                        num_inference_steps=num_inference_steps,
                                        guidance_scale=guidance_scale)
-        assert latents.shape==(num_prompts, 4, height//self.vae_scale_factor, width//self.vae_scale_factor)
+        assert latents.shape==(num_prompts, 4, height//self.vae_resolution_factor, width//self.vae_resolution_factor)
         
         # img latents -> imgs
         with torch.no_grad():
