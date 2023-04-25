@@ -118,27 +118,28 @@ class StableDiffusion(nn.Module):
 
         return output_embeddings
 
-    def add_noise(self, original_samples, noise, timesteps):
-        #This is identical to scheduler.add_noise, assuming the scheduler is DDIM, DDPM or PNDM
-        #It was copy-pasted
+    @staticmethod
+    def _calculate_sqrt_alpha_prods(timesteps, samples, scheduler):
+        """Calculate sqrt_alpha_prod and sqrt_one_minus_alpha_prod."""
+        #TODO: Add shape assertions
         timesteps = timesteps.cpu()
-        sqrt_alpha_prod = self.scheduler.alphas_cumprod[timesteps] ** 0.5
-        sqrt_alpha_prod = self.scheduler.match_shape(sqrt_alpha_prod, original_samples)
-        sqrt_one_minus_alpha_prod = (1 - self.scheduler.alphas_cumprod[timesteps]) ** 0.5
-        sqrt_one_minus_alpha_prod = self.scheduler.match_shape(sqrt_one_minus_alpha_prod, original_samples)
+        sqrt_alpha_prod = (scheduler.alphas_cumprod[timesteps] ** 0.5)
+        sqrt_one_minus_alpha_prod = (1 - scheduler.alphas_cumprod[timesteps]) ** 0.5
 
+        sqrt_alpha_prod = scheduler.match_shape(sqrt_alpha_prod, samples)
+        sqrt_one_minus_alpha_prod = scheduler.match_shape(sqrt_one_minus_alpha_prod, samples)
+
+        return sqrt_alpha_prod, sqrt_one_minus_alpha_prod
+
+    def add_noise(self, original_samples, noise, timesteps):
+        """Add noise to the original samples based on a predefined scheduler."""
+        sqrt_alpha_prod, sqrt_one_minus_alpha_prod = self._calculate_sqrt_alpha_prods(timesteps, original_samples, self.scheduler)
         noisy_latents = sqrt_alpha_prod * original_samples + sqrt_one_minus_alpha_prod * noise
         return noisy_latents
 
     def remove_noise(self, noisy_latents, noise, timesteps):
-        #TODO: Add shape assertions
-        #This is the inverse of add_noise
-        timesteps = timesteps.cpu()
-        sqrt_alpha_prod = self.scheduler.alphas_cumprod[timesteps] ** 0.5
-        sqrt_alpha_prod = self.scheduler.match_shape(sqrt_alpha_prod, noisy_latents)
-        sqrt_one_minus_alpha_prod = (1 - self.scheduler.alphas_cumprod[timesteps]) ** 0.5
-        sqrt_one_minus_alpha_prod = self.scheduler.match_shape(sqrt_one_minus_alpha_prod, noisy_latents)
-
+        """Remove noise from the noisy latents to recover the original samples. This function is the inverse of add_noise."""
+        sqrt_alpha_prod, sqrt_one_minus_alpha_prod = self._calculate_sqrt_alpha_prods(timesteps, noisy_latents, self.scheduler)
         original_samples = (noisy_latents - sqrt_one_minus_alpha_prod * noise) / sqrt_alpha_prod
         return original_samples
     
