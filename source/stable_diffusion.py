@@ -114,7 +114,7 @@ class StableDiffusion(nn.Module):
         assert (uncond_embeddings==torch.stack([uncond_embeddings[0]]*len(uncond_embeddings))).all()
         assert (uncond_embeddings==uncond_embeddings[0][None]).all()
 
-        assert output_embeddings.shape == (len(prompts)*2, 77, 768)
+        # assert output_embeddings.shape == (len(prompts)*2, 77, 768)
 
         return output_embeddings
 
@@ -225,7 +225,7 @@ class StableDiffusion(nn.Module):
         return output
 
     def produce_latents(self, text_embeddings:torch.Tensor, height:int=512, width:int=512, num_inference_steps=50, guidance_scale=7.5, latents=None)->torch.Tensor:
-        assert len(text_embeddings.shape)==3 and text_embeddings.shape[-2:]==(77,768)
+        assert len(text_embeddings.shape)==3 # and text_embeddings.shape[-2:]==(77,768)
         assert not len(text_embeddings)%2
         num_prompts = len(text_embeddings)//2
 
@@ -318,7 +318,7 @@ class StableDiffusion(nn.Module):
                      guidance_scale:float=7.5, 
                      latents:Optional[torch.Tensor]=None)->torch.Tensor:
         
-        assert len(text_embeddings.shape)==3 and text_embeddings.shape[1:]==(77,768)
+        assert len(text_embeddings.shape)==3# and text_embeddings.shape[1:]==(77,768)
         assert not len(text_embeddings)%2
         num_prompts=len(text_embeddings)//2
 
@@ -354,7 +354,7 @@ class StableDiffusion(nn.Module):
 
         # prompts -> text embeddings
         text_embeddings = self.get_text_embeddings(prompts)
-        assert text_embeddings.shape==( len(prompts)*2, 77, 768 )
+        # assert text_embeddings.shape==( len(prompts)*2, 77, 768 )
         
         return self.embeddings_to_imgs(text_embeddings, height, width, num_inference_steps, guidance_scale, latents)
     
