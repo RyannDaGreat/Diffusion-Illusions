@@ -38,19 +38,20 @@ class StableDiffusion(nn.Module):
     def __init__(self, device='cuda', checkpoint_path="CompVis/stable-diffusion-v1-4"):
         """
         Some suggested checkpoint_path:
-            CompVis/stable-diffusion-v1-4      # Base model 1.4
-            runwayml/stable-diffusion-v1-5     # Base model 1.5
-            stabilityai/stable-diffusion-2     # Base model 2.0
-            stabilityai/stable-diffusion-2-1   # Base model 2.1
-            sd-dreambooth-library/fashion      # Fashion stuff?
-            nitrosocke/mo-di-diffusion         # Dreambooth: Use 'modern disney style' in prompt. Pixar style.
-            Envvi/Inkpunk-Diffusion            # Dreambooth: Use 'nvinkpunk' in prompt. Looks kinda like borderlands, but more dramatic and artistic.
-            nitrosocke/classic-anim-diffusion  # Dreambooth: Use 'classic disney style' in prompt. Old timey disney style.
-            nitrosocke/Ghibli-Diffusion        # Dreambooth: Use 'ghibli style' in prompt. Studio Ghibli anime style.
-            nitrosocke/archer-diffusion        # Dreambooth: Use 'archer style' in prompt. Thick outline clean cartoon style.
-            hakurei/waifu-diffusion            # Fine Tuned: No special prompting needed
-            hakurei/artstation-diffusion       # Fine Tuned: No special prompting needed
-            prompthero/openjourney-v4          # Fine Tuned: No special prompting needed
+            CompVis/stable-diffusion-v1-4      # 512 Base model 1.4
+            runwayml/stable-diffusion-v1-5     # 512 Base model 1.5
+            stabilityai/stable-diffusion-2     # 768 Base model 2.0
+            stabilityai/stable-diffusion-2-1   # 768 Base model 2.1
+            sd-dreambooth-library/fashion      # 512 Fashion stuff?
+            nitrosocke/mo-di-diffusion         # 512 Dreambooth: Use 'modern disney style' in prompt. Pixar style.
+            nitrosocke/archer-diffusion        # 512 Dreambooth: Use 'archer style' in prompt. Thick outline clean cartoon style.
+            nitrosocke/nitro-diffusion         # 512 Dreambooth: Use 'arcane style', 'archer style' and/or 'modern disney style' in your prompt
+            Envvi/Inkpunk-Diffusion            # 512 Dreambooth: Use 'nvinkpunk' in prompt. Looks kinda like borderlands, but more dramatic and artistic.
+            nitrosocke/classic-anim-diffusion  # 512 Dreambooth: Use 'classic disney style' in prompt. Old timey disney style.
+            nitrosocke/Ghibli-Diffusion        # 512 Dreambooth: Use 'ghibli style' in prompt. Studio Ghibli anime style.
+            hakurei/waifu-diffusion            # 512 Fine Tuned: No special prompting needed
+            hakurei/artstation-diffusion       # 512 Fine Tuned: No special prompting needed
+            prompthero/openjourney-v4          # 512 Fine Tuned: No special prompting needed
         """
         
         #Set the singleton. Other classes such as Label need this.
