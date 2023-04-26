@@ -139,8 +139,9 @@ class StableDiffusion(nn.Module):
         sqrt_alpha_prod = (scheduler.alphas_cumprod[timesteps] ** 0.5)
         sqrt_one_minus_alpha_prod = (1 - scheduler.alphas_cumprod[timesteps]) ** 0.5
 
-        sqrt_alpha_prod = scheduler.match_shape(sqrt_alpha_prod, samples)
-        sqrt_one_minus_alpha_prod = scheduler.match_shape(sqrt_one_minus_alpha_prod, samples)
+        # Reshape the tensors and move them to the same device as samples
+        sqrt_alpha_prod = sqrt_alpha_prod.unsqueeze(-1).unsqueeze(-1).unsqueeze(-1).to(samples.device)
+        sqrt_one_minus_alpha_prod = sqrt_one_minus_alpha_prod.unsqueeze(-1).unsqueeze(-1).unsqueeze(-1).to(samples.device)
 
         return sqrt_alpha_prod, sqrt_one_minus_alpha_prod
 
@@ -315,7 +316,7 @@ class StableDiffusion(nn.Module):
 
         imgs = 2 * imgs - 1
         posterior = self.vae.encode(imgs)
-        latents = posterior.sample() * self.vae_scaling_factor
+        latents = posterior.latent_dist.mean * self.vae_scaling_factor
 
         assert len(latents.shape)==4 and latents.shape[1]==4 #[B, 4, H, W]
 
