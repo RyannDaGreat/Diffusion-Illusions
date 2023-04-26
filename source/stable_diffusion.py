@@ -68,7 +68,7 @@ class StableDiffusion(nn.Module):
         self.min_step = int(self.num_train_timesteps * 0.02) # aka 20
         self.max_step = int(self.num_train_timesteps * 0.98) # aka 980
 
-        print('[INFO] sd.py: loading stable diffusion...please make sure you have run `huggingface-cli login`.')
+        print(f'[INFO] StableDiffusion: loading checkpoint {repr(checkpoint_path)} ... please make sure you have run `huggingface-cli login` to enable downloads.')
         
         # Unlike the original code, I'll load these from the pipeline. This lets us use dreambooth models.
         pipe = StableDiffusionPipeline.from_pretrained(pretrained_model_name_or_path=checkpoint_path, torch_dtype=torch.float, safety_checker=None, requires_safety_checker=False)
@@ -100,7 +100,7 @@ class StableDiffusion(nn.Module):
             
         self.alphas = self.scheduler.alphas_cumprod.to(self.device) # for convenience
 
-        print(f'[INFO] sd.py: loaded stable diffusion!')
+        print(f'[INFO] StableDiffusion: loaded stable diffusion!')
 
     def get_text_embeddings(self, prompts: Union[str, List[str]])->torch.Tensor:
         
