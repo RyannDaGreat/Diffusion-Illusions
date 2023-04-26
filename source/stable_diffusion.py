@@ -74,7 +74,7 @@ class StableDiffusion(nn.Module):
         # Unlike the original code, I'll load these from the pipeline. This lets us use dreambooth models.
         pipe = StableDiffusionPipeline.from_pretrained(pretrained_model_name_or_path=checkpoint_path, torch_dtype=torch.float, safety_checker=None, requires_safety_checker=False)
     
-        pipe.scheduler = PNDMScheduler(beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear", num_train_timesteps=self.num_train_timesteps) #Error from scheduling_lms_discrete.py
+        pipe.scheduler = PNDMScheduler.from_pretrained(pretrained_model_name_or_path=checkpoint_path, torch_dtype=torch.float, subfolder="scheduler")
         
         self.pipe         = pipe
         self.vae          = pipe.vae         .to(self.device) ; assert isinstance(self.vae          , AutoencoderKL       ),type(self.vae          )
