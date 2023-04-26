@@ -13,10 +13,10 @@ class BaseLabel:
         self.name=name
         self.embedding=embedding.to(device)
         
-    def get_sample_image(self):
+    def get_sample_image(self, num_steps:int=None, guidance_scale:float=None):
         s = stable_diffusion._get_stable_diffusion_singleton()
         with torch.no_grad():
-            output=s.embeddings_to_imgs(self.embedding)[0]
+            output=s.embeddings_to_imgs(self.embedding,num_steps=num_steps, guidance_scale=guidance_scale)[0]
         assert rp.is_image(output)
         return output
             

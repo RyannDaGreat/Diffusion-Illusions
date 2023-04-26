@@ -246,12 +246,14 @@ class StableDiffusion(nn.Module):
                         text_embeddings:torch.Tensor,
                         height:int=None,
                         width:int=None,
-                        num_inference_steps=50,
-                        guidance_scale=7.5,
+                        num_steps:int=None,
+                        guidance_scale:float=None,
                         latents=None) ->torch.Tensor:
         
         if height is None:height=self.height
         if width  is None:width =self.width
+        if num_steps is None:num_steps=50
+        if guidance_scale is None:guidance_scale=7.5
 
         assert len(text_embeddings.shape)==3 # and text_embeddings.shape[-2:]==(77,768)
         assert not len(text_embeddings)%2
@@ -260,9 +262,9 @@ class StableDiffusion(nn.Module):
         if latents is None:
             latents = torch.randn((num_prompts, self.unet.config.in_channels, height//self.vae_resolution_factor, width//self.vae_resolution_factor), device=self.device)
 
-        assert 0 <= num_inference_steps <= 1000, 'Stable diffusion appears to be trained with 1000 timesteps'
+        assert 0 <= num_steps <= 1000, 'Stable diffusion appears to be trained with 1000 timesteps'
 
-        self.scheduler.set_timesteps(num_inference_steps)
+        self.scheduler.set_timesteps(num_steps)
 
         with torch.autocast('cuda'):
             for i, t in enumerate(self.scheduler.timesteps):
@@ -342,8 +344,8 @@ class StableDiffusion(nn.Module):
     def embeddings_to_imgs(self, text_embeddings:torch.Tensor, 
                      height:int=None, 
                      width:int=None,
-                     num_inference_steps:int=50,
-                     guidance_scale:float=7.5, 
+                     num_steps:int=None,
+                     guidance_scale:float=None, 
                      latents:Optional[torch.Tensor]=None)->torch.Tensor:
 
         if height is None:height=self.height
@@ -358,7 +360,7 @@ class StableDiffusion(nn.Module):
                                        height=height, 
                                        width=width, 
                                        latents=latents, 
-                                       num_inference_steps=num_inference_steps,
+                                       num_steps=num_steps,
                                        guidance_scale=guidance_scale)
         assert latents.shape==(num_prompts, 4, height//self.vae_resolution_factor, width//self.vae_resolution_factor)
         
@@ -376,8 +378,8 @@ class StableDiffusion(nn.Module):
     def prompts_to_imgs(self, prompts: List[str], 
                         height:int=None, 
                         width:int=None, 
-                        num_inference_steps:int=50, 
-                        guidance_scale:float=7.5, 
+                        num_steps:int=None, 
+                        guidance_scale:float=None, 
                         latents:Optional[torch.Tensor]=None)->torch.Tensor:
 
         if height is None:height=self.height
@@ -390,7 +392,7 @@ class StableDiffusion(nn.Module):
         text_embeddings = self.get_text_embeddings(prompts)
         # assert text_embeddings.shape==( len(prompts)*2, 77, 768 )
         
-        return self.embeddings_to_imgs(text_embeddings, height, width, num_inference_steps, guidance_scale, latents)
+        return self.embeddings_to_imgs(text_embeddings, height, width, num_steps, guidance_scale, latents)
     
     def prompt_to_img(self, prompt:str, *args, **kwargs)->torch.Tensor:
         return self.prompts_to_imgs([prompt],*args,**kwargs)[0]
