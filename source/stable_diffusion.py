@@ -82,10 +82,10 @@ class StableDiffusion(nn.Module):
         self.unet         = pipe.unet        .to(self.device) ; assert isinstance(self.unet         , UNet2DConditionModel),type(self.unet         )
         self.scheduler    = pipe.scheduler                    ; #assert isinstance(self.scheduler    , PNDMScheduler       ),type(self.scheduler    )
         
-        self.latent_channels = self.vae.latent_channels # Is always 4 in Stable Diffusion 1.x and 2.x. Refers to the number of channels in latent space. Currently hard-coded as 4 throughout this module for brevity.
         self.vae_resolution_factor = self.pipe.vae_scale_factor # Is always 8 in Stable Diffusion 1.x and 2.x. Refers to the resolution factor between latent and pixel space.
-        self.vae_scaling_factor = self.vae.scaling_factor # Is always 0.18215  in Stable Diffusion 1.x and 2.x. See AutoencoderKL's docstring for more info about this magic number.
-        self.height=self.width=self.vae.sample_size # Will be 512x512 for Stable Diffusion 1.x, and 768x768 for Stable Diffusion 2.x. The preferred Stable Diffusion height and width.
+        self.latent_channels    = self.vae.config['latent_channels'] # Is always 4 in Stable Diffusion 1.x and 2.x. Refers to the number of channels in latent space. Currently hard-coded as 4 throughout this module for brevity.
+        self.vae_scaling_factor = self.vae.config['scaling_factor'] # Is always 0.18215  in Stable Diffusion 1.x and 2.x. See AutoencoderKL's docstring for more info about this magic number.
+        self.height=self.width  = self.vae.config['sample_size'] # Will be 512x512 for Stable Diffusion 1.x, and 768x768 for Stable Diffusion 2.x. The preferred Stable Diffusion height and width.
 
         #Some unnesecary assertions; these just reflect what I currently know about the Stable Diffusion models currently out.
         assert self.latent_channels==4
