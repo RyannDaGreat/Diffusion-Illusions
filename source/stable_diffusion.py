@@ -14,7 +14,7 @@
 from typing import Union,List,Optional
 
 from transformers import CLIPTextModel, CLIPTokenizer, logging
-from diffusers import AutoencoderKL, UNet2DConditionModel, PNDMScheduler
+from diffusers import AutoencoderKL, UNet2DConditionModel, PNDMScheduler, DDIMScheduler, DDPMScheduler
 from diffusers import StableDiffusionPipeline
 
 import torch
@@ -74,7 +74,9 @@ class StableDiffusion(nn.Module):
         # Unlike the original code, I'll load these from the pipeline. This lets us use dreambooth models.
         pipe = StableDiffusionPipeline.from_pretrained(pretrained_model_name_or_path=checkpoint_path, torch_dtype=torch.float, safety_checker=None, requires_safety_checker=False)
     
-        pipe.scheduler = PNDMScheduler.from_pretrained(pretrained_model_name_or_path=checkpoint_path, torch_dtype=torch.float, subfolder="scheduler")
+        # pipe.scheduler = DDIMScheduler.from_pretrained(pretrained_model_name_or_path=checkpoint_path, torch_dtype=torch.float, subfolder="scheduler")
+        pipe.scheduler = DDPMScheduler.from_pretrained(pretrained_model_name_or_path=checkpoint_path, torch_dtype=torch.float, subfolder="scheduler")
+        # pipe.scheduler = PNDMScheduler.from_pretrained(pretrained_model_name_or_path=checkpoint_path, torch_dtype=torch.float, subfolder="scheduler")
         
         self.pipe         = pipe
         self.vae          = pipe.vae         .to(self.device) ; assert isinstance(self.vae          , AutoencoderKL       ),type(self.vae          )
