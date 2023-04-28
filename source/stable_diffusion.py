@@ -180,7 +180,7 @@ class StableDiffusion(nn.Module):
                    height=None,
                    width=None,
                    target=None, #If this is set, we don't perform any SD stuff. Currently this is a latent target! The code is messy! We also want image target later
-                   # image_target=None, #TODO: Implement this!
+                   image_target=None, #TODO: Implement this!
                   ):
         
         # This method is responsible for generating the dream-loss gradients.
@@ -196,14 +196,15 @@ class StableDiffusion(nn.Module):
 
         assert 0<=t<self.num_train_timesteps, 'invalid timestep t=%i'%t
 
-        # encode image into latents with vae, requires grad!
+        # if latent_coef or noise_coef or image_target is None and not target is None:
+            # encode image into latents with vae, requires grad!
         latents = self.encode_imgs(pred_rgb_scaled)
 
         output=EasyDict()
         
         # predict the noise residual with unet, NO grad!
         with torch.no_grad():
-            if target is None:
+            if target is None and image_target is None:
                 # add noise
                 noise = torch.randn_like(latents)
                 #This is the only place we use the scheduler...the add_noise function. What's more...it's totally generic! The scheduler doesn't impact the implementation of train_step...
@@ -228,7 +229,11 @@ class StableDiffusion(nn.Module):
             output.target=latent_pred #This can be used as a target for faster inference
 
             if image_coef:
-                image_pred = self.decode_latents(latent_pred)
+                if image_target is not None:
+                    image_pred = image_target
+                else:
+                    image_pred = self.decode_latents(latent_pred)
+                output.image_target=image_pred
                 
         #TODO: Different guidance scales for each type...if mixing them is useful...
                 
@@ -246,18 +251,20 @@ class StableDiffusion(nn.Module):
             total_delta=total_delta+noise_delta * noise_coef
         
         # Ryan's Latent Guidance
-        latent_pred_uncond, latent_pred_text = latent_pred.chunk(2)
-        latent_pred_guided = latent_pred_uncond + guidance_scale * (latent_pred_text - latent_pred_uncond)
-        latent_delta=latent_pred_guided - latents
-        latent_delta=-latent_delta #I don't know why, but it's backwards...I didn't analyze it too closely tho
-        total_delta=total_delta + latent_delta * latent_coef
-        
-        #Will this make a vram leak? I don't use them rn, so for now I'll comment them out just in case...maybe its fine idk
-        # output.latent_pred_uncond=latent_pred_uncond
-        # output.latent_pred_text=latent_pred_text
-        # output.latent_pred_guided=latent_pred_guided
-        
-        deprecated_output=torch.stack([*deprecated_output, *latent_pred_guided])
+        #TODO: make image_target get similar assertions to latent_target
+        if not (image_target is not None and not target is not None):
+            latent_pred_uncond, latent_pred_text = latent_pred.chunk(2)
+            latent_pred_guided = latent_pred_uncond + guidance_scale * (latent_pred_text - latent_pred_uncond)
+            latent_delta=latent_pred_guided - latents
+            latent_delta=-latent_delta #I don't know why, but it's backwards...I didn't analyze it too closely tho
+            total_delta=total_delta + latent_delta * latent_coef
+
+            #Will this make a vram leak? I don't use them rn, so for now I'll comment them out just in case...maybe its fine idk
+            # output.latent_pred_uncond=latent_pred_uncond
+            # output.latent_pred_text=latent_pred_text
+            # output.latent_pred_guided=latent_pred_guided
+
+            deprecated_output=torch.stack([*deprecated_output, *latent_pred_guided])
         
         if image_coef:
             # Ryan's Image Guidance
@@ -272,7 +279,8 @@ class StableDiffusion(nn.Module):
         grad = w * total_delta
 
         # manually backward, since we omitted an item in grad and cannot simply autodiff
-        latents.backward(gradient=grad, retain_graph=True)
+        if noise_coef or latent_coef:
+            latents.backward(gradient=grad, retain_graph=True)
         
         output.deprecated_output=deprecated_output
 
