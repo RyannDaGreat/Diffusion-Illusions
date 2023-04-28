@@ -134,31 +134,37 @@ class StableDiffusion(nn.Module):
         return output_embeddings
 
     @staticmethod
-    def _calculate_sqrt_alpha_prods(timesteps, samples, scheduler):
-        """Calculate sqrt_alpha_prod and sqrt_one_minus_alpha_prod."""
-        #TODO: Add shape assertions
+    def _calculate_sqrt_alpha_beta_prods(timesteps, scheduler, device):
+        """Calculate sqrt_alpha_prod and sqrt_beta_prod."""
+        #THESE NAMES ARE KINDA MISLEADING: its not the sqrt of the prod of the betas, it's 1-sqrt(prod of alphas)
+        #TODO: add shape assertions.
         timesteps = timesteps.cpu()
         sqrt_alpha_prod = (scheduler.alphas_cumprod[timesteps] ** 0.5)
-        sqrt_one_minus_alpha_prod = (1 - scheduler.alphas_cumprod[timesteps]) ** 0.5
+        sqrt_beta_prod = (1 - scheduler.alphas_cumprod[timesteps]) ** 0.5
 
         # Reshape the tensors and move them to the same device as samples
-        sqrt_alpha_prod = sqrt_alpha_prod.unsqueeze(-1).unsqueeze(-1).unsqueeze(-1).to(samples.device)
-        sqrt_one_minus_alpha_prod = sqrt_one_minus_alpha_prod.unsqueeze(-1).unsqueeze(-1).unsqueeze(-1).to(samples.device)
+        sqrt_alpha_prod = sqrt_alpha_prod.unsqueeze(-1).unsqueeze(-1).unsqueeze(-1).to(device)
+        sqrt_beta_prod = sqrt_beta_prod.unsqueeze(-1).unsqueeze(-1).unsqueeze(-1).to(device)
 
-        return sqrt_alpha_prod, sqrt_one_minus_alpha_prod
+        return sqrt_alpha_prod, sqrt_beta_prod
 
     def add_noise(self, original_samples, noise, timesteps):
-        """Add noise to the original samples based on a predefined scheduler."""
-        sqrt_alpha_prod, sqrt_one_minus_alpha_prod = self._calculate_sqrt_alpha_prods(timesteps, original_samples, self.scheduler)
-        noisy_latents = sqrt_alpha_prod * original_samples + sqrt_one_minus_alpha_prod * noise
+        """Add noise to the original samples based on a predefined scheduler. Alternatively, you can use self.scheduler.add_noise, which should be equivalent."""
+        #HELP! This is no longer the inverse of remove_noise, what gives?? We might need it to be!
+        sqrt_alpha_prod, sqrt_beta_prod = self._calculate_sqrt_alpha_beta_prods(timesteps, self.scheduler, noise.device)
+        noisy_latents = sqrt_alpha_prod * original_samples + sqrt_beta_prod * noise
         return noisy_latents
 
     def remove_noise(self, noisy_latents, noise, timesteps):
-        """Remove noise from the noisy latents to recover the original samples. This function is the inverse of add_noise."""
-        sqrt_alpha_prod, sqrt_one_minus_alpha_prod = self._calculate_sqrt_alpha_prods(timesteps, noisy_latents, self.scheduler)
-        original_samples = (noisy_latents - sqrt_one_minus_alpha_prod * noise) / sqrt_alpha_prod
+        """Remove noise from the noisy latents to recover the original samples. This function mathematically found in DDPMScheduler.step."""
+        #TODO: Make it subtract_noise instead?
+        sqrt_alpha_prod, sqrt_beta_prod = self._calculate_sqrt_alpha_beta_prods(timesteps, self.scheduler, noise.device)
+        assert self.scheduler.config.prediction_type in 'epsilon v_prediction sample'.split(), 'This code might be out of date. As of writing, these are the only three.'
+        if self.scheduler.config.prediction_type=='epsilon'     :original_samples = (noisy_latents - sqrt_beta_prod * noise) / sqrt_alpha_prod #Used in Stable Diffusion 1.x
+        if self.scheduler.config.prediction_type=='v_prediction':original_samples = sqrt_alpha_prod * noisy_latents - sqrt_beta_prod * noise   #Used in Stable Diffusion 2.x
+        if self.scheduler.config.prediction_type=='sample'      :original_samples = noise                                                      #Never used in anything I've seen
         return original_samples
-    
+
     def predict_noise(self, noisy_latents, text_embeddings, timestep):
         return self.unet(noisy_latents, timestep, encoder_hidden_states=text_embeddings)['sample']
 
