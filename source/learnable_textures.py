@@ -11,6 +11,7 @@ import torch.nn as nn
 import numpy as np
 import einops
 import rp
+import torch.nn.functional as F
 
 #This file contains three types of learnable images:
 #    Raster: A simple RGB pixel grid
@@ -180,7 +181,69 @@ class LearnableImageRasterSigmoided(LearnableImage):
         assert output.shape==(self.num_channels, self.height, self.width)
         
         return torch.sigmoid(output) #Can't have values over 1 or less than 0 for peekaboo
-    
+
+def box_blur(image, kernel_size=3):
+    """
+    Apply a box blur filter to an image tensor of shape (C, H, W) in PyTorch without
+    changing the image dimensions.
+
+    Args:
+        image (torch.Tensor): Input image tensor of shape (C, H, W)
+        kernel_size (int, optional): Size of the box blur kernel. Defaults to 3.
+
+    Returns:
+        torch.Tensor: Blurred image tensor of shape (C, H, W)
+        
+    Created with GPT4: https://shareg.pt/OeplCSP
+    """
+    # Check if the input image has the correct shape
+    if len(image.shape) != 3:
+        raise ValueError("Input image must have a shape of (C, H, W)")
+
+    if kernel_size % 2 == 0:
+        raise ValueError("Kernel size must be an odd number")
+
+    C, H, W = image.shape
+
+    # Define a box blur kernel of the specified size
+    kernel = torch.ones((kernel_size, kernel_size), dtype=image.dtype, device=image.device) / (kernel_size * kernel_size)
+
+    # Expand the kernel to match the input image's channels
+    kernel = kernel.expand(C, -1, -1).unsqueeze(1)
+
+    # Apply the convolution with padding to maintain the image dimensions
+    padding = kernel_size // 2
+    blurred_image = F.conv2d(image.unsqueeze(0), kernel, padding=padding, groups=C).squeeze(0)
+
+    return blurred_image
+
+
+class LearnableImageRasterBoxBlurredSigmoided(LearnableImage):
+    def __init__(self,
+                 height      :int  ,
+                 width       :int  ,
+                 num_channels:int=3,
+                 kernel_size :int=3,
+                 blur_repeats:int=1,
+                ):
+        
+        super().__init__(height,width,num_channels)
+        self.kernel_size=kernel_size
+        self.blur_repeats=blur_repeats
+        
+        #An image paramterized by pixels
+
+        self.image=nn.Parameter(torch.randn(num_channels,height,width))
+        
+    def forward(self):
+        output = self.image.clone()
+        
+        for _ in range(self.blur_repeats):
+            output = box_blur(output,self.kernel_size)
+        
+        assert output.shape==(self.num_channels, self.height, self.width)
+        
+        return torch.sigmoid(output) #Can't have values over 1 or less than 0 for peekaboo
     
     
 class LearnableImageRaster(LearnableImage):

@@ -20,6 +20,7 @@ from diffusers import StableDiffusionPipeline
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from easydict import EasyDict
 
 import rp
 
@@ -178,6 +179,8 @@ class StableDiffusion(nn.Module):
                    image_coef=0,
                    height=None,
                    width=None,
+                   target=None, #If this is set, we don't perform any SD stuff. Currently this is a latent target! The code is messy! We also want image target later
+                   # image_target=None, #TODO: Implement this!
                   ):
         
         # This method is responsible for generating the dream-loss gradients.
@@ -196,45 +199,65 @@ class StableDiffusion(nn.Module):
         # encode image into latents with vae, requires grad!
         latents = self.encode_imgs(pred_rgb_scaled)
 
+        output=EasyDict()
         
         # predict the noise residual with unet, NO grad!
         with torch.no_grad():
-            # add noise
-            noise = torch.randn_like(latents)
-            #This is the only place we use the scheduler...the add_noise function. What's more...it's totally generic! The scheduler doesn't impact the implementation of train_step...
-            latents_noisy = self.add_noise(latents, noise, t) #The add_noise function is identical for PNDM, DDIM, and DDPM schedulers in the diffusers library
-            #TODO: Expand this add_noise function, and put it in this class. That way we don't need the scheduler...and we can also add an inverse function, which is what I need for previews...that subtracts noise...
-            #Also, create a dream-loss-based image gen example notebook...
+            if target is None:
+                # add noise
+                noise = torch.randn_like(latents)
+                #This is the only place we use the scheduler...the add_noise function. What's more...it's totally generic! The scheduler doesn't impact the implementation of train_step...
+                latents_noisy = self.add_noise(latents, noise, t) #The add_noise function is identical for PNDM, DDIM, and DDPM schedulers in the diffusers library
+                #TODO: Expand this add_noise function, and put it in this class. That way we don't need the scheduler...and we can also add an inverse function, which is what I need for previews...that subtracts noise...
+                #Also, create a dream-loss-based image gen example notebook...
 
-            # pred noise
-            latent_model_input = torch.cat([latents_noisy] * 2)
-            noise_pred = self.predict_noise(latent_model_input, text_embeddings, t)
+                # pred noise
+                latent_model_input = torch.cat([latents_noisy] * 2)
+                noise_pred = self.predict_noise(latent_model_input, text_embeddings, t)
 
-            latent_pred = self.remove_noise(latents_noisy, noise_pred, t)
-            output = latent_pred
+
+                output.noise_pred=noise_pred #
+
+                latent_pred = self.remove_noise(latents_noisy, noise_pred, t)
+            else:
+                #Skip calculation and just set the latent_pred. Note that noise_pred isn't created, so we have to assume noise_coef is 0
+                assert not noise_coef, 'If the latent target is given we will not do any denoising, so the noise_coef should be 0!'
+                latent_pred = target
             
+            deprecated_output = latent_pred
+            output.target=latent_pred #This can be used as a target for faster inference
+
             if image_coef:
                 image_pred = self.decode_latents(latent_pred)
-
                 
         #TODO: Different guidance scales for each type...if mixing them is useful...
                 
         w = (1 - self.alphas[t])
             
         # perform noise guidance (high scale from paper!)
-        noise_pred_uncond, noise_pred_text = noise_pred.chunk(2)
-        noise_pred = noise_pred_uncond + guidance_scale * (noise_pred_text - noise_pred_uncond)
-        noise_delta=noise_pred - noise
-        total_delta=noise_delta * noise_coef
+        
+        total_delta=0
+        
+        if noise_coef:
+            assert target is None, 'If the latent target is given we will not do any denoising, so the noise_coef should be 0!'
+            noise_pred_uncond, noise_pred_text = noise_pred.chunk(2)
+            noise_pred = noise_pred_uncond + guidance_scale * (noise_pred_text - noise_pred_uncond)
+            noise_delta=noise_pred - noise
+            total_delta=total_delta+noise_delta * noise_coef
         
         # Ryan's Latent Guidance
         latent_pred_uncond, latent_pred_text = latent_pred.chunk(2)
-        latent_pred = latent_pred_uncond + guidance_scale * (latent_pred_text - latent_pred_uncond)
-        latent_delta=latent_pred - latents
+        latent_pred_guided = latent_pred_uncond + guidance_scale * (latent_pred_text - latent_pred_uncond)
+        latent_delta=latent_pred_guided - latents
         latent_delta=-latent_delta #I don't know why, but it's backwards...I didn't analyze it too closely tho
         total_delta=total_delta + latent_delta * latent_coef
         
-        output=torch.stack([*output, *latent_pred])
+        #Will this make a vram leak? I don't use them rn, so for now I'll comment them out just in case...maybe its fine idk
+        # output.latent_pred_uncond=latent_pred_uncond
+        # output.latent_pred_text=latent_pred_text
+        # output.latent_pred_guided=latent_pred_guided
+        
+        deprecated_output=torch.stack([*deprecated_output, *latent_pred_guided])
         
         if image_coef:
             # Ryan's Image Guidance
@@ -250,6 +273,8 @@ class StableDiffusion(nn.Module):
 
         # manually backward, since we omitted an item in grad and cannot simply autodiff
         latents.backward(gradient=grad, retain_graph=True)
+        
+        output.deprecated_output=deprecated_output
 
         return output
 
