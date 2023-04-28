@@ -230,7 +230,7 @@ class StableDiffusion(nn.Module):
 
             if image_coef:
                 if image_target is not None:
-                    image_pred = image_target
+                    image_pred = image_target.detach()
                 else:
                     image_pred = self.decode_latents(latent_pred)
                 output.image_target=image_pred
