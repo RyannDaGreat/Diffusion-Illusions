@@ -231,6 +231,7 @@ class StableDiffusion(nn.Module):
         latent_pred_uncond, latent_pred_text = latent_pred.chunk(2)
         latent_pred = latent_pred_uncond + guidance_scale * (latent_pred_text - latent_pred_uncond)
         latent_delta=latent_pred - latents
+        latent_delta=-latent_delta #I don't know why, but it's backwards...I didn't analyze it too closely tho
         total_delta=total_delta + latent_delta * latent_coef
         
         output=torch.stack([*output, *latent_pred])
@@ -240,6 +241,7 @@ class StableDiffusion(nn.Module):
             image_pred_uncond, image_pred_text = image_pred.chunk(2)
             image_pred = image_pred_uncond + guidance_scale * (image_pred_text - image_pred_uncond)
             image_delta=image_pred - pred_rgb_scaled
+            image_delta=-image_delta#Same here...I don't know why, but it's backwards...I didn't analyze it too closely tho
             pred_rgb_scaled.backward(gradient = w * image_delta * image_coef, retain_graph=True)
 
 
@@ -279,7 +281,7 @@ class StableDiffusion(nn.Module):
             for i, t in enumerate(self.scheduler.timesteps):
                 assert int(t) == t and 0 <= t <= 999, 'Suprisingly to me...the timesteps were encoded as integers lol (np.int64)'
                 assert int(i) == i and 0 <= i <= 999, 'And because there are 1000 of them, the index is also bounded'
-                t=int(t) # This akes some schedulers happy; it's the same value anyway.
+                # t=int(t) # This akes some schedulers happy; it's the same value anyway.
 
                 # Expand the latents if we are doing classifier-free guidance to avoid doing two forward passes.
                 latent_model_input = torch.cat([latents] * 2) #The first half is the blank prompts (repeated); the second half is 
