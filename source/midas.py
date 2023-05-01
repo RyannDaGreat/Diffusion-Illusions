@@ -1,9 +1,10 @@
 import rp
+from .utils import SingletonModel
 import torch
 
-assert not __name__ == 'midas', 'Please import this as source.midas, not just midas. The later will conflict with a package from torch hub when initializing MIDAS().'
+assert not __name__ == 'midas', 'Please import this module as source.midas, not just midas. The later will conflict with a package from torch hub when initializing MIDAS().'
 
-class MIDAS(rp.CachedInstances):
+class MIDAS(SingletonModel):
     devices=[]    
 
     def __init__(self, device="cpu"):
