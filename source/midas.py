@@ -8,11 +8,7 @@ class MIDAS(SingletonModel):
     devices=[]    
 
     def __init__(self, device="cpu"):
-        if self.devices:
-            rp.fansi_print('Warning: MIDAS instances are on multiple devices (wasting VRAM): '+str(self.devices+[device]),'yellow','bold')
-            
-        self.device = device
-        self.devices.append(device)
+        super().__init__(device)
 
         model_type = "DPT_Large"
         self.midas = torch.hub.load("intel-isl/MiDaS", model_type)

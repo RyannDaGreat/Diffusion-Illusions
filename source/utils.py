@@ -1,4 +1,5 @@
 import rp
+import torch
 
 class SingletonModel(rp.CachedInstances):
     """
@@ -33,10 +34,10 @@ class SingletonModel(rp.CachedInstances):
         if device is None:
             device = "cpu"
 
-        self.device = torch.device(device)
-
-        if device not in self.devices:
-            self.devices.append(device)
+        device = torch.device(device)
+        
+        self.device = device
+        self.devices.append(device)
 
         if len(self.devices) > 1:
             model_name = type(self).__name__
