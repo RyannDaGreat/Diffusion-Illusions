@@ -10,6 +10,7 @@
 
 import torch
 import rp
+import numpy as np
 
 __all__=['BilateralProxyBlur']
 
@@ -194,7 +195,7 @@ class BilateralProxyBlur:
                  kernel_size:int = 5,
                  tolerance = .08,
                  sigma = 5,
-                 iterations=10,
+                 iterations = 10,
                 ):
         self.weights = get_weight_matrix(image,sigma,kernel_size,tolerance)
         self.kernel_size=kernel_size
@@ -204,3 +205,35 @@ class BilateralProxyBlur:
         self.image=image
     def __call__(self, image):
         return apply_weight_matrix(image,self.weights,self.iterations)
+
+def bilateral_blur(
+    image,
+    kernel_image = None,
+    kernel_size = 5,
+    tolerance = 0.08,
+    sigma = 5,
+    iterations = 10,
+    device='cpu',
+):
+    # A bilateral blur on numpy images
+    if kernel_image is None:
+        kernel_image = image
+    assert rp.is_image(image)
+    assert isinstance(kernel_image, np.ndarray)
+    assert kernel_image.ndim == 3, "HWC Form"
+
+    image        = rp.as_torch_image(image       ).to(device)
+    kernel_image = rp.as_torch_image(kernel_image).to(device)
+
+    bilateral_proxy_blur = BilateralProxyBlur(
+        kernel_image,
+        kernel_size=kernel_size,
+        tolerance=tolerance,
+        sigma=sigma,
+        iterations=iterations,
+    )
+
+    output = bilateral_proxy_blur(image)
+    output = rp.as_numpy_image(output)
+    assert rp.is_image(output)
+    return output
