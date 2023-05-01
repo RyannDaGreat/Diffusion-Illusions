@@ -32,7 +32,7 @@ class SingletonModel(rp.CachedInstances):
 
     def __init__(self, device=None):
         if device is None:
-            device = "cpu"
+            device = rp.select_torch_device(silent=True, prefer_used=True)
 
         device = torch.device(device)
         
@@ -46,3 +46,9 @@ class SingletonModel(rp.CachedInstances):
                 "yellow",
                 "bold",
             )
+
+    def __repr__(self):
+        model_name = type(self).__name__
+        return model_name+'(%s)'%str(self.device)
+
+

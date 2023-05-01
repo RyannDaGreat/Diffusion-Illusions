@@ -7,7 +7,7 @@ assert not __name__ == 'midas', 'Please import this module as source.midas, not 
 class MIDAS(SingletonModel):
     devices=[]    
 
-    def __init__(self, device="cpu"):
+    def __init__(self, device=None):
         super().__init__(device)
 
         model_type = "DPT_Large"
