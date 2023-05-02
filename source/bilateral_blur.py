@@ -213,8 +213,11 @@ def bilateral_blur(
     tolerance = 0.08,
     sigma = 5,
     iterations = 10,
-    device='cpu',
+    device=None,
 ):
+    if device is None:
+        device=rp.select_torch_device(silent=True, prefer_used=True)
+    
     # A bilateral blur on numpy images
     if kernel_image is None:
         kernel_image = image
@@ -222,6 +225,7 @@ def bilateral_blur(
     assert isinstance(kernel_image, np.ndarray)
     assert kernel_image.ndim == 3, "HWC Form"
 
+    image=rp.as_float_image(image)
     image        = rp.as_torch_image(image       ).to(device)
     kernel_image = rp.as_torch_image(kernel_image).to(device)
 
