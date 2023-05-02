@@ -42,7 +42,7 @@ class SingletonModel(rp.CachedInstances):
         if len(self.devices) > 1:
             model_name = type(self).__name__
             rp.fansi_print(
-                f"Warning: {model_name} instances are on multiple devices (wasting VRAM): {self.devices}",
+                f"Warning: {model_name} instances are on multiple devices (wasting VRAM): {', '.join(map(str,self.devices))}",
                 "yellow",
                 "bold",
             )
