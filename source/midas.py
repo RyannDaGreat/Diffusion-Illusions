@@ -75,6 +75,23 @@ class MIDAS(SingletonModel):
         depth_map_name = rp.strip_file_extension(image_path) + '_depth.png'
         return rp.save_image(depth_map, depth_map_name)
     
-    def __repr__(self):
-        return 'MIDAS(%s)'%str(self.device)
+    def get_rgbd_kernel_image(self, image, rgb_scale=.1, depth_scale=1):
+        #Return an RGBA image, where alpha is depth.
+        #The color ranges might be over the range [0,1]
+        #It's meant to be used as a kernel for a bilateral filter
+        assert rp.is_image(image)
 
+        depth=self.estimate_depth_map(image)
+        depth=depth/20
+        depth=depth*depth_scale
+
+        image=rp.as_float_image(image)
+        image=rp.as_rgba_image(image)
+        image=image*rgb_scale
+
+        image[:,:,3]=depth
+        
+        assert rp.is_rgba_image(image)
+        
+        return image
+    
