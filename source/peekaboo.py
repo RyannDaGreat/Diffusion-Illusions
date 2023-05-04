@@ -24,12 +24,21 @@ from easydict import EasyDict
 from collections import defaultdict
 import pandas as pd
 from icecream import ic
+from source.midas import MIDAS
 
 from source.stable_diffusion_labels import get_mean_embedding, BaseLabel, SimpleLabel, MeanLabel
 
 def make_learnable_image(height, width, num_channels, foreground=None, bilateral_kwargs:dict={}, representation = 'fourier'):
     #Here we determine our image parametrization schema
-    bilateral_blur =  BilateralProxyBlur(foreground,**bilateral_kwargs)
+    
+    rgb_scale=bilateral_kwargs['rgb_scale']
+    depth_scale=bilateral_kwargs['depth_scale']
+    if depth_scale>0 or rgb_scale!=1:
+        midas=MIDAS() #Assume it was initialized somewhere else? We infer the device automatically
+        foreground=rp.as_torch_image(midas.get_rgbd_kernel_image(rp.as_numpy_image(foreground), rgb_scale=rgb_scale, depth_scale=depth_scale)).to(foreground.device)
+    
+    
+    bilateral_blur =  BilateralProxyBlur(foreground,**{k:v for k,v in bilateral_kwargs.items() if not k in 'rgb_scale depth_scale'.split()})
     if representation=='fourier bilateral':
         return LearnableImageFourierBilateral(bilateral_blur,num_channels) #A neural neural image + bilateral filter
     elif representation=='raster bilateral':
@@ -349,11 +358,7 @@ def run_peekaboo(name:str, image:Union[str,np.ndarray], label:Optional['BaseLabe
                 LEARNING_RATE=1e-5, # Can be larger if not using neural neural textures (aka when representation is raster)
                 BATCH_SIZE=1,       # Doesn't make much difference, larger takes more vram
                 GUIDANCE_SCALE=100, # The defauly value from the DreamFusion paper
-                bilateral_kwargs=dict(kernel_size = 3,
-                                      tolerance = .08,
-                                      sigma = 5,
-                                      iterations=40,
-                                     ),
+                bilateral_kwargs=dict(),
                 square_image_method='crop', #Can be either 'crop' or 'scale' - how will we square the input image?
                 representation='fourier bilateral', #Can be 'fourier bilateral', 'raster bilateral', 'fourier', or 'raster'
                 min_step=None,
@@ -362,6 +367,16 @@ def run_peekaboo(name:str, image:Union[str,np.ndarray], label:Optional['BaseLabe
                 use_stable_dream_loss=True,
                  output_folder_name='peekaboo_results',
                 )->PeekabooResults:
+    
+    _bilateral_kwargs=dict(kernel_size = 3,
+                                      tolerance = .08,
+                                      sigma = 5,
+                                      iterations=40,
+                                      rgb_scale=1,
+                                      depth_scale=0,
+                                     )
+    _bilateral_kwargs.update(bilateral_kwargs)
+    bilateral_kwargs=_bilateral_kwargs
     
     s=sd._get_stable_diffusion_singleton()
     
