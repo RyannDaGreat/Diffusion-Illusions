@@ -115,8 +115,9 @@ coco_nocrop_settings = EasyDict(
 
 # VOC
 voc_settings = EasyDict(
-    #results_folder="/home/ryan/CleanCode/Projects/Peekaboo/Experiments/Github/Diffusion-Illusions/untracked/dep_peekaboo_results_VOC",
-    results_folder="/home/ryan/CleanCode/Projects/Peekaboo/Experiments/Github/Diffusion-Illusions/untracked/dep_peekaboo_results_VOC_singleseed",
+    results_folder="/home/ryan/CleanCode/Projects/Peekaboo/Experiments/Github/Diffusion-Illusions/untracked/dep_peekaboo_results_VOC",
+    #results_folder="/home/ryan/CleanCode/Projects/Peekaboo/Experiments/Github/Diffusion-Illusions/untracked/dep_peekaboo_results_VOC_singleseed",
+    #results_folder="/mnt/md0/nfs/ryan/CleanCode/Projects/Peekaboo/Experiments/Dreams/peekaboo_results",
     label_folder="/raid/datasets/pascal_voc/VOC2012/SegmentationClass",
     dataset_folder="/nfs/ws1/datasets/RefVOC/",
     crop_file_prefix="cropped-",
@@ -178,7 +179,7 @@ def alpha_filter_1(alpha):
     return pred_img
 
 alpha_filter=identity
-#alpha_filter=alpha_filter_1
+alpha_filter=alpha_filter_1
     
 def IOU(a, b):
     a=as_binary_image(a)
@@ -187,20 +188,66 @@ def IOU(a, b):
     b=as_grayscale_image(b)
     return np.count_nonzero(np.logical_and(a, b)) / np.count_nonzero(np.logical_or(a, b))
 
-def result_iou(result,threshold=.4,alpha_filter=None):
+def result_iou(result,thresholds=.4,alpha_filter=None):
+    if not isinstance(thresholds,list):
+        thresholds=[thresholds]
+        
     if alpha_filter is None:
         alpha_filter=globals()['alpha_filter']
     alpha_image,label_image=destructure(result)
+    alpha=alpha_image
     
-    assert is_float_image(alpha_image)
-    alpha=alpha_image>threshold
+    assert is_float_image(alpha)
     alpha=alpha_filter(alpha)
-    assert is_float_image(alpha_image)
+    assert is_float_image(alpha)
     
-    return IOU(alpha,label_image)    
+    outs=[]
+    for threshold in thresholds:
+        alpha=alpha>threshold
+        outs.append(IOU(alpha,label_image))
+    if len(outs)==1:
+        return outs[0]
+    return outs
 
 def quick_preview(results):
     #First run results=load_results()
     while True:
         display_image_on_macmax(get_comparison_image(random_element(re.results)))
         input('Press enter to see next image')
+
+# 2023-05-10 15:07:02.266565
+def mean_iou(results,thresholds=[.1,.2,.3,.4,.5,.6,.7,.8,.9]):
+    if not is_iterable(thresholds):
+        thresholds=[thresholds]
+    outs=[]
+    from tqdm import tqdm
+    for t in thresholds:
+        out=[]
+        for x in tqdm(results):
+            out.append(result_iou(x,t))
+        out=mean(out)
+        outs.append(out)
+    return outs
+def make_report(results=None,thresholds=[.4]):
+    if not results:
+        results=globals()['results']
+    modes=cluster_by_key(results,key= lambda x: x.mode,as_dict=True)
+    ans={x:mean_iou(y,thresholds) for x,y in modes.items()}
+    return ans
+
+def make_report_per_prompt(results=None):
+    if not results:
+        results=globals()['results']
+    results=results.results
+    prompts=cluster_by_key(results,key= lambda x: x.prompt,as_dict=True)
+    out={}
+    for prompt in prompts:
+        print()
+        fansi_print(prompt,'green','bold')
+        res=prompts[prompt]
+        q=make_report(res)
+
+        fansi_print(q)
+        out[prompt]=q
+    return out
+        
