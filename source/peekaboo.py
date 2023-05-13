@@ -243,7 +243,10 @@ class PeekabooResults(EasyDict):
     pass
 
 def save_peekaboo_results(results,new_folder_path):
-    assert not rp.folder_exists(new_folder_path), 'Please use a different name, not %s'%new_folder_path
+    
+    if rp.folder_exists(new_folder_path):
+        new_folder_path+='_'+rp.random_namespace_hash() #Instead of crashing just make a new folder. Sometimes they'll collide when we do it randomly!
+        assert not rp.folder_exists(new_folder_path), 'Please use a different name, not %s'%new_folder_path
     rp.make_folder(new_folder_path)
     with rp.SetCurrentDirectoryTemporarily(new_folder_path):
         log("Saving PeekabooResults to "+new_folder_path)
@@ -481,7 +484,7 @@ def run_peekaboo(name:str, image:Union[str,np.ndarray], label:Optional['BaseLabe
         pass
 
     output_folder = rp.make_folder('%s/%s'%(output_folder_name,name))
-    output_folder += '/%03i'%len(rp.get_subfolders(output_folder))
+    output_folder += '/%03i'%(len(rp.get_subfolders(output_folder))+rp.random_index(10))
     
                 
     # rp.ptoc()

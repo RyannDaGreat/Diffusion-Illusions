@@ -24,6 +24,8 @@ from easydict import EasyDict
 
 import rp
 
+rp.fansi_print('Current Process: %i %s'%(rp.get_process_id(),rp.get_process_title()),'green','bold') #This should prob be done for every notebook!
+
 # Suppress partial model loading warning
 logging.set_verbosity_error()
 

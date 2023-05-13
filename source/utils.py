@@ -11,7 +11,7 @@ class SingletonModel(rp.CachedInstances):
     the model are created on different devices, which might lead to resource waste (e.g., VRAM on GPUs).
 
     Example:
-        class MyModel(WarnMultipleDevices):
+        class MyModel(SingletonModel):
             def __init__(self, device=None):
                 super().__init__(device)
         

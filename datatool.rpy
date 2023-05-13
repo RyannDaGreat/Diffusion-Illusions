@@ -1,3 +1,4 @@
+# 2023-05-11 21:53:35.871249
 from tqdm import tqdm
 
 @memoized
@@ -277,40 +278,73 @@ def add_means_to_nested_dict(ans):
     ans=dict_transpose(ans)
     return ans
 
+def merged_results(results):
+    #Group them by file and average them
+    #We'll use this '
+    q=list(chunk_by_key(results, lambda x: x.fname))
+    w=[x[0] for x in q]
+    out=[]
+    from copy import deepcopy
+    for i,c in enumerate(q):
+        alpha_image=np.mean(as_numpy_array([x.alpha_image for x in c]),0)
+        r=deepcopy(c[0])
+        r.alpha_image=alpha_image
+        out.append(r)
+    return out
+    
+
 def print_data_as_table(data):
     from rich.table import Table
     from rich.console import Console
+    from rich.text import Text
 
     data=add_means_to_nested_dict(data)
-    
+
     # Initialize a console
     console = Console()
-
-    # Create a table
-    table = Table(show_header=True, header_style="bold magenta")
 
     # Define labels and categories
     labels = list(data.keys())
     categories = list(data[labels[0]].keys())
 
-    # Add columns to the table (one for each category)
-    table.add_column("Label")
-    for category in categories:
-        table.add_column(category)
-        
+    num_threshs=len(data[labels[0]][categories[0]])
 
-    num_threshs=len(data[labels[0]][category])
+    # Iterate through each threshold
     for n in range(num_threshs):
         print()
         print('Thresh',n)
-        # Add rows to the table (one for each label)
-        for label in labels:
-            row = [label] + [f'{data[label][category][n]:.3f}' for category in categories]
-            table.add_row(*row)
-        table.add_row()
 
-    # Print the table
-    console.print(table)
+        # Create a new table for each threshold
+        table = Table(show_header=True, header_style="bold magenta")
+
+        # Add columns to the table (one for each category)
+        table.add_column("Label")
+        for category in categories:
+            table.add_column(category)
+
+        # Define a dictionary to store maximum values of each column
+        max_values = {category: float('-inf') for category in categories}
+
+        # First pass to determine the maximum value in each column
+        for label in labels:
+            for category in categories:
+                max_values[category] = max(max_values[category], data[label][category][n])
+
+        # Second pass to add rows to the table (one for each label)
+        for label in labels:
+            row = [label]
+            for category in categories:
+                value = data[label][category][n]
+                if value == max_values[category]:
+                    # If the value is the maximum in its column, format it as bold cyan
+                    value_text = Text(f'{value:.3f}', style='underline cyan')
+                else:
+                    value_text = Text(f'{value:.3f}')
+                row.append(value_text)
+            table.add_row(*row)
+
+        # Print the table
+        console.print(table)
 
 #############
 
@@ -338,16 +372,17 @@ settings=voc_settings
 #settings= coco_nocrop_settings
 
 alpha_filter=identity
-alpha_filter=alpha_filter_1
-#alpha_filter=alpha_filter_2
+#alpha_filter=alpha_filter_1
 alpha_filter=alpha_filter_3
-#alpha_filter=alpha_filter_4
-#alpha_filter=alpha_filter_5
 
-BLACKLISTED_MODES='clip_raster_bilateral default pure_fourier pure_raster'.split()
-BLACKLISTED_MODES+='midas_fourier midas_fourier_low_grav raster_bilateral raster_bilateral_higher_gravity_1 raster_bilateral_higher_gravity_2 raster_bilateral_higher_gravity_3 raster_bilateral_lower_gravity_1 raster_bilateral_lower_gravity_2 raster_bilateral_no_gravity '.split()
-#BLACKLISTED_MODES+='midas_fourier midas_fourier_low_grav midas_raster_bilateral raster_bilateral raster_bilateral_higher_gravity_1 raster_bilateral_higher_gravity_2 raster_bilateral_higher_gravity_3 raster_bilateral_lower_gravity_1 raster_bilateral_lower_gravity_2 raster_bilateral_no_gravity '.split()
+BLACKLISTED_MODES=set()
+#BLACKLISTED_MODES|=set('clip_raster_bilateral default pure_fourier pure_raster'.split())
+#BLACKLISTED_MODES|=set('midas_fourier midas_fourier_low_grav raster_bilateral raster_bilateral_higher_gravity_1 raster_bilateral_higher_gravity_2 raster_bilateral_higher_gravity_3 raster_bilateral_lower_gravity_1 raster_bilateral_lower_gravity_2 raster_bilateral_no_gravity '.split())
+BLACKLISTED_MODES|=set('midas_raster_bilateral_lower_grav midas_raster_bilateral_no_grav midas_raster_bilateral_no_grav_100iter midas_raster_bilateral_lower_grav_100iter midas_raster_bilateral_low_grav_100iter'.split()) #Unfinished
+#BLACKLISTED_MODES-=set('raster_bilateral raster_bilateral_lower_gravity_2'.split())
 
 result_bundle=load_result_bundle()
 results=result_bundle.results
-ans=make_report_per_prompt(thresholds=[.05,.1,.15,.2,.25,.3,.4,.5,.6,.7,.8,.9])
+#ans=make_report_per_prompt(thresholds=[.05,.1,.15,.2,.25,.3,.4,.5,.6,.7,.8,.9])
+ans=make_report_per_prompt(thresholds=[.5])
+
