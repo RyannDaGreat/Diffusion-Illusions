@@ -1,3 +1,0 @@
-GOAL:
-    Make it compatiable with both SD2 and SD1 - and abstract their functions out. 
-
