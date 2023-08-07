@@ -369,6 +369,8 @@ def run_peekaboo(name:str, image:Union[str,np.ndarray], label:Optional['BaseLabe
                 clip_coef=0,
                 use_stable_dream_loss=True,
                  output_folder_name='peekaboo_results',
+                 
+                 extra_data={},
                 )->PeekabooResults:
     
     _bilateral_kwargs=dict(kernel_size = 3,
@@ -525,6 +527,8 @@ def run_peekaboo(name:str, image:Union[str,np.ndarray], label:Optional['BaseLabe
         time_completed=rp.r._format_datetime(rp.get_current_date()),
         device=s.device,
         computer_name=rp.get_computer_name(),
+        
+        extra_data=extra_data,
     ) 
 
     save_peekaboo_results(results,output_folder)
