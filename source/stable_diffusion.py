@@ -35,7 +35,7 @@ def _get_stable_diffusion_singleton():
 
 
 class StableDiffusion(nn.Module):
-    def __init__(self, device='cuda', checkpoint_path="CompVis/stable-diffusion-v1-4"):
+    def __init__(self, device='cuda', checkpoint_path="CompVis/stable-diffusion-v1-4", pipe=None):
         
         global _stable_diffusion_singleton
         if _stable_diffusion_singleton is not None:
@@ -55,9 +55,14 @@ class StableDiffusion(nn.Module):
         print('[INFO] sd.py: loading stable diffusion...please make sure you have run `huggingface-cli login`.')
         
         # Unlike the original code, I'll load these from the pipeline. This lets us use dreambooth models.
-        pipe = StableDiffusionPipeline.from_pretrained(checkpoint_path, torch_dtype=torch.float)
-        pipe.safety_checker = lambda images, _: images, False # Disable the NSFW checker (slows things down)
-    
+        if pipe is None:
+            pipe = StableDiffusionPipeline.from_pretrained(
+                checkpoint_path,
+                torch_dtype=torch.float,
+                requires_safety_checker=False,
+                safety_checker=None,
+            )
+        
         pipe.scheduler = PNDMScheduler(beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear", num_train_timesteps=self.num_train_timesteps) #Error from scheduling_lms_discrete.py
         
         self.pipe         = pipe
@@ -108,11 +113,11 @@ class StableDiffusion(nn.Module):
         #It was copy-pasted
         timesteps = timesteps.cpu()
         sqrt_alpha_prod = self.scheduler.alphas_cumprod[timesteps] ** 0.5
-        sqrt_alpha_prod = self.scheduler.match_shape(sqrt_alpha_prod, original_samples)
-        sqrt_one_minus_alpha_prod = (1 - self.scheduler.alphas_cumprod[timesteps]) ** 0.5
-        sqrt_one_minus_alpha_prod = self.scheduler.match_shape(sqrt_one_minus_alpha_prod, original_samples)
+        # sqrt_alpha_prod = self.scheduler.match_shape(sqrt_alpha_prod, original_samples)
+        sqrt_one_minus_alpha_prod = (1 - self.scheduler.alphas_cumprod[timesteps].to(self.device)) ** 0.5
+        # sqrt_one_minus_alpha_prod = self.scheduler.match_shape(sqrt_one_minus_alpha_prod, original_samples)
 
-        noisy_latents = sqrt_alpha_prod * original_samples + sqrt_one_minus_alpha_prod * noise
+        noisy_latents = sqrt_alpha_prod.to(self.device) * original_samples.to(self.device) + sqrt_one_minus_alpha_prod * noise
         return noisy_latents
 
     def remove_noise(self, noisy_latents, noise, timesteps):
@@ -120,11 +125,11 @@ class StableDiffusion(nn.Module):
         #This is the inverse of add_noise
         timesteps = timesteps.cpu()
         sqrt_alpha_prod = self.scheduler.alphas_cumprod[timesteps] ** 0.5
-        sqrt_alpha_prod = self.scheduler.match_shape(sqrt_alpha_prod, noisy_latents)
-        sqrt_one_minus_alpha_prod = (1 - self.scheduler.alphas_cumprod[timesteps]) ** 0.5
-        sqrt_one_minus_alpha_prod = self.scheduler.match_shape(sqrt_one_minus_alpha_prod, noisy_latents)
+        # sqrt_alpha_prod = self.scheduler.match_shape(sqrt_alpha_prod, noisy_latents)
+        sqrt_one_minus_alpha_prod = (1 - self.scheduler.alphas_cumprod[timesteps].to(self.device)) ** 0.5
+        # sqrt_one_minus_alpha_prod = self.scheduler.match_shape(sqrt_one_minus_alpha_prod, noisy_latents)
 
-        original_samples = (noisy_latents - sqrt_one_minus_alpha_prod * noise) / sqrt_alpha_prod
+        original_samples = (noisy_latents - sqrt_one_minus_alpha_prod * noise) / sqrt_alpha_prod.to(self.device)
         return original_samples
     
     def predict_noise(self, noisy_latents, text_embeddings, timestep):
@@ -151,13 +156,13 @@ class StableDiffusion(nn.Module):
         assert 0<=t<self.num_train_timesteps, 'invalid timestep t=%i'%t
 
         # encode image into latents with vae, requires grad!
-        latents = self.encode_imgs(pred_rgb_512)
+        latents = self.encode_imgs(pred_rgb_512).to(self.device)
 
         
         # predict the noise residual with unet, NO grad!
         with torch.no_grad():
             # add noise
-            noise = torch.randn_like(latents)
+            noise = torch.randn_like(latents).to(self.device)
             #This is the only place we use the scheduler...the add_noise function. What's more...it's totally generic! The scheduler doesn't impact the implementation of train_step...
             latents_noisy = self.add_noise(latents, noise, t) #The add_noise function is identical for PNDM, DDIM, and DDPM schedulers in the diffusers library
             #TODO: Expand this add_noise function, and put it in this class. That way we don't need the scheduler...and we can also add an inverse function, which is what I need for previews...that subtracts noise...
@@ -269,7 +274,7 @@ class StableDiffusion(nn.Module):
 
         imgs = 2 * imgs - 1
         posterior = self.vae.encode(imgs)
-        latents = posterior.sample() * 0.18215
+        latents = posterior.latent_dist.sample() * 0.18215
         
         assert len(latents.shape)==4 and latents.shape[1]==4 #[B, 4, H, W]
 
