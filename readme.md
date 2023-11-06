@@ -1,6 +1,9 @@
 Hello world! This project has a website. Please visit that lol
 
-Please visit [ryanndagreat.github.io/Diffusion-Illusions](https://ryanndagreat.github.io/Diffusion-Illusions)
+Please visit [diffusionillusions.com](https://diffusionillusions.com)
+
+Or equivalently, [ryanndagreat.github.io/Diffusion-Illusions](https://ryanndagreat.github.io/Diffusion-Illusions)
+
 
 ![](assets/DiffusionIllusionsGif2.gif)
 
