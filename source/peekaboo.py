@@ -485,7 +485,7 @@ def run_peekaboo(name:str, image:Union[str,np.ndarray], label:Optional['BaseLabe
         log("Interrupted early, returning current results...")
         pass
 
-    output_folder = rp.make_folder('%s/%s'%(output_folder_name,name))
+    output_folder = rp.make_folder('%s/%s'%(output_folder_name[:200],name[:200]))
     output_folder += '/%03i'%(len(rp.get_subfolders(output_folder))+rp.random_index(10))
     
                 
