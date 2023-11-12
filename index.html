@@ -1210,14 +1210,40 @@
 		<script>
 			document.addEventListener('DOMContentLoaded', function () {
 				const imageGroups = [
+					'hc_playground_qr',
+					'hc_onering',
 					'2bwcatto',
-					'hc_help_dogs_1',
-					'hc_help_dogs_2',
-					'hc_lipstick_gandalf',
-					'hc_miku_picard_xl1',
-					'hc_miku_picard_xl2',
-					'hc_pentagram',
-					'hc_playground_bio'
+					'hc_help_dogs_1_',
+					'hc_help_dogs_2_',
+					'hc_lipstick_gandalf_',
+					// 'hc_miku_picard_xl1_',
+					// 'hc_miku_picard_xl2_',
+					'hc_pentagram_',
+					'hc_playground_bio_',
+					'q_vader_',
+					// 'q_pyra_',
+					'q_playstar_',
+					'q_playstar2_',
+					'q_playring_',
+					'q_nyanjungle_',
+					'q_mikubest_',
+					'q_mikubest3_',
+					'q_mikubest2_',
+					'q_miku3_',
+					'q_miku2_',
+					'q_miku1_',
+					'q_junglespiral_',
+					'q_frog_',
+					'q_frog2_',
+					'q_firegirl_',
+					'q_firedog_',
+					'q_chicken_',
+					'q_chicken2_',
+					// 'q_cat3_',
+					'q_animals_',
+					'hc_nyan',
+					'hc_russian_mario',
+					'hc_walter_thomas',
 				];
 
 				const container = document.getElementById('image-container');
@@ -1231,7 +1257,7 @@
 						imageContainer.className = 'hidden-character-image-container';
 
 						const image = document.createElement('img');
-						image.src = `images/quad_overlays/${group}_${i}.png`;
+						image.src = `images/quad_overlays/${group}${i}.png`;
 						image.className = 'draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image';
 						image.style.cssText = 'z-index: 1000;height: 256px;width:256px;';
 
