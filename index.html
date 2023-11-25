@@ -10,6 +10,9 @@
 
 
 	<style>
+
+
+
 		/* Gist Dark Mode Start */
 
 		/* https://github.com/lonekorean/gist-syntax-themes */
@@ -27,7 +30,7 @@
 
 		.generic_pause_button,
 		.reset-all-flip-images-button,
-		.reset-all-hidden-characters-button,
+		.reset-all-hidden-overlays-button,
 		.reset-all-rotaters-button {
 			background-color: rgba(248, 248, 242, .2);
 			border-radius: 100px;
@@ -242,7 +245,7 @@
 			/* z-index: 9999; */
 		}
 
-		.hidden-character-image-container {
+		.hidden-overlay-image-container {
 			display: inline-block;
 			position: relative;
 			margin: 0;
@@ -252,7 +255,7 @@
 
 		}
 
-		.hidden-character-image {
+		.hidden-overlay-image {
 			height: 256;
 			width: 256;
 		}
@@ -510,16 +513,16 @@
 	<h3>Introduction</h3>
 	<p>We're excited to share our paper, "Diffusion Illusions: Hiding Images in Plain Sight," which showcases how optical
 		illusions and steganography can be created using text-to-image diffusion models.
-	<p>We'll keep this brief so we can dive right into the pictures - <a class="scroll-to" href="#summary">check the
-			bottom of the
-			page</a> for more details about this project!</p>
-	<p>There are three kinds of illusions presented: <a class="scroll-to" href="#flippy_illusions">Flippy Illusions</a>,
+
+	<p>This website provides an interactive demo, simulating how these illusions work in real life! Please play around with all of them!</p>
+
+	<p>There are three kinds of illusions presented: <a class="scroll-to" href="#flip_illusions">Flip Illusions</a>,
 		<a class="scroll-to" href="#rotating_overlays">Rotating Overlays</a>, and
-		<a class="scroll-to" href="#hidden_characters">Hidden Characters</a>
+		<a class="scroll-to" href="#hidden_overlays">Hidden Overlays</a>
 	</p>
 
 
-	<h2 id="flippy_illusions">Flippy Illusions</h2>
+	<h2 id="flip_illusions">Flip Illusions</h2>
 	<p>If you wait a few seconds, the below images will flip upside-down - to reveal a new image!
 
 		<span class="no_mobile">
@@ -532,7 +535,7 @@
 		<span class="reset-all-flip-images-button no_mobile" style="margin-right:30px">
 			<b>Click here to reset all rotations</b>
 		</span>
-		<span class="generic_pause_button flippy_pause_button" style="display: inline-block; width: 40pt;">
+		<span class="generic_pause_button flip_pause_button" style="display: inline-block; width: 40pt;">
 			<b>Pause</b>
 		</span>
 	</div>
@@ -716,7 +719,7 @@
 	<br>
 
 	<hr>
-	<h2 id="hidden_characters">Hidden Characters</h2>
+	<h2 id="hidden_overlays">Hidden Overlays</h2>
 	<p>In this section, we have sets of 4 images. You can <it><b>click and drag</b></it> them on top of each other! They
 		will all be
 		multiplied together, and when they're all on top of each other they will reveal a secret 5th image. To reset the
@@ -730,7 +733,7 @@
 	<br>
 	<br>
 	<div style="text-align: center;">
-		<span class="reset-all-hidden-characters-button">
+		<span class="reset-all-hidden-overlays-button">
 			<b>Click here to reset all positions</b>
 		</span>
 	</div>
@@ -740,17 +743,17 @@
 
 	<div>
 		<div class="row lightbox">
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/tanky0.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/tanky0.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/tanky1.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/tanky1.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/tanky2.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/tanky2.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/tanky3.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/tanky3.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
 		</div>
 		<div class="caption">Click and drag these 4 pictures together! Can you find the hidden 5th picture? <br>
@@ -769,17 +772,17 @@
 
 	<div>
 		<div class="row lightbox">
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy00.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/darthy00.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy01.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/darthy01.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy02.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/darthy02.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy03.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/darthy03.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
 		</div>
 		<div class="caption">Try it with these too!</div>
@@ -794,7 +797,7 @@
 	<br>
 	<br>
 	<div style="text-align: center;">
-		<span class="reset-all-hidden-characters-button">
+		<span class="reset-all-hidden-overlays-button">
 			<b>Click here to reset all positions</b>
 		</span>
 	</div>
@@ -803,20 +806,20 @@
 
 	<div>
 		<div class="row lightbox">
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/miku1.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/miku1.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/miku0.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/miku0.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/miku2.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/miku2.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/miku3.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/miku3.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<!-- <div class="hidden-character-image-container"><img src="images/quad_overlays/mimi0.png"
-				class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image" style="z-index: 1000;"></div> -->
+			<!-- <div class="hidden-overlay-image-container"><img src="images/quad_overlays/mimi0.png"
+				class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image" style="z-index: 1000;"></div> -->
 
 		</div>
 		<div class="caption">(Hatsune Miku) * 4 = ?</div>
@@ -830,7 +833,7 @@
 	<br>
 	<br>
 	<div style="text-align: center;">
-		<span class="reset-all-hidden-characters-button">
+		<span class="reset-all-hidden-overlays-button">
 			<b>Click here to reset all positions</b>
 		</span>
 	</div>
@@ -839,17 +842,17 @@
 
 	<!-- <div>
 		<div class="row lightbox">
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/mimi1.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/mimi1.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/mimi0.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/mimi0.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/mimi2.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/mimi2.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/mimi3.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/mimi3.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
 		</div>
 		<div class="caption">(Hatsune Miku) * 4 = ?</div>
@@ -861,7 +864,7 @@
 	<br>
 	<br>
 	<div style="text-align: center;">
-		<span class="reset-all-hidden-characters-button">
+		<span class="reset-all-hidden-overlays-button">
 			<b>Click here to reset all positions</b>
 		</span>
 	</div>
@@ -876,20 +879,20 @@
 
 	<div>
 		<div class="row lightbox">
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/froggo0.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/froggo0.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/froggo1.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/froggo1.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/froggo2.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/froggo2.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/froggo3.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/froggo3.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
 		</div>
-		<!-- <div class="caption">This one isn't strictly a character...<br> -->
+		<!-- <div class="caption">This one isn't strictly a overlay...<br> -->
 
 	</div>
 	</div>
@@ -904,17 +907,17 @@
 
 	<!-- <div>
 		<div class="row lightbox">
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/catto0.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/catto0.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/catto1.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/catto1.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/catto2.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/catto2.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/catto3.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/catto3.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;"></div>
 		</div>
 
@@ -928,7 +931,7 @@
 	<br>
 	<br>
 	<div style="text-align: center;">
-		<span class="reset-all-hidden-characters-button">
+		<span class="reset-all-hidden-overlays-button">
 			<b>Click here to reset all positions</b>
 		</span>
 	</div>
@@ -938,17 +941,17 @@
 
 	<div>
 		<div class="row lightbox">
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/animalbw0.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/animalbw0.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;height: 256px;width:256px;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/animalbw1.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/animalbw1.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;height: 256px;width:256px;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/animalbw2.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/animalbw2.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;height: 256px;width:256px;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/animalbw3.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/animalbw3.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;height: 256px;width:256px;"></div>
 		</div>
 		<!-- <div class="caption">These images are kinda wikihow-quality but they'll do for now<br> -->
@@ -964,7 +967,7 @@
 	<br>
 	<br>
 	<div style="text-align: center;">
-		<span class="reset-all-hidden-characters-button">
+		<span class="reset-all-hidden-overlays-button">
 			<b>Click here to reset all positions</b>
 		</span>
 	</div>
@@ -973,17 +976,17 @@
 
 	<div>
 		<div class="row lightbox">
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/animalcol0.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/animalcol0.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;height: 256px;width:256px;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/animalcol1.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/animalcol1.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;height: 256px;width:256px;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/animalcol2.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/animalcol2.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;height: 256px;width:256px;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/animalcol3.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/animalcol3.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image"
 					style="z-index: 1000;height: 256px;width:256px;"></div>
 		</div>
 		<!-- <div class="caption">These images are kinda wikihow-quality but they'll do for now<br> -->
@@ -997,14 +1000,14 @@
 	<br>
 	<div>
 		<!-- <div class="row lightbox">
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/bwcatto0.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image" style="z-index: 1000;height: 256px;width:256px;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/bwcatto1.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image" style="z-index: 1000;height: 256px;width:256px;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/bwcatto2.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image" style="z-index: 1000;height: 256px;width:256px;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/bwcatto3.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image" style="z-index: 1000;height: 256px;width:256px;"></div>
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/bwcatto0.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image" style="z-index: 1000;height: 256px;width:256px;"></div>
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/bwcatto1.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image" style="z-index: 1000;height: 256px;width:256px;"></div>
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/bwcatto2.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image" style="z-index: 1000;height: 256px;width:256px;"></div>
+			<div class="hidden-overlay-image-container"><img src="images/quad_overlays/bwcatto3.png"
+					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image" style="z-index: 1000;height: 256px;width:256px;"></div>
 		</div>
 		</div>
 	</div>
@@ -1015,14 +1018,14 @@
 	<br> -->
 
 		<!-- <div class="row lightbox">
-		<div class="hidden-character-image-container"><img src="images/quad_overlays/2bwcatto0.png"
-				class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image" style="z-index: 1000;height: 256px;width:256px;"></div>
-		<div class="hidden-character-image-container"><img src="images/quad_overlays/2bwcatto1.png"
-				class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image" style="z-index: 1000;height: 256px;width:256px;"></div>
-		<div class="hidden-character-image-container"><img src="images/quad_overlays/2bwcatto2.png"
-				class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image" style="z-index: 1000;height: 256px;width:256px;"></div>
-		<div class="hidden-character-image-container"><img src="images/quad_overlays/2bwcatto3.png"
-				class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image" style="z-index: 1000;height: 256px;width:256px;"></div>
+		<div class="hidden-overlay-image-container"><img src="images/quad_overlays/2bwcatto0.png"
+				class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image" style="z-index: 1000;height: 256px;width:256px;"></div>
+		<div class="hidden-overlay-image-container"><img src="images/quad_overlays/2bwcatto1.png"
+				class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image" style="z-index: 1000;height: 256px;width:256px;"></div>
+		<div class="hidden-overlay-image-container"><img src="images/quad_overlays/2bwcatto2.png"
+				class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image" style="z-index: 1000;height: 256px;width:256px;"></div>
+		<div class="hidden-overlay-image-container"><img src="images/quad_overlays/2bwcatto3.png"
+				class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image" style="z-index: 1000;height: 256px;width:256px;"></div>
 	</div>
 
 	</div>
@@ -1080,11 +1083,11 @@
 
 					for (let i = 0; i < 4; i++) {
 						const imageContainer = document.createElement('div');
-						imageContainer.className = 'hidden-character-image-container';
+						imageContainer.className = 'hidden-overlay-image-container';
 
 						const image = document.createElement('img');
 						image.src = `images/quad_overlays/${group}${i}.png`;
-						image.className = 'draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image';
+						image.className = 'draggable-image quad-overlay glow-hover-element wiggly-image hidden-overlay-image';
 						image.style.cssText = 'z-index: 1000;height: 256px;width:256px;';
 
 						imageContainer.appendChild(image);
@@ -1102,7 +1105,7 @@
 					resetButtonContainer.style.textAlign = 'center';
 
 					const resetButtonSpan = document.createElement('span');
-					resetButtonSpan.className = 'reset-all-hidden-characters-button';
+					resetButtonSpan.className = 'reset-all-hidden-overlays-button';
 
 					const resetButtonText = document.createElement('b');
 					resetButtonText.textContent = 'Click here to reset all positions';
@@ -1166,7 +1169,7 @@
 
 			function makeImagesDraggable() {
 				$('.draggable-image').draggable({
-					snap: '.hidden-character-image, .lightbox',
+					snap: '.hidden-overlay-image, .lightbox',
 					start: function () {
 						if ($(this).hasClass('wiggly-image')) {
 							stop_wiggle = true;
@@ -1175,10 +1178,10 @@
 					drag: function (event, ui) {
 						var transformMatrix = $(this).css('transform');
 						ui.helper.css('transform', transformMatrix);
-						$('.reset-all-rotaters-button, .reset-all-hidden-characters-button').removeClass('inactive_button');
+						$('.reset-all-rotaters-button, .reset-all-hidden-overlays-button').removeClass('inactive_button');
 					},
 					stop: function () {
-						$('.reset-all-rotaters-button, .reset-all-hidden-characters-button').removeClass('inactive_button');
+						$('.reset-all-rotaters-button, .reset-all-hidden-overlays-button').removeClass('inactive_button');
 					}
 				}).dblclick(function () {
 					var originalPosition = $(this).data('originalPosition');
@@ -1207,9 +1210,9 @@
 				});
 			}
 
-			function resetHiddenCharactersPositions() {
-				$('.reset-all-hidden-characters-button').click(function () {
-					$('.hidden-character-image').each(function () {
+			function resetHiddenoverlaysPositions() {
+				$('.reset-all-hidden-overlays-button').click(function () {
+					$('.hidden-overlay-image').each(function () {
 						var originalPosition = $(this).data('originalPosition');
 						$(this).animate({
 							top: originalPosition.top,
@@ -1284,7 +1287,7 @@
 
 
 			function setButtonsInactive() {
-				$('.reset-all-rotaters-button, .reset-all-hidden-characters-button, .reset-all-flip-images-button').addClass('inactive_button');
+				$('.reset-all-rotaters-button, .reset-all-hidden-overlays-button, .reset-all-flip-images-button').addClass('inactive_button');
 			}
 
 			function initFlipImageRotation() {
@@ -1354,7 +1357,7 @@
 			storeOriginalPositions();
 			makeImagesDraggable();
 			resetRotatersPositions();
-			resetHiddenCharactersPositions();
+			resetHiddenoverlaysPositions();
 			resetFlipImagesPositions();
 			setButtonsInactive();
 			smoothScrolling();
@@ -1477,7 +1480,7 @@
 
 		$(document).ready(function () {
 			//TODO: Why doesn't this work?
-			$('.flippy_pause_button').data('state', 'pause').on('click', function () {
+			$('.flip_pause_button').data('state', 'pause').on('click', function () {
 				var button = $(this);
 				var currentState = button.data('state');
 
