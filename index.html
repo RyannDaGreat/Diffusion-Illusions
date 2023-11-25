@@ -132,6 +132,9 @@
 			font-size: 20pt;
 		}
 
+		h4 {
+			font-size: 16pt;
+		}
 		h1 {
 			color: rgb(255, 212, 165);
 		}
@@ -233,7 +236,7 @@
 			/* position: -webkit-sticky; */
 			/* position: sticky; */
 			position: relative;
-			filter: brightness(300%);
+			filter: brightness(200%);
 			/* height:256px; */
 			/* width: 256px; */
 			/* z-index: 9999; */
@@ -504,24 +507,33 @@
 	<h1>Diffusion Illusions: Hiding Images in Plain Sight</h1>
 
 	<h4>By <a target="_blank" href="https://ryanndagreat.github.io/">Ryan Burgert</a>,
+		<a target="_blank" href="https://scholar.google.com/citations?user=kXpclAgAAAAJ">Abe Leite</a>,
+		<a target="_blank" href="https://scholar.google.com/citations?user=qkyC7KQAAAAJ">Xiang Li</a>,
 		<a target="_blank" href="https://scholar.google.com/citations?user=K2WBZTwAAAAJ">Kanchana Ranasinghe</a>,
-		<a target="_blank" href="https://scholar.google.com/citations?user=qkyC7KQAAAAJ&hl=en">Xiang Li</a>,
-		<a target="_blank" href="https://scholar.google.com/citations?user=vcw0TJIAAAAJ&hl=en">Michael Ryoo</a>
+		<a target="_blank" href="https://scholar.google.com/citations?user=vcw0TJIAAAAJ">Michael Ryoo</a>
 	</h4>
 
 
 	<h3>Introduction</h3>
 	<p>We're excited to share our demo, "Diffusion Illusions: Hiding Images in Plain Sight," which showcases how optical
 		illusions and steganography can be created using text-to-image diffusion models.
+		<div>
+			<h4>News:</h4>
+			<ul>
+				<li>This project won <a href="https://cvpr2023.thecvf.com/Conferences/2023/Awards">best demo award in CVPR 2023!</a></li>
+				<li>We also presented at <a href="https://opensauce.live">OpenSauce 2023</a>. See JacksFilms' reaction <a href="https://youtube.com/clip/Ugkx5Rtt80MHftrU7QxCFSJciszQo6qx1zVm?feature=shared">here</a></li>
+			</ul>
+		</div>
 		<!-- The demo is available at <a -->
 		<!-- href="https://ryanndagreat.github.io/Diffusion-Illusions/">ryanndagreat.github.io/Diffusion-Illusions</a> -->
-		A video
-		demonstration is coming soon! Our demo shows how Score Distillation Loss, introduced in DreamFusion,
+		<!-- A video
+		demonstration is coming soon!
+		Our demo shows how Score Distillation Loss, introduced in DreamFusion,
 		can be used for more than just creating 3D models. For example, as shown in our paper <a
 			href="https://ryanndagreat.github.io/peekaboo/">"Peekaboo: Text to Image Diffusion
 			Models are Zero Shot Segmentors"</a>, that loss can even be adapted for segmentation. In this
 		demo, we use a variant of score distillation loss to optimize different optical illusions - hiding images in
-		plain sight.
+		plain sight. -->
 	</p>
 	<p>Source code: <a
 			href="https://github.com/RyannDaGreat/Diffusion-Illusions">github.com/RyannDaGreat/Diffusion-Illusions</a>.
@@ -649,214 +661,112 @@
 
 
 
-	<div class="col">
-		<div style="text-align: center;">
-			<span class="reset-all-rotaters-button" style="margin-right:30px">
-				<b>Click here to reset all positions</b>
-			</span>
-			<span class="generic_pause_button rotation_overlay_pause_button"
-				style="display: inline-block; width: 40pt;">
-				<b>Pause</b>
-			</span>
-		</div>
-		<br>
-		<br>
+	<div id="rotator-container"></div>
 
-		<div class="row">
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const row_length = 3; // Number of image pairs per row
+		const imagePairs = [
+			['4girlb', '4girlr'],
+			['affatab', 'affatar'],
+			['mikupb', 'mikupr'],
+			['lipb', 'lipr'],
+			['asasab', 'asasar'],
+			['dollopb', 'dollopr'],
+			['dolfob', 'dolfor'],
+			['pikavaderb', 'pikavaderr'],
+			['cowerr', 'cowerb'],
+			['seasonb', 'seasonr'],
+			['rotablenderb', 'rotablenderr'],
+			['skellyb', 'skellyr'],
+			['discor', 'discob'],
+			['tardyb', 'tardyr'],
+			['bbadb', 'bbadr'],
+			['shrekb', 'shrekr'],
+			['shrek2b', 'shrek2r'],
+			['shrek3b', 'shrek3r'],
+			['girlbob', 'girlbor'],
+			['girlbo2b', 'girlbo2r'],
+			['girlbo3b', 'girlbo3r'],
+			['girlbo4b', 'girlbo4r'],
+			// ['sanicb', 'sanicr'],
+			['shrek4b', 'shrek4r'],
+			["qrot_susher_base", "qrot_susher_rotator"],
+			["qrot_anime_bunbun_base", "qrot_anime_bunbun_rotator"],
+			// ["qrot_dogcatface1_base", "qrot_dogcatface1_rotator"],
+			["qrot_dogcatface2_base", "qrot_dogcatface2_rotator"],
+			["qrot_dogcatface3_base", "qrot_dogcatface3_rotator"],
+			// ["qrot_lotr1_base", "qrot_lotr1_rotator"],
+			["qrot_lotr2_base", "qrot_lotr2_rotator"],
+			["qrot_lotr3_base", "qrot_lotr3_rotator"],
+			["qrot_lotr4_base", "qrot_lotr4_rotator"],
+			["qrot_mikupicard1_base", "qrot_mikupicard1_rotator"],
+			["qrot_mikupicard2_base", "qrot_mikupicard2_rotator"],
+			["qrot_mikupicard3_base", "qrot_mikupicard3_rotator"],
+			["qrot_superman1_base", "qrot_superman1_rotator"],
+			["qrot_superman2_base", "qrot_superman2_rotator"],
+			["qrot_superman3_base", "qrot_superman3_rotator"],
+			// ["qrot_sushicream1_base", "qrot_sushicream1_rotator"],
+		];
 
-			<div class="rot-image-container" style="filter: brightness(200%);">
-				<img src="images/rotaters/4girlb.png" class="rot_image_size">
-				<img src="images/rotaters/4girlr.png"
-					class="rot_image_size quad-rotating-image draggable-image glow-hover-element">
+		const container = document.getElementById('rotator-container');
+
+		// Creating the top button section
+		const buttonSection = document.createElement('div');
+		buttonSection.className = 'col';
+		buttonSection.innerHTML = `
+			<div style="text-align: center;">
+				<span class="reset-all-rotaters-button" style="margin-right:30px">
+					<b>Click here to reset all positions</b>
+				</span>
+				<span class="generic_pause_button rotation_overlay_pause_button" style="display: inline-block; width: 40pt;">
+					<b>Pause</b>
+				</span>
 			</div>
+			<br><br>
+		`;
+		container.appendChild(buttonSection);
 
-			<div style="width: 50px"></div>
+		// Function to create a single image pair container
+		function createImagePair(pair) {
+			const imageContainer = document.createElement('div');
+			imageContainer.className = 'rot-image-container';
+			imageContainer.style.filter = 'brightness(200%)'; // Adjust brightness as needed
 
-			<div class="rot-image-container" style="filter: brightness(200%);">
-				<img src="images/rotaters/affatab.png" class="rot_image_size">
-				<img src="images/rotaters/affatar.png"
-					class="rot_image_size quad-rotating-image draggable-image glow-hover-element">
-			</div>
+			const image1 = document.createElement('img');
+			image1.src = `images/rotaters/${pair[0]}.png`;
+			image1.className = 'rot_image_size';
 
-			<div style="width: 50px"></div>
+			const image2 = document.createElement('img');
+			image2.src = `images/rotaters/${pair[1]}.png`;
+			image2.className = 'rot_image_size quad-rotating-image draggable-image glow-hover-element';
 
-			<div class="rot-image-container">
-				<img src="images/rotaters/mikupb.png" class="rot_image_size">
-				<img src="images/rotaters/mikupr.png"
-					class="rot_image_size quad-rotating-image draggable-image glow-hover-element">
-			</div>
+			imageContainer.appendChild(image1);
+			imageContainer.appendChild(image2);
+			return imageContainer;
+		}
 
-		</div>
+		// Loop to create rows
+		for (let i = 0; i < imagePairs.length; i += row_length) {
+			const row = document.createElement('div');
+			row.className = 'row';
 
-		<br>
-		<br>
+			for (let j = 0; j < row_length && (i + j) < imagePairs.length; j++) {
+				row.appendChild(createImagePair(imagePairs[i + j]));
 
-		<div class="row">
-			<!-- <div class="rot-image-container" style="filter: brightness(150%);">
-				<img src="images/rotaters/rastb.png" class="rot_image_size">
-				<img src="images/rotaters/rastr.png"
-					class="rot_image_size quad-rotating-image draggable-image glow-hover-element">
-			</div> -->
-			<div class="rot-image-container" style="filter: brightness(150%);">
-				<img src="images/rotaters/lipb.png" class="rot_image_size">
-				<img src="images/rotaters/lipr.png"
-					class="rot_image_size quad-rotating-image draggable-image glow-hover-element">
-			</div>
-			<div style="width: 50px"></div>
-			<div class="rot-image-container" style="filter: brightness(150%);">
-				<img src="images/rotaters/asasab.png" class="rot_image_size">
-				<img src="images/rotaters/asasar.png"
-					class="rot_image_size quad-rotating-image draggable-image glow-hover-element">
-			</div>
-			<div style="width: 50px"></div>
-			<div class="rot-image-container" style="filter: brightness(150%);">
-				<img src="images/rotaters/dollopb.png" class="rot_image_size">
-				<img src="images/rotaters/dollopr.png"
-					class="rot_image_size quad-rotating-image draggable-image glow-hover-element">
-			</div>
-		</div>
+				if (j < row_length - 1) {
+					const spacer = document.createElement('div');
+					spacer.style.width = '50px';
+					row.appendChild(spacer);
+				}
+			}
 
-		<br>
-		<br>
-
-		<div class="row">
-
-			<div class="rot-image-container">
-				<img src="images/rotaters/dolfob.png" class="rot_image_size">
-				<img src="images/rotaters/dolfor.png"
-					class="rot_image_size quad-rotating-image draggable-image glow-hover-element">
-			</div>
-
-			<div style="width: 50px"></div>
-
-			<div class="rot-image-container" style="filter: brightness(200%);">
-				<img src="images/rotaters/pikavaderb.png">
-				<img src="images/rotaters/pikavaderr.png"
-					class="quad-rotating-image draggable-image glow-hover-element">
-			</div>
-
-			<div style="width: 50px"></div>
-
-
-			<div class="rot-image-container" style="filter: brightness(150%);">
-				<img src="images/rotaters/cowerr.png" class="rot_image_size">
-				<img src="images/rotaters/cowerb.png"
-					class="rot_image_size quad-rotating-image draggable-image glow-hover-element">
-			</div>
-		</div>
-
-		<br>
-		<br>
-
-		<div class="row">
-			<div class="rot-image-container" style="filter: brightness(170%);">
-				<img src="images/rotaters/seasonb.png">
-				<img src="images/rotaters/seasonr.png" class="season-rotating-image draggable-image glow-hover-element">
-			</div>
-			<div style="width: 50px"></div>
-			<div class="rot-image-container" style="filter: brightness(180%);">
-				<img src="images/rotaters/rotablenderb.png">
-				<img src="images/rotaters/rotablenderr.png"
-					class="elf-rotating-image draggable-image glow-hover-element">
-			</div>
-			<div style="width: 50px"></div>
-			<div class="rot-image-container" style="filter: brightness(150%);">
-				<img src="images/rotaters/skellyb.png">
-				<img src="images/rotaters/skellyr.png" class="skelly-rotating-image draggable-image glow-hover-element">
-			</div>
-		</div>
-
-		<br>
-		<br>
-
-		<div class="row">
-			<div class="rot-image-container" style="filter: brightness(170%);">
-				<img src="images/rotaters/discor.png">
-				<img src="images/rotaters/discob.png" class="quad-rotating-image draggable-image glow-hover-element">
-			</div>
-			<div style="width: 50px"></div>
-			<div class="rot-image-container" style="filter: brightness(180%);">
-				<img src="images/rotaters/tardyb.png">
-				<img src="images/rotaters/tardyr.png" class="quad-rotating-image draggable-image glow-hover-element">
-			</div>
-			<div style="width: 50px"></div>
-			<div class="rot-image-container" style="filter: brightness(180%);">
-				<img src="images/rotaters/bbadb.png">
-				<img src="images/rotaters/bbadr.png" class="quad-rotating-image draggable-image glow-hover-element">
-			</div>
-			<!-- <div style="width: 50px"></div>
-			<div class="rot-image-container" style="filter: brightness(150%);">
-				<img src="images/rotaters/skellyb.png">
-				<img src="images/rotaters/skellyr.png" class="skelly-rotating-image draggable-image glow-hover-element">
-			</div> -->
-		</div>
-
-		<br>
-		<br>
-
-
-		<div class="row">
-			<div class="rot-image-container" style="filter: brightness(170%);">
-				<img src="images/rotaters/shrekb.png">
-				<img src="images/rotaters/shrekr.png" class="quad-rotating-image draggable-image glow-hover-element">
-			</div>
-			<div style="width: 50px"></div>
-			<div class="rot-image-container" style="filter: brightness(180%);">
-				<img src="images/rotaters/shrek2b.png">
-				<img src="images/rotaters/shrek2r.png" class="quad-rotating-image draggable-image glow-hover-element">
-			</div>
-			<div style="width: 50px"></div>
-			<div class="rot-image-container" style="filter: brightness(180%);">
-				<img src="images/rotaters/shrek3b.png">
-				<img src="images/rotaters/shrek3r.png" class="quad-rotating-image draggable-image glow-hover-element">
-			</div>
-		</div>
-
-		<br>
-		<br>
-
-
-		<div class="row">
-			<div class="rot-image-container" style="filter: brightness(170%);">
-				<img src="images/rotaters/girlbob.png">
-				<img src="images/rotaters/girlbor.png" class="quad-rotating-image draggable-image glow-hover-element">
-			</div>
-			<div style="width: 50px"></div>
-			<div class="rot-image-container" style="filter: brightness(180%);">
-				<img src="images/rotaters/girlbo2b.png">
-				<img src="images/rotaters/girlbo2r.png" class="quad-rotating-image draggable-image glow-hover-element">
-			</div>
-			<div style="width: 50px"></div>
-			<div class="rot-image-container" style="filter: brightness(180%);">
-				<img src="images/rotaters/girlbo3b.png">
-				<img src="images/rotaters/girlbo3r.png" class="quad-rotating-image draggable-image glow-hover-element">
-			</div>
-		</div>
-
-
-		<br>
-		<br>
-
-
-		<div class="row">
-			<div class="rot-image-container" style="filter: brightness(170%);">
-				<img src="images/rotaters/girlbo4b.png">
-				<img src="images/rotaters/girlbo4r.png" class="quad-rotating-image draggable-image glow-hover-element">
-			</div>
-			<div style="width: 50px"></div>
-			<div class="rot-image-container" style="filter: brightness(180%);">
-				<img src="images/rotaters/sanicb.png">
-				<img src="images/rotaters/sanicr.png" class="quad-rotating-image draggable-image glow-hover-element">
-			</div>
-			<div style="width: 50px"></div>
-			<div class="rot-image-container" style="filter: brightness(180%);">
-				<img src="images/rotaters/shrek4b.png">
-				<img src="images/rotaters/shrek4r.png" class="quad-rotating-image draggable-image glow-hover-element">
-			</div>
-		</div>
-
-
-	</div>
+			container.appendChild(row);
+			container.appendChild(document.createElement('br'));
+			container.appendChild(document.createElement('br'));
+		}
+	});
+</script>
 
 	<br>
 	<br>
@@ -1637,12 +1547,12 @@
 			var currentDate = `${yyyy}-${mm}-${dd}`;
 
 			var citation = `@misc{burgert2023diffusion_illusions,
-    title = {Diffusion Illusions: Hiding Images in Plain Sight},
-    author = {Burgert, Ryan and Ranasinghe, Kanchana and Li, Xiang and Ryoo, Michael},
-    year = {2023},
-    month = mar,
-    howpublished = {\\url{https://ryanndagreat.github.io/Diffusion-Illusions}},
-    note = {Accessed: ${currentDate}}
+	title = {Diffusion Illusions: Hiding Images in Plain Sight},
+	author = {Burgert, Ryan and Ranasinghe, Kanchana and Li, Xiang and Ryoo, Michael},
+	year = {2023},
+	month = mar,
+	howpublished = {\\url{https://ryanndagreat.github.io/Diffusion-Illusions}},
+	note = {Accessed: ${currentDate}}
 }`;
 
 			$("#citation-text").text(citation);
@@ -1718,7 +1628,7 @@
 
 	<hr>
 
-	<h2 id="summary">CVPR Demo Proposal Summary</h2>
+	<h2 id="summary">Demo Summary</h2>
 
 	<a href="assets/whitepaper.pdf">
 		<h3>Short Whitepaper</h3>
@@ -1747,14 +1657,14 @@
 			reveals a fourth image.</li>
 	</ol>
 
-	<h3>Interactive Experience</h3>
+	<!-- <h3>Interactive Experience</h3>
 	<p>The project will include physical items such as transparencies for people to interact with, as well as a live
 		demonstration that will allow people to create their own illusions on the spot. If space permits, we might bring
 		a printer to let people play with the illusions they create. And if we have even more space, perhaps a robot arm
 		to automatically demo the flippy images.</p>
 
 	<p>In this website you'll find multiple interactive exhibits where you can drag images around as if they were pieces
-		of paper / transparencies. Until we demo at CVPR, this is the next best thing to the physical demo! </p>
+		of paper / transparencies. Until we demo at CVPR, this is the next best thing to the physical demo! </p> -->
 
 	<h3>Similar Projects</h3>
 	<p>Another project with a similar goal was released in February: <a target="_blank"
@@ -1766,7 +1676,7 @@
 		- it optimizes images using a variant of score distillation loss to perform zero shot segmentation.</p>
 
 
-	<h3>Pseudocode</h3>
+	<h3>How it Works: Pseudocode</h3>
 	<p>To help explain how these were calculated, I've included some easy-to-read pseudocode that covers how each of
 		these illusions were made. The full source code can be found at <a target="_blank"
 			href="https://github.com/RyannDaGreat/Diffusion-Illusions">github.com/RyannDaGreat/Diffusion-Illusions</a>,
