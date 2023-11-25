@@ -506,38 +506,10 @@
 <body>
 	<h1>Diffusion Illusions: Hiding Images in Plain Sight</h1>
 
-	<h4>By <a target="_blank" href="https://ryanndagreat.github.io/">Ryan Burgert</a>,
-		<a target="_blank" href="https://scholar.google.com/citations?user=kXpclAgAAAAJ">Abe Leite</a>,
-		<a target="_blank" href="https://scholar.google.com/citations?user=qkyC7KQAAAAJ">Xiang Li</a>,
-		<a target="_blank" href="https://scholar.google.com/citations?user=K2WBZTwAAAAJ">Kanchana Ranasinghe</a>,
-		<a target="_blank" href="https://scholar.google.com/citations?user=vcw0TJIAAAAJ">Michael Ryoo</a>
-	</h4>
-
 
 	<h3>Introduction</h3>
-	<p>We're excited to share our demo, "Diffusion Illusions: Hiding Images in Plain Sight," which showcases how optical
+	<p>We're excited to share our paper, "Diffusion Illusions: Hiding Images in Plain Sight," which showcases how optical
 		illusions and steganography can be created using text-to-image diffusion models.
-		<div>
-			<h4>News:</h4>
-			<ul>
-				<li>This project won <a href="https://cvpr2023.thecvf.com/Conferences/2023/Awards">best demo award in CVPR 2023!</a></li>
-				<li>We also presented at <a href="https://opensauce.live">OpenSauce 2023</a>. See JacksFilms' reaction <a href="https://youtube.com/clip/Ugkx5Rtt80MHftrU7QxCFSJciszQo6qx1zVm?feature=shared">here</a></li>
-			</ul>
-		</div>
-		<!-- The demo is available at <a -->
-		<!-- href="https://ryanndagreat.github.io/Diffusion-Illusions/">ryanndagreat.github.io/Diffusion-Illusions</a> -->
-		<!-- A video
-		demonstration is coming soon!
-		Our demo shows how Score Distillation Loss, introduced in DreamFusion,
-		can be used for more than just creating 3D models. For example, as shown in our paper <a
-			href="https://ryanndagreat.github.io/peekaboo/">"Peekaboo: Text to Image Diffusion
-			Models are Zero Shot Segmentors"</a>, that loss can even be adapted for segmentation. In this
-		demo, we use a variant of score distillation loss to optimize different optical illusions - hiding images in
-		plain sight. -->
-	</p>
-	<p>Source code: <a
-			href="https://github.com/RyannDaGreat/Diffusion-Illusions">github.com/RyannDaGreat/Diffusion-Illusions</a>.
-		If you like it, please give it a star!</p>
 	<p>We'll keep this brief so we can dive right into the pictures - <a class="scroll-to" href="#summary">check the
 			bottom of the
 			page</a> for more details about this project!</p>
@@ -545,13 +517,6 @@
 		<a class="scroll-to" href="#rotating_overlays">Rotating Overlays</a>, and
 		<a class="scroll-to" href="#hidden_characters">Hidden Characters</a>
 	</p>
-
-	<!-- <ol>
-		  <li><a class="scroll-to" href="#flippy_illusions">Flippy Illusions</a></li>
-	  <li><a class="scroll-to" href="#rotating_overlays">Rotating Overlays</a></li>
-	  <li><a class="scroll-to" href="#hidden_characters">Hidden Characters</a></li>
-	</ol> -->
-
 
 
 	<h2 id="flippy_illusions">Flippy Illusions</h2>
@@ -617,26 +582,7 @@
 		</div>
 	</div>
 
-	<h3>A real-life demo:</h3>
-	<div style="text-align:center;">
-		<!-- <iframe width="393.5" height="700"
-			src="https://www.youtube.com/embed/hmV_J3p2KVo?autoplay=1&loop=1&playlist=hmV_J3p2KVo&rel=0"
-			title="YouTube video player" frameborder="0"
-			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-			allowfullscreen></iframe> -->
-		<iframe width="393.5" height="700"
-			src="https://www.youtube.com/embed/hmV_J3p2KVo?autoplay=0&loop=1&playlist=hmV_J3p2KVo&rel=0"
-			title="YouTube video player" frameborder="0"
-			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-			allowfullscreen></iframe>
-
-	</div>
 	<br>
-	<a target="_blank"
-		href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/flippy_illusions_for_colab.ipynb">
-		<h3><img src="images/colab_logo.svg" alt="Google Colab logo" width="30pt" height="30pt"
-				style="vertical-align: middle; margin-right: 10pt;">Try it on Colab!</h3>
-	</a>
 
 	<hr>
 
@@ -645,8 +591,6 @@
 		on the top is multiplied by the one on the bottom
 		(pixelwise), simulating how light would be filtered through two transparent sheets with images printed on them.
 		Effectively, we've made 4 images out of 2!</p>
-	<p>This works in real life too: you can overlay printouts of these images on top of each other for the same results,
-		as seen in the youtube video.</p>
 	<p>You can <it><b>click and drag</b></it> them to inspect the top and bottom images separately, or right
 		click and open image in new tab to print them out for yourself. To reset the position of an image, <b> double
 			click it.</b></p>
@@ -771,30 +715,6 @@
 	<br>
 	<br>
 
-	<h3>A real-life demo:</h3>
-	<div style="text-align:center;">
-		<!-- <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/NWEUaXHWyI0"
-			title="YouTube video player" frameborder="0"
-			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-			allowfullscreen></iframe> -->
-		<iframe width="700" height="393.75" src="https://www.youtube.com/embed/CWXMSHKrd8Y?rel=0"
-			title="YouTube video player" frameborder="0"
-			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-			allowfullscreen></iframe>
-	</div>
-	<div class="caption">
-		<a target="_blank" href="assets/rotating_overlays.pdf">Click here for a printable PDF</a> full of these images,
-		so you can try
-		it yourself!
-	</div>
-
-	<a target="_blank"
-		href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/rotation_overlays_for_colab.ipynb">
-		<h3><img src="images/colab_logo.svg" alt="Google Colab logo" width="30pt" height="30pt"
-				style="vertical-align: middle; margin-right: 10pt;">Try it on Colab!</h3>
-	</a>
-
-
 	<hr>
 	<h2 id="hidden_characters">Hidden Characters</h2>
 	<p>In this section, we have sets of 4 images. You can <it><b>click and drag</b></it> them on top of each other! They
@@ -806,10 +726,6 @@
 	<!-- <button type="button" . class="">Click me</button> -->
 
 
-	<p>This works in real life too: you can overlay printouts of these images on top of each other for the same results,
-		as seen in the youtube video.</p>
-	</p>
-	<p>I won't spoil it for you in this paragraph; try it out!</p>
 
 	<br>
 	<br>
@@ -1538,27 +1454,6 @@
 			}
 		});
 
-		//Bibtex section
-		$(document).ready(function () {
-			var today = new Date();
-			var yyyy = today.getFullYear();
-			var mm = String(today.getMonth() + 1).padStart(2, "0");
-			var dd = String(today.getDate()).padStart(2, "0");
-			var currentDate = `${yyyy}-${mm}-${dd}`;
-
-			var citation = `@misc{burgert2023diffusion_illusions,
-	title = {Diffusion Illusions: Hiding Images in Plain Sight},
-	author = {Burgert, Ryan and Ranasinghe, Kanchana and Li, Xiang and Ryoo, Michael},
-	year = {2023},
-	month = mar,
-	howpublished = {\\url{https://ryanndagreat.github.io/Diffusion-Illusions}},
-	note = {Accessed: ${currentDate}}
-}`;
-
-			$("#citation-text").text(citation);
-		});
-
-
 		//Play and Pause Buttons
 		$(document).ready(function () {
 			$('.rotation_overlay_pause_button').data('state', 'pause').on('click', function () {
@@ -1608,144 +1503,6 @@
 
 
 	</script>
-
-
-	<h3>A real-life demo <span style="color: ;">[WARNING: SPOILERS!!!]</span></h3>
-	<div style="text-align:center;">
-		<iframe width="700" height="393.5" src="https://www.youtube.com/embed/dt612_cpYl0?rel=0"
-			title="YouTube video player" frameborder="0"
-			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-			allowfullscreen></iframe>
-	</div>
-
-	<br>
-	<a target="_blank"
-		href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/hidden_characters_for_colab.ipynb">
-		<h3><img src="images/colab_logo.svg" alt="Google Colab logo" width="30pt" height="30pt"
-				style="vertical-align: middle; margin-right: 10pt;">Try it on Colab!</h3>
-	</a>
-
-
-	<hr>
-
-	<h2 id="summary">Demo Summary</h2>
-
-	<a href="assets/whitepaper.pdf">
-		<h3>Short Whitepaper</h3>
-	</a>
-	<p>Click the <a href="assets/whitepaper.pdf">this link</a> to access a short 2-page whitepaper about this project,
-		including mathetmatical formulae.</p>
-
-	<h3>Project Overview</h3>
-	<p>The project is comprised of three demonstrations:</p>
-	<ol>
-		<li><strong>Generating images that appear as different objects when flipped upside down</strong> - For example,
-			a giraffe could look like a penguin. <br>
-			Top accomplish this, let's define some functions and variables. We want to create an image "Image" such that
-			when viewed right side up, "Image" matches "Prompt1" (in this case 'Giraffe'). And when Image is upside
-			down, we want it to match the prompt "Penguin"
-			We optimize an image we'll call "Image" using score distillation loss "SD". We optimize SD(Image,prompt_1)
-		</li>
-		<li><strong>Revealing a hidden image through image overlay</strong> - Overlaying four images, such as Hatsune
-			Miku, a bear in a field, Mario, and a pumpkin, to reveal a fifth image, Darth Vader, when light is shone
-			behind it. The four images are optimized to look like the original objects when viewed individually, but
-			when combined, they reveal the hidden image of Darth Vader.</li>
-		<li><strong>Revealing multiple images through image rotation</strong> - Overlaying two images to reveal four
-			different images when rotated. The top image, when overlayed on the bottom image and light shines through,
-			will reveal an image such as Darth Vader. When the top image is rotated 90 degrees, it becomes a different
-			picture such as Pikachu. Another 90-degree rotation reveals another image and a final 90-degree rotation
-			reveals a fourth image.</li>
-	</ol>
-
-	<!-- <h3>Interactive Experience</h3>
-	<p>The project will include physical items such as transparencies for people to interact with, as well as a live
-		demonstration that will allow people to create their own illusions on the spot. If space permits, we might bring
-		a printer to let people play with the illusions they create. And if we have even more space, perhaps a robot arm
-		to automatically demo the flippy images.</p>
-
-	<p>In this website you'll find multiple interactive exhibits where you can drag images around as if they were pieces
-		of paper / transparencies. Until we demo at CVPR, this is the next best thing to the physical demo! </p> -->
-
-	<h3>Similar Projects</h3>
-	<p>Another project with a similar goal was released in February: <a target="_blank"
-			href="https://github.com/tancik/Illusion-Diffusion">Illusion-Diffusion</a>, authored by Matthew Tanick. That
-		project only achieves the first part of this demo, aka image flipping.</p>
-
-	<p>Our paper, <a href="https://ryanndagreat.github.io/peekaboo/">"Peekaboo: Text to Image Diffusion
-			Models are Zero Shot Segmentors"</a>, has an extremely similar formulation to the illusions on this website
-		- it optimizes images using a variant of score distillation loss to perform zero shot segmentation.</p>
-
-
-	<h3>How it Works: Pseudocode</h3>
-	<p>To help explain how these were calculated, I've included some easy-to-read pseudocode that covers how each of
-		these illusions were made. The full source code can be found at <a target="_blank"
-			href="https://github.com/RyannDaGreat/Diffusion-Illusions">github.com/RyannDaGreat/Diffusion-Illusions</a>,
-		or at any of the Google Colab links throughout this webpage.</p>
-	<h4>Flippy Illusions</h4>
-	<script src="https://gist.github.com/RyannDaGreat/fde3d6c05fb4d6d0cf31e7477658d3fd.js"></script>
-	<br>
-	<h4>Rotating Overlays</h4>
-	<script src="https://gist.github.com/RyannDaGreat/0cb428a7d0a839249f058ef8273b9faf.js"></script>
-	<br>
-	<h4>Hidden Characters</h4>
-	<script src="https://gist.github.com/RyannDaGreat/9dc5d591ec7bbba3743eab69e964b8db.js"></script>
-
-	<h3>Timelapses</h3>
-
-	<p>Diffusion illisions are generated through an iterative process: we optimize the output images with gradient
-		descent, starting from pure noise. Here are some timelapses showing how they evolve over time.</p>
-
-	<h4>Flippy Illusion Timelapses</h4>
-	<div style="text-align:center;">
-		<iframe width="700" height="700"
-			src="https://www.youtube.com/embed/YRWd4nVcZlA?autoplay=1&loop=1&playlist=YRWd4nVcZlA&rel=0"
-			title="YouTube video player" frameborder="0"
-			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-			allowfullscreen></iframe>
-	</div>
-	<p class="center_text">For reference, here are the end results of the above timelapse video:</p>
-	<div style="text-align: center;">
-		<span class="reset-all-flip-images-button no_mobile" style="margin-right:30px">
-			<b>Click here to reset all rotations</b>
-		</span>
-		<span class="generic_pause_button flippy_pause_button" style="display: inline-block; width: 40pt;">
-			<b>Pause</b>
-		</span>
-	</div>
-	<br>
-	<div class="col">
-		<div class="row">
-			<div class="image-container">
-				<div class="caption">Giraffe / Penguin</div>
-				<img src="images/flippers/giraffepenguin_timelapse.png"
-					class="flip_image flip_image_animated glow-hover-element">
-			</div>
-			<div class="image-container">
-
-				<div class="caption">Angelic Pretty / Victorian Dress</div>
-				<img src="images/flippers/lolo_timelapse.png" class="flip_image flip_image_animated glow-hover-element">
-			</div>
-		</div>
-
-		<br>
-		<br>
-	</div>
-	<h4>Hidden Character Timelapses</h4>
-	<div style="text-align:center;">
-		<iframe width="1000" height="500"
-			src="https://www.youtube.com/embed/e-ORk5keZNw?autoplay=1&loop=1&playlist=e-ORk5keZNw&rel=0"
-			title="YouTube video player" frameborder="0"
-			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-			allowfullscreen></iframe>
-	</div>
-	<br>
-	<br>
-	<br>
-	<h3>Bibtex Citation</h3>
-	<div class="citation-box">
-		<pre id="citation-text"></pre>
-	</div>
-	<br>
 
 </body>
 
