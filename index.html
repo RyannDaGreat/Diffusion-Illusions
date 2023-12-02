@@ -135,6 +135,7 @@
 		h4 {
 			font-size: 16pt;
 		}
+
 		h1 {
 			color: rgb(255, 212, 165);
 		}
@@ -517,16 +518,18 @@
 	<h3>Introduction</h3>
 	<p>We're excited to share our demo, "Diffusion Illusions: Hiding Images in Plain Sight," which showcases how optical
 		illusions and steganography can be created using text-to-image diffusion models.
-		<div>
-			<h4>News:</h4>
-			<ul>
-				<li>This project won <a href="https://cvpr2023.thecvf.com/Conferences/2023/Awards">best demo award in CVPR 2023!</a></li>
-				<li>We also presented at <a href="https://opensauce.live">OpenSauce 2023</a>. See JacksFilms' reaction <a href="https://youtube.com/clip/Ugkx5Rtt80MHftrU7QxCFSJciszQo6qx1zVm?feature=shared">here</a></li>
-			</ul>
-		</div>
-		<!-- The demo is available at <a -->
-		<!-- href="https://ryanndagreat.github.io/Diffusion-Illusions/">ryanndagreat.github.io/Diffusion-Illusions</a> -->
-		<!-- A video
+	<div>
+		<h4>News:</h4>
+		<ul>
+			<li>This project won <a href="https://cvpr2023.thecvf.com/Conferences/2023/Awards">best demo award in CVPR
+					2023!</a></li>
+			<li>We also presented at <a href="https://opensauce.live">OpenSauce 2023</a>. See JacksFilms' reaction <a
+					href="https://youtube.com/clip/Ugkx5Rtt80MHftrU7QxCFSJciszQo6qx1zVm?feature=shared">here</a></li>
+		</ul>
+	</div>
+	<!-- The demo is available at <a -->
+	<!-- href="https://ryanndagreat.github.io/Diffusion-Illusions/">ryanndagreat.github.io/Diffusion-Illusions</a> -->
+	<!-- A video
 		demonstration is coming soon!
 		Our demo shows how Score Distillation Loss, introduced in DreamFusion,
 		can be used for more than just creating 3D models. For example, as shown in our paper <a
@@ -538,8 +541,7 @@
 	<p><b>Source code: </b><a
 			href="https://github.com/RyannDaGreat/Diffusion-Illusions">github.com/RyannDaGreat/Diffusion-Illusions</a>.
 		If you like it, please give it a star!</p>
-		<p><b>Our Paper: </b><a
-			href="assets/whitepaper.pdf">diffusionillusions.pdf</a> - please give it a read!</p>
+	<p><b>Our Paper: </b><a href="assets/whitepaper.pdf">diffusionillusions.pdf</a> - please give it a read!</p>
 	<p>We'll keep this brief so we can dive right into the pictures - <a class="scroll-to" href="#summary">check the
 			bottom of the
 			page</a> for more details about this project!</p>
@@ -808,60 +810,60 @@
 		<br>
 		<br>
 
-	<div id="rotator-container"></div>
+		<div id="rotator-container"></div>
 
-<script>
-	document.addEventListener('DOMContentLoaded', function() {
-		const row_length = 3; // Number of image pairs per row
-		const imagePairs = [
-			// ['4girlb', '4girlr'],
-			// ['affatab', 'affatar'],
-			// ['mikupb', 'mikupr'],
-			// ['lipb', 'lipr'],
-			// ['asasab', 'asasar'],
-			// ['dollopb', 'dollopr'],
-			// ['dolfob', 'dolfor'],
-			// ['pikavaderb', 'pikavaderr'],
-			// ['cowerr', 'cowerb'],
-			// ['seasonb', 'seasonr'],
-			// ['rotablenderb', 'rotablenderr'],
-			// ['skellyb', 'skellyr'],
-			// ['discor', 'discob'],
-			// ['tardyb', 'tardyr'],
-			// ['bbadb', 'bbadr'],
-			['shrekb', 'shrekr'],
-			['shrek2b', 'shrek2r'],
-			['shrek3b', 'shrek3r'],
-			['girlbob', 'girlbor'],
-			['girlbo2b', 'girlbo2r'],
-			['girlbo3b', 'girlbo3r'],
-			['girlbo4b', 'girlbo4r'],
-			// ['sanicb', 'sanicr'],
-			['shrek4b', 'shrek4r'],
-			["qrot_susher_base", "qrot_susher_rotator"],
-			["qrot_anime_bunbun_base", "qrot_anime_bunbun_rotator"],
-			// ["qrot_dogcatface1_base", "qrot_dogcatface1_rotator"],
-			["qrot_dogcatface2_base", "qrot_dogcatface2_rotator"],
-			["qrot_dogcatface3_base", "qrot_dogcatface3_rotator"],
-			// ["qrot_lotr1_base", "qrot_lotr1_rotator"],
-			["qrot_lotr2_base", "qrot_lotr2_rotator"],
-			["qrot_lotr3_base", "qrot_lotr3_rotator"],
-			["qrot_lotr4_base", "qrot_lotr4_rotator"],
-			["qrot_mikupicard1_base", "qrot_mikupicard1_rotator"],
-			["qrot_mikupicard2_base", "qrot_mikupicard2_rotator"],
-			["qrot_mikupicard3_base", "qrot_mikupicard3_rotator"],
-			["qrot_superman1_base", "qrot_superman1_rotator"],
-			["qrot_superman2_base", "qrot_superman2_rotator"],
-			["qrot_superman3_base", "qrot_superman3_rotator"],
-			// ["qrot_sushicream1_base", "qrot_sushicream1_rotator"],
-		];
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				const row_length = 3; // Number of image pairs per row
+				const imagePairs = [
+					// ['4girlb', '4girlr'],
+					// ['affatab', 'affatar'],
+					// ['mikupb', 'mikupr'],
+					// ['lipb', 'lipr'],
+					// ['asasab', 'asasar'],
+					// ['dollopb', 'dollopr'],
+					// ['dolfob', 'dolfor'],
+					// ['pikavaderb', 'pikavaderr'],
+					// ['cowerr', 'cowerb'],
+					// ['seasonb', 'seasonr'],
+					// ['rotablenderb', 'rotablenderr'],
+					// ['skellyb', 'skellyr'],
+					// ['discor', 'discob'],
+					// ['tardyb', 'tardyr'],
+					// ['bbadb', 'bbadr'],
+					['shrekb', 'shrekr'],
+					['shrek2b', 'shrek2r'],
+					['shrek3b', 'shrek3r'],
+					['girlbob', 'girlbor'],
+					['girlbo2b', 'girlbo2r'],
+					['girlbo3b', 'girlbo3r'],
+					['girlbo4b', 'girlbo4r'],
+					// ['sanicb', 'sanicr'],
+					['shrek4b', 'shrek4r'],
+					["qrot_susher_base", "qrot_susher_rotator"],
+					["qrot_anime_bunbun_base", "qrot_anime_bunbun_rotator"],
+					// ["qrot_dogcatface1_base", "qrot_dogcatface1_rotator"],
+					["qrot_dogcatface2_base", "qrot_dogcatface2_rotator"],
+					["qrot_dogcatface3_base", "qrot_dogcatface3_rotator"],
+					// ["qrot_lotr1_base", "qrot_lotr1_rotator"],
+					["qrot_lotr2_base", "qrot_lotr2_rotator"],
+					["qrot_lotr3_base", "qrot_lotr3_rotator"],
+					["qrot_lotr4_base", "qrot_lotr4_rotator"],
+					["qrot_mikupicard1_base", "qrot_mikupicard1_rotator"],
+					["qrot_mikupicard2_base", "qrot_mikupicard2_rotator"],
+					["qrot_mikupicard3_base", "qrot_mikupicard3_rotator"],
+					["qrot_superman1_base", "qrot_superman1_rotator"],
+					["qrot_superman2_base", "qrot_superman2_rotator"],
+					["qrot_superman3_base", "qrot_superman3_rotator"],
+					// ["qrot_sushicream1_base", "qrot_sushicream1_rotator"],
+				];
 
-		const container = document.getElementById('rotator-container');
+				const container = document.getElementById('rotator-container');
 
-		// Creating the top button section
-		const buttonSection = document.createElement('div');
-		buttonSection.className = 'col';
-		buttonSection.innerHTML = `
+				// Creating the top button section
+				const buttonSection = document.createElement('div');
+				buttonSection.className = 'col';
+				buttonSection.innerHTML = `
 			<div style="text-align: center;">
 				<span class="reset-all-rotaters-button" style="margin-right:30px">
 					<b>Click here to reset all positions</b>
@@ -872,203 +874,207 @@
 			</div>
 			<br><br>
 		`;
-		container.appendChild(buttonSection);
+				container.appendChild(buttonSection);
 
-		// Function to create a single image pair container
-		function createImagePair(pair) {
-			const imageContainer = document.createElement('div');
-			imageContainer.className = 'rot-image-container';
-			imageContainer.style.filter = 'brightness(200%)'; // Adjust brightness as needed
+				// Function to create a single image pair container
+				function createImagePair(pair) {
+					const imageContainer = document.createElement('div');
+					imageContainer.className = 'rot-image-container';
+					imageContainer.style.filter = 'brightness(200%)'; // Adjust brightness as needed
 
-			const image1 = document.createElement('img');
-			image1.src = `images/rotaters/${pair[0]}.png`;
-			image1.className = 'rot_image_size';
+					const image1 = document.createElement('img');
+					image1.src = `images/rotaters/${pair[0]}.png`;
+					image1.className = 'rot_image_size';
 
-			const image2 = document.createElement('img');
-			image2.src = `images/rotaters/${pair[1]}.png`;
-			image2.className = 'rot_image_size quad-rotating-image draggable-image glow-hover-element';
+					const image2 = document.createElement('img');
+					image2.src = `images/rotaters/${pair[1]}.png`;
+					image2.className = 'rot_image_size quad-rotating-image draggable-image glow-hover-element';
 
-			imageContainer.appendChild(image1);
-			imageContainer.appendChild(image2);
-			return imageContainer;
-		}
-
-		// Loop to create rows
-		for (let i = 0; i < imagePairs.length; i += row_length) {
-			const row = document.createElement('div');
-			row.className = 'row';
-
-			for (let j = 0; j < row_length && (i + j) < imagePairs.length; j++) {
-				row.appendChild(createImagePair(imagePairs[i + j]));
-
-				if (j < row_length - 1) {
-					const spacer = document.createElement('div');
-					spacer.style.width = '50px';
-					row.appendChild(spacer);
+					imageContainer.appendChild(image1);
+					imageContainer.appendChild(image2);
+					return imageContainer;
 				}
-			}
 
-			container.appendChild(row);
-			container.appendChild(document.createElement('br'));
-			container.appendChild(document.createElement('br'));
-		}
-	});
-</script>
+				// Loop to create rows
+				for (let i = 0; i < imagePairs.length; i += row_length) {
+					const row = document.createElement('div');
+					row.className = 'row';
 
-	<br>
-	<br>
+					for (let j = 0; j < row_length && (i + j) < imagePairs.length; j++) {
+						row.appendChild(createImagePair(imagePairs[i + j]));
 
-	<h3>A real-life demo:</h3>
-	<div style="text-align:center;">
-		<!-- <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/NWEUaXHWyI0"
+						if (j < row_length - 1) {
+							const spacer = document.createElement('div');
+							spacer.style.width = '50px';
+							row.appendChild(spacer);
+						}
+					}
+
+					container.appendChild(row);
+					container.appendChild(document.createElement('br'));
+					container.appendChild(document.createElement('br'));
+				}
+			});
+		</script>
+
+		<br>
+		<br>
+
+		<h3>A real-life demo:</h3>
+		<div style="text-align:center;">
+			<!-- <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/NWEUaXHWyI0"
 			title="YouTube video player" frameborder="0"
 			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 			allowfullscreen></iframe> -->
-		<iframe width="700" height="393.75" src="https://www.youtube.com/embed/CWXMSHKrd8Y?rel=0"
-			title="YouTube video player" frameborder="0"
-			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-			allowfullscreen></iframe>
-	</div>
-	<div class="caption">
-		<a target="_blank" href="assets/rotating_overlays.pdf">Click here for a printable PDF</a> full of these images,
-		so you can try
-		it yourself!
-	</div>
-
-	<a target="_blank"
-		href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/rotation_overlays_for_colab.ipynb">
-		<h3><img src="images/colab_logo.svg" alt="Google Colab logo" width="30pt" height="30pt"
-				style="vertical-align: middle; margin-right: 10pt;">Try it on Colab!</h3>
-	</a>
-
-
-	<hr>
-	<h2 id="hidden_characters">Hidden Characters</h2>
-	<p>In this section, we have sets of 4 images. You can <it><b>click and drag</b></it> them on top of each other! They
-		will all be
-		multiplied together, and when they're all on top of each other they will reveal a secret 5th image. To reset the
-		position of an image, <b> double click it.</b></p>
-	</p>
-
-	<!-- <button type="button" . class="">Click me</button> -->
-
-
-	<p>This works in real life too: you can overlay printouts of these images on top of each other for the same results,
-		as seen in the youtube video.</p>
-	</p>
-	<p>I won't spoil it for you in this paragraph; try it out!</p>
-
-	<br>
-	<br>
-	<div style="text-align: center;">
-		<span class="reset-all-hidden-characters-button">
-			<b>Click here to reset all positions</b>
-		</span>
-	</div>
-	<br>
-	<br>
-
-
-	<div>
-		<div class="row lightbox">
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/tanky0.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
-					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/tanky1.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
-					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/tanky2.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
-					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/tanky3.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
-					style="z-index: 1000;"></div>
+			<iframe width="700" height="393.75" src="https://www.youtube.com/embed/CWXMSHKrd8Y?rel=0"
+				title="YouTube video player" frameborder="0"
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+				allowfullscreen></iframe>
 		</div>
-		<div class="caption">Click and drag these 4 pictures together! Can you find the hidden 5th picture? <br>
-
-			<span class="smaller-text">(hint:
-				it's easiest to see on the white background!)</span>
+		<div class="caption">
+			<a target="_blank" href="assets/rotating_overlays.pdf">Click here for a printable PDF</a> full of these
+			images,
+			so you can try
+			it yourself!
 		</div>
-	</div>
 
-	<br>
-	<br>
-	<br>
-	<br>
+		<a target="_blank"
+			href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/rotation_overlays_for_colab.ipynb">
+			<h3><img src="images/colab_logo.svg" alt="Google Colab logo" width="30pt" height="30pt"
+					style="vertical-align: middle; margin-right: 10pt;">Try it on Colab!</h3>
+		</a>
 
 
+		<hr>
+		<h2 id="hidden_characters">Hidden Characters</h2>
+		<p>In this section, we have sets of 4 images. You can <it><b>click and drag</b></it> them on top of each other!
+			They
+			will all be
+			multiplied together, and when they're all on top of each other they will reveal a secret 5th image. To reset
+			the
+			position of an image, <b> double click it.</b></p>
+		</p>
 
-	<div>
-		<div class="row lightbox">
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy00.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
-					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy01.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
-					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy02.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
-					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy03.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
-					style="z-index: 1000;"></div>
+		<!-- <button type="button" . class="">Click me</button> -->
+
+
+		<p>This works in real life too: you can overlay printouts of these images on top of each other for the same
+			results,
+			as seen in the youtube video.</p>
+		</p>
+		<p>I won't spoil it for you in this paragraph; try it out!</p>
+
+		<br>
+		<br>
+		<div style="text-align: center;">
+			<span class="reset-all-hidden-characters-button">
+				<b>Click here to reset all positions</b>
+			</span>
 		</div>
-		<div class="caption">Try it with these too!</div>
+		<br>
+		<br>
 
-	</div>
 
-	<br>
-	<br>
-	<br>
-	<br>
+		<div>
+			<div class="row lightbox">
+				<div class="hidden-character-image-container"><img src="images/quad_overlays/tanky0.png"
+						class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+						style="z-index: 1000;"></div>
+				<div class="hidden-character-image-container"><img src="images/quad_overlays/tanky1.png"
+						class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+						style="z-index: 1000;"></div>
+				<div class="hidden-character-image-container"><img src="images/quad_overlays/tanky2.png"
+						class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+						style="z-index: 1000;"></div>
+				<div class="hidden-character-image-container"><img src="images/quad_overlays/tanky3.png"
+						class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+						style="z-index: 1000;"></div>
+			</div>
+			<div class="caption">Click and drag these 4 pictures together! Can you find the hidden 5th picture? <br>
 
-	<br>
-	<br>
-	<div style="text-align: center;">
-		<span class="reset-all-hidden-characters-button">
-			<b>Click here to reset all positions</b>
-		</span>
-	</div>
-	<br>
-	<br>
+				<span class="smaller-text">(hint:
+					it's easiest to see on the white background!)</span>
+			</div>
+		</div>
 
-	<div>
-		<div class="row lightbox">
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/miku1.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
-					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/miku0.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
-					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/miku2.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
-					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/miku3.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
-					style="z-index: 1000;"></div>
-			<!-- <div class="hidden-character-image-container"><img src="images/quad_overlays/mimi0.png"
+		<br>
+		<br>
+		<br>
+		<br>
+
+
+
+		<div>
+			<div class="row lightbox">
+				<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy00.png"
+						class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+						style="z-index: 1000;"></div>
+				<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy01.png"
+						class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+						style="z-index: 1000;"></div>
+				<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy02.png"
+						class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+						style="z-index: 1000;"></div>
+				<div class="hidden-character-image-container"><img src="images/quad_overlays/darthy03.png"
+						class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+						style="z-index: 1000;"></div>
+			</div>
+			<div class="caption">Try it with these too!</div>
+
+		</div>
+
+		<br>
+		<br>
+		<br>
+		<br>
+
+		<br>
+		<br>
+		<div style="text-align: center;">
+			<span class="reset-all-hidden-characters-button">
+				<b>Click here to reset all positions</b>
+			</span>
+		</div>
+		<br>
+		<br>
+
+		<div>
+			<div class="row lightbox">
+				<div class="hidden-character-image-container"><img src="images/quad_overlays/miku1.png"
+						class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+						style="z-index: 1000;"></div>
+				<div class="hidden-character-image-container"><img src="images/quad_overlays/miku0.png"
+						class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+						style="z-index: 1000;"></div>
+				<div class="hidden-character-image-container"><img src="images/quad_overlays/miku2.png"
+						class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+						style="z-index: 1000;"></div>
+				<div class="hidden-character-image-container"><img src="images/quad_overlays/miku3.png"
+						class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+						style="z-index: 1000;"></div>
+				<!-- <div class="hidden-character-image-container"><img src="images/quad_overlays/mimi0.png"
 				class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image" style="z-index: 1000;"></div> -->
 
+			</div>
+			<div class="caption">(Hatsune Miku) * 4 = ?</div>
+
 		</div>
-		<div class="caption">(Hatsune Miku) * 4 = ?</div>
+		<br>
+		<br>
+		<br>
+		<br>
 
-	</div>
-	<br>
-	<br>
-	<br>
-	<br>
+		<br>
+		<br>
+		<div style="text-align: center;">
+			<span class="reset-all-hidden-characters-button">
+				<b>Click here to reset all positions</b>
+			</span>
+		</div>
+		<br>
+		<br>
 
-	<br>
-	<br>
-	<div style="text-align: center;">
-		<span class="reset-all-hidden-characters-button">
-			<b>Click here to reset all positions</b>
-		</span>
-	</div>
-	<br>
-	<br>
-
-	<!-- <div>
+		<!-- <div>
 		<div class="row lightbox">
 			<div class="hidden-character-image-container"><img src="images/quad_overlays/mimi1.png"
 					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
@@ -1105,24 +1111,24 @@
 
 
 
-	<div>
-		<div class="row lightbox">
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/froggo0.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
-					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/froggo1.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
-					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/froggo2.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
-					style="z-index: 1000;"></div>
-			<div class="hidden-character-image-container"><img src="images/quad_overlays/froggo3.png"
-					class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
-					style="z-index: 1000;"></div>
-		</div>
-		<!-- <div class="caption">This one isn't strictly a character...<br> -->
+		<div>
+			<div class="row lightbox">
+				<div class="hidden-character-image-container"><img src="images/quad_overlays/froggo0.png"
+						class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+						style="z-index: 1000;"></div>
+				<div class="hidden-character-image-container"><img src="images/quad_overlays/froggo1.png"
+						class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+						style="z-index: 1000;"></div>
+				<div class="hidden-character-image-container"><img src="images/quad_overlays/froggo2.png"
+						class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+						style="z-index: 1000;"></div>
+				<div class="hidden-character-image-container"><img src="images/quad_overlays/froggo3.png"
+						class="draggable-image quad-overlay glow-hover-element wiggly-image hidden-character-image"
+						style="z-index: 1000;"></div>
+			</div>
+			<!-- <div class="caption">This one isn't strictly a character...<br> -->
 
-	</div>
+		</div>
 	</div>
 
 	<br>
@@ -1353,22 +1359,22 @@
 
 
 
-	<!-- Javascript Goes Here -->
-	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
-	<script>
-		$(function () {
-			function storeOriginalPositions() {
-				// Iterate through each draggable image and store its original position
-				$('.draggable-image').each(function () {
-					$(this).data('originalPosition', $(this).position());
-				});
+		<!-- Javascript Goes Here -->
+		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+		<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+		<script>
+			$(function () {
+				function storeOriginalPositions() {
+					// Iterate through each draggable image and store its original position
+					$('.draggable-image').each(function () {
+						$(this).data('originalPosition', $(this).position());
+					});
 
-				// Define the CSS rules as a string
-				//Add animations AFTER getting the position so we don't corrupt the positions
-				const cssRules = `
+					// Define the CSS rules as a string
+					//Add animations AFTER getting the position so we don't corrupt the positions
+					const cssRules = `
 		.quad-rotating-image {
 			animation: quad_rotate 12s linear infinite;
 		}
@@ -1383,142 +1389,224 @@
 		}
 	`;
 
-				// Create a <style> element
-				const styleElement = document.createElement('style');
-				styleElement.type = 'text/css';
+					// Create a <style> element
+					const styleElement = document.createElement('style');
+					styleElement.type = 'text/css';
 
-				// Add the CSS rules to the <style> element
-				styleElement.appendChild(document.createTextNode(cssRules));
+					// Add the CSS rules to the <style> element
+					styleElement.appendChild(document.createTextNode(cssRules));
 
-				// Insert the <style> element with the new CSS rules into the <head> of the document
-				document.head.appendChild(styleElement);
-			}
+					// Insert the <style> element with the new CSS rules into the <head> of the document
+					document.head.appendChild(styleElement);
+				}
 
 
-			function makeImagesDraggable() {
-				$('.draggable-image').draggable({
-					snap: '.hidden-character-image, .lightbox',
-					start: function () {
-						if ($(this).hasClass('wiggly-image')) {
-							stop_wiggle = true;
+				function makeImagesDraggable() {
+					$('.draggable-image').draggable({
+						snap: '.hidden-character-image, .lightbox',
+						start: function () {
+							if ($(this).hasClass('wiggly-image')) {
+								stop_wiggle = true;
+							}
+						},
+						drag: function (event, ui) {
+							var transformMatrix = $(this).css('transform');
+							ui.helper.css('transform', transformMatrix);
+							$('.reset-all-rotaters-button, .reset-all-hidden-characters-button').removeClass('inactive_button');
+						},
+						stop: function () {
+							$('.reset-all-rotaters-button, .reset-all-hidden-characters-button').removeClass('inactive_button');
 						}
-					},
-					drag: function (event, ui) {
-						var transformMatrix = $(this).css('transform');
-						ui.helper.css('transform', transformMatrix);
-						$('.reset-all-rotaters-button, .reset-all-hidden-characters-button').removeClass('inactive_button');
-					},
-					stop: function () {
-						$('.reset-all-rotaters-button, .reset-all-hidden-characters-button').removeClass('inactive_button');
-					}
-				}).dblclick(function () {
-					var originalPosition = $(this).data('originalPosition');
-					$(this).animate({
-						top: originalPosition.top,
-						left: originalPosition.left
-					}, 1000);
-				});
-			}
-
-			function resetRotatersPositions() {
-				$('.reset-all-rotaters-button').click(function () {
-					function func() {
-						var originalPosition = $(this).data('originalPosition');
-						$(this).animate({
-							top: originalPosition.top,
-							left: originalPosition.left
-						}, 1000);
-					}
-					$('.quad-rotating-image').each(func);
-					$('.season-rotating-image').each(func);
-					$('.skelly-rotating-image').each(func);
-					$('.elf-rotating-image').each(func);
-					$(this).addClass('inactive_button')
-					// setButtonsInactive();
-				});
-			}
-
-			function resetHiddenCharactersPositions() {
-				$('.reset-all-hidden-characters-button').click(function () {
-					$('.hidden-character-image').each(function () {
+					}).dblclick(function () {
 						var originalPosition = $(this).data('originalPosition');
 						$(this).animate({
 							top: originalPosition.top,
 							left: originalPosition.left
 						}, 1000);
 					});
-					// setButtonsInactive();
-					$(this).addClass('inactive_button')
-				});
-			}
+				}
 
-			function resetFlipImagesPositions() {
-				$('.reset-all-flip-images-button').click(function () {
-					$('.flip_image').each(function () {
-						var originalPosition = $(this).data('originalPosition');
+				function resetRotatersPositions() {
+					$('.reset-all-rotaters-button').click(function () {
+						function func() {
+							var originalPosition = $(this).data('originalPosition');
+							$(this).animate({
+								top: originalPosition.top,
+								left: originalPosition.left
+							}, 1000);
+						}
+						$('.quad-rotating-image').each(func);
+						$('.season-rotating-image').each(func);
+						$('.skelly-rotating-image').each(func);
+						$('.elf-rotating-image').each(func);
+						$(this).addClass('inactive_button')
+						// setButtonsInactive();
+					});
+				}
 
-						$(this).removeClass('flip_image_animated');
-						$(this).css({
-							'transform': 'rotateZ(0deg)',
-							'transition': 'transform 1s'
+				function resetHiddenCharactersPositions() {
+					$('.reset-all-hidden-characters-button').click(function () {
+						$('.hidden-character-image').each(function () {
+							var originalPosition = $(this).data('originalPosition');
+							$(this).animate({
+								top: originalPosition.top,
+								left: originalPosition.left
+							}, 1000);
+						});
+						// setButtonsInactive();
+						$(this).addClass('inactive_button')
+					});
+				}
+
+				function resetFlipImagesPositions() {
+					$('.reset-all-flip-images-button').click(function () {
+						$('.flip_image').each(function () {
+							var originalPosition = $(this).data('originalPosition');
+
+							$(this).removeClass('flip_image_animated');
+							$(this).css({
+								'transform': 'rotateZ(0deg)',
+								'transition': 'transform 1s'
+							});
+
+							setTimeout(() => {
+								$(this).css('transition', ''); // Clear the transition property
+								$(this).addClass('flip_image_animated');
+							}, 1000); // Wait for the 1-second animation to finish before adding the class
 						});
 
-						setTimeout(() => {
-							$(this).css('transition', ''); // Clear the transition property
-							$(this).addClass('flip_image_animated');
-						}, 1000); // Wait for the 1-second animation to finish before adding the class
+						$(this).addClass('inactive_button');
 					});
+				}
 
-					$(this).addClass('inactive_button');
-				});
-			}
+				function startWiggle(intervalTime) {
+					setInterval(function () {
+						if (stop_wiggle) {
+							return;
+						}
 
-			function startWiggle(intervalTime) {
-				setInterval(function () {
-					if (stop_wiggle) {
-						return;
-					}
+						var images = $('.wiggly-image');
+						var randomIndex = Math.floor(Math.random() * images.length);
+						var randomImage = images.eq(randomIndex);
 
-					var images = $('.wiggly-image');
-					var randomIndex = Math.floor(Math.random() * images.length);
-					var randomImage = images.eq(randomIndex);
+						if (Math.random() > .0) {
+							randomImage.css('animation', 'wiggle .5s');
+							randomImage.one('animationend', function () {
+								randomImage.css('animation', '');
+							});
+						}
+					}, 150);
+				}
 
-					if (Math.random() > .0) {
-						randomImage.css('animation', 'wiggle .5s');
-						randomImage.one('animationend', function () {
-							randomImage.css('animation', '');
+				function makeImagesZoomable() {
+					$(".image-container img").wrap(function () {
+						return $("<a>", {
+							href: this.src,
+							target: "_blank"
 						});
-					}
-				}, 150);
-			}
-
-			function makeImagesZoomable() {
-				$(".image-container img").wrap(function () {
-					return $("<a>", {
-						href: this.src,
-						target: "_blank"
 					});
-				});
-			}
+				}
 
-			function smoothScrolling() {
-				$('.scroll-to').click(function () {
-					$('html, body').animate({
-						scrollTop: $($(this).attr('href')).offset().top
-					}, 500);
+				function smoothScrolling() {
+					$('.scroll-to').click(function () {
+						$('html, body').animate({
+							scrollTop: $($(this).attr('href')).offset().top
+						}, 500);
 
-					return false;
-				});
-			}
+						return false;
+					});
+				}
 
-			var stop_wiggle = false;
+				var stop_wiggle = false;
 
 
-			function setButtonsInactive() {
-				$('.reset-all-rotaters-button, .reset-all-hidden-characters-button, .reset-all-flip-images-button').addClass('inactive_button');
-			}
+				function setButtonsInactive() {
+					$('.reset-all-rotaters-button, .reset-all-hidden-characters-button, .reset-all-flip-images-button').addClass('inactive_button');
+				}
 
-			function initFlipImageRotation() {
+				function initFlipImageRotation() {
+					var dragging = false;
+					var currentElement;
+					var centerX;
+					var centerY;
+					var initialAngle;
+					var currentRotation;
+
+					function getCurrentRotation(elem) {
+						var matrix = elem.css('transform');
+						var angle;
+
+						if (matrix !== 'none') {
+							var values = matrix.split('(')[1].split(')')[0].split(',');
+							var a = values[0];
+							var b = values[1];
+							angle = Math.atan2(b, a) * (180 / Math.PI);
+						} else {
+							angle = 0;
+						}
+
+						return angle;
+					}
+
+					$('.flip_image').mousedown(function (e) {
+						$('.reset-all-flip-images-button').removeClass('inactive_button');
+						dragging = true;
+						currentElement = $(this);
+						centerX = currentElement.offset().left + (currentElement.width() / 2);
+						centerY = currentElement.offset().top + (currentElement.height() / 2);
+						var mouseX = e.pageX;
+						var mouseY = e.pageY;
+						initialAngle = Math.atan2(mouseX -
+							centerY, mouseY - centerY);
+						currentRotation = getCurrentRotation(currentElement);
+						currentElement.css('cursor', 'grabbing'); // closed hand cursor while dragging
+						currentElement.removeClass('flip_image_animated'); // remove the animated class when clicked or dragged
+					});
+
+					$('.flip_image').dblclick(function () {
+						$(this).addClass('flip_image_animated'); // add the animated class when double-clicked
+					});
+
+					$(document).mouseup(function () {
+						if (dragging && currentElement) {
+							currentElement.css('cursor', 'grab'); // open hand cursor after dragging
+						}
+						dragging = false;
+					});
+
+					$(document).mousemove(function (e) {
+						if (dragging && currentElement) {
+							var mouseX = e.pageX;
+							var mouseY = e.pageY;
+							var currentAngle = Math.atan2(mouseX - centerX, mouseY - centerY);
+							var deltaAngle = initialAngle - currentAngle;
+							var newRotation = currentRotation + (deltaAngle * (180 / Math.PI));
+							currentElement.css('transform', 'rotate(' + newRotation + 'deg)');
+							currentElement.css('transform-origin', '50% 50%');
+						}
+					});
+				}
+
+				// Initialize functions
+				storeOriginalPositions();
+				makeImagesDraggable();
+				resetRotatersPositions();
+				resetHiddenCharactersPositions();
+				resetFlipImagesPositions();
+				setButtonsInactive();
+				smoothScrolling();
+				startWiggle();
+				// initFlipImageRotation();
+
+
+
+
+
+			});
+
+
+
+			(function () {
 				var dragging = false;
 				var currentElement;
 				var centerX;
@@ -1542,158 +1630,76 @@
 					return angle;
 				}
 
-				$('.flip_image').mousedown(function (e) {
-					$('.reset-all-flip-images-button').removeClass('inactive_button');
-					dragging = true;
-					currentElement = $(this);
-					centerX = currentElement.offset().left + (currentElement.width() / 2);
-					centerY = currentElement.offset().top + (currentElement.height() / 2);
-					var mouseX = e.pageX;
-					var mouseY = e.pageY;
-					initialAngle = Math.atan2(mouseX -
-						centerY, mouseY - centerY);
-					currentRotation = getCurrentRotation(currentElement);
-					currentElement.css('cursor', 'grabbing'); // closed hand cursor while dragging
-					currentElement.removeClass('flip_image_animated'); // remove the animated class when clicked or dragged
-				});
-
-				$('.flip_image').dblclick(function () {
-					$(this).addClass('flip_image_animated'); // add the animated class when double-clicked
-				});
-
-				$(document).mouseup(function () {
-					if (dragging && currentElement) {
-						currentElement.css('cursor', 'grab'); // open hand cursor after dragging
-					}
-					dragging = false;
-				});
-
-				$(document).mousemove(function (e) {
-					if (dragging && currentElement) {
+				$(function () {
+					$('.flip_image').mousedown(function (e) {
+						$('.reset-all-flip-images-button').removeClass('inactive_button');
+						dragging = true;
+						currentElement = $(this);
+						centerX = currentElement.offset().left + (currentElement.width() / 2);
+						centerY = currentElement.offset().top + (currentElement.height() / 2);
 						var mouseX = e.pageX;
 						var mouseY = e.pageY;
-						var currentAngle = Math.atan2(mouseX - centerX, mouseY - centerY);
-						var deltaAngle = initialAngle - currentAngle;
-						var newRotation = currentRotation + (deltaAngle * (180 / Math.PI));
-						currentElement.css('transform', 'rotate(' + newRotation + 'deg)');
-						currentElement.css('transform-origin', '50% 50%');
-					}
+						initialAngle = Math.atan2(mouseX - centerX, mouseY - centerY);
+						currentRotation = getCurrentRotation(currentElement);
+						currentElement.css('cursor', 'grabbing'); // closed hand cursor while dragging
+						currentElement.removeClass('flip_image_animated'); // remove the animated class when clicked or dragged
+						if (dragging && currentElement) {
+							//Copied from mousemove; lets us catch it mid-spin without glitching
+							var mouseX = e.pageX;
+							var mouseY = e.pageY;
+							var currentAngle = Math.atan2(mouseX - centerX, mouseY - centerY);
+							var deltaAngle = initialAngle - currentAngle;
+							var newRotation = currentRotation + (deltaAngle * (180 / Math.PI)); // add the new angle instead of subtracting it
+							currentElement.css('transform', 'rotate(' + newRotation + 'deg)');
+							currentElement.css('transform-origin', '50% 50%');
+						}
+					});
+
+					$('.flip_image').dblclick(function () {
+						$(this).addClass('flip_image_animated'); // add the animated class when double-clicked
+					});
+
+					$(document).mouseup(function () {
+						if (dragging && currentElement) {
+							currentElement.css('cursor', 'grab'); // open hand cursor after dragging
+						}
+						dragging = false;
+					});
+
+					$(document).mousemove(function (e) {
+						if (dragging && currentElement) {
+							var mouseX = e.pageX;
+							var mouseY = e.pageY;
+							var currentAngle = Math.atan2(mouseX - centerX, mouseY - centerY);
+							var deltaAngle = initialAngle - currentAngle;
+							var newRotation = currentRotation + (deltaAngle * (180 / Math.PI)); // add the new angle instead of subtracting it
+							currentElement.css('transform', 'rotate(' + newRotation + 'deg)');
+							currentElement.css('transform-origin', '50% 50%');
+						}
+					});
 				});
+			})();
+
+
+			function isMobileDevice() {
+				var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+				return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
 			}
-
-			// Initialize functions
-			storeOriginalPositions();
-			makeImagesDraggable();
-			resetRotatersPositions();
-			resetHiddenCharactersPositions();
-			resetFlipImagesPositions();
-			setButtonsInactive();
-			smoothScrolling();
-			startWiggle();
-			// initFlipImageRotation();
-
-
-
-
-
-		});
-
-
-
-		(function () {
-			var dragging = false;
-			var currentElement;
-			var centerX;
-			var centerY;
-			var initialAngle;
-			var currentRotation;
-
-			function getCurrentRotation(elem) {
-				var matrix = elem.css('transform');
-				var angle;
-
-				if (matrix !== 'none') {
-					var values = matrix.split('(')[1].split(')')[0].split(',');
-					var a = values[0];
-					var b = values[1];
-					angle = Math.atan2(b, a) * (180 / Math.PI);
-				} else {
-					angle = 0;
+			$(document).ready(function () {
+				if (isMobileDevice()) {
+					$('.no_mobile').css('display', 'none');
 				}
-
-				return angle;
-			}
-
-			$(function () {
-				$('.flip_image').mousedown(function (e) {
-					$('.reset-all-flip-images-button').removeClass('inactive_button');
-					dragging = true;
-					currentElement = $(this);
-					centerX = currentElement.offset().left + (currentElement.width() / 2);
-					centerY = currentElement.offset().top + (currentElement.height() / 2);
-					var mouseX = e.pageX;
-					var mouseY = e.pageY;
-					initialAngle = Math.atan2(mouseX - centerX, mouseY - centerY);
-					currentRotation = getCurrentRotation(currentElement);
-					currentElement.css('cursor', 'grabbing'); // closed hand cursor while dragging
-					currentElement.removeClass('flip_image_animated'); // remove the animated class when clicked or dragged
-					if (dragging && currentElement) {
-						//Copied from mousemove; lets us catch it mid-spin without glitching
-						var mouseX = e.pageX;
-						var mouseY = e.pageY;
-						var currentAngle = Math.atan2(mouseX - centerX, mouseY - centerY);
-						var deltaAngle = initialAngle - currentAngle;
-						var newRotation = currentRotation + (deltaAngle * (180 / Math.PI)); // add the new angle instead of subtracting it
-						currentElement.css('transform', 'rotate(' + newRotation + 'deg)');
-						currentElement.css('transform-origin', '50% 50%');
-					}
-				});
-
-				$('.flip_image').dblclick(function () {
-					$(this).addClass('flip_image_animated'); // add the animated class when double-clicked
-				});
-
-				$(document).mouseup(function () {
-					if (dragging && currentElement) {
-						currentElement.css('cursor', 'grab'); // open hand cursor after dragging
-					}
-					dragging = false;
-				});
-
-				$(document).mousemove(function (e) {
-					if (dragging && currentElement) {
-						var mouseX = e.pageX;
-						var mouseY = e.pageY;
-						var currentAngle = Math.atan2(mouseX - centerX, mouseY - centerY);
-						var deltaAngle = initialAngle - currentAngle;
-						var newRotation = currentRotation + (deltaAngle * (180 / Math.PI)); // add the new angle instead of subtracting it
-						currentElement.css('transform', 'rotate(' + newRotation + 'deg)');
-						currentElement.css('transform-origin', '50% 50%');
-					}
-				});
 			});
-		})();
 
+			//Bibtex section
+			$(document).ready(function () {
+				var today = new Date();
+				var yyyy = today.getFullYear();
+				var mm = String(today.getMonth() + 1).padStart(2, "0");
+				var dd = String(today.getDate()).padStart(2, "0");
+				var currentDate = `${yyyy}-${mm}-${dd}`;
 
-		function isMobileDevice() {
-			var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-			return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
-		}
-		$(document).ready(function () {
-			if (isMobileDevice()) {
-				$('.no_mobile').css('display', 'none');
-			}
-		});
-
-		//Bibtex section
-		$(document).ready(function () {
-			var today = new Date();
-			var yyyy = today.getFullYear();
-			var mm = String(today.getMonth() + 1).padStart(2, "0");
-			var dd = String(today.getDate()).padStart(2, "0");
-			var currentDate = `${yyyy}-${mm}-${dd}`;
-
-			var citation = `@misc{burgert2023diffusion_illusions,
+				var citation = `@misc{burgert2023diffusion_illusions,
 	title = {Diffusion Illusions: Hiding Images in Plain Sight},
 	author = {Burgert, Ryan and Li, Xiang and Leite, Abe and Ranasinghe, Kanchana and Ryoo, Michael},
 	year = {2023},
@@ -1702,113 +1708,119 @@
 	note = {Accessed: ${currentDate}}
 }`;
 
-			$("#citation-text").text(citation);
-		});
-
-
-		//Play and Pause Buttons
-		$(document).ready(function () {
-			$('.rotation_overlay_pause_button').data('state', 'pause').on('click', function () {
-				var button = $(this);
-				var currentState = button.data('state');
-
-				if (currentState === 'pause') {
-					button.data('state', 'play');
-					button.html('<b>Play</b>'); // Replace this with your image code when needed
-					// $('.quad-rotating-image, .season-rotating-image, .skelly-rotating-image, .elf-rotating-image').addClass('paused');
-					$('.quad-rotating-image, .season-rotating-image, .skelly-rotating-image, .elf-rotating-image').css('animation-play-state', 'paused');
-
-				} else if (currentState === 'play') {
-					button.data('state', 'pause');
-					button.html('<b>Pause</b>'); // Replace this with your image code when needed
-					// $('.quad-rotating-image, .season-rotating-image, .skelly-rotating-image, .elf-rotating-image').removeClass('paused');
-					$('.quad-rotating-image, .season-rotating-image, .skelly-rotating-image, .elf-rotating-image').css('animation-play-state', 'unset');
-				}
-			});
-		});
-
-		$(document).ready(function () {
-			//TODO: Why doesn't this work?
-			$('.flippy_pause_button').data('state', 'pause').on('click', function () {
-				var button = $(this);
-				var currentState = button.data('state');
-
-				if (currentState === 'pause') {
-					button.data('state', 'play');
-					button.html('<b>Play</b>'); // Replace this with your image code when needed
-					// $('flip_image, flip_image_animated').addClass('paused');
-					$('.flip_image').css('animation-play-state', 'paused');
-
-				} else if (currentState === 'play') {
-
-					button.data('state', 'pause');
-					button.html('<b>Pause</b>'); // Replace this with your image code when needed
-					// $('flip_image, flip_image_animated').removeClass('paused');
-					$('.flip_image').css('animation-play-state', 'unset');
-				}
-
+				$("#citation-text").text(citation);
 			});
 
-		});
+
+			//Play and Pause Buttons
+			$(document).ready(function () {
+				$('.rotation_overlay_pause_button').data('state', 'pause').on('click', function () {
+					var button = $(this);
+					var currentState = button.data('state');
+
+					if (currentState === 'pause') {
+						button.data('state', 'play');
+						button.html('<b>Play</b>'); // Replace this with your image code when needed
+						// $('.quad-rotating-image, .season-rotating-image, .skelly-rotating-image, .elf-rotating-image').addClass('paused');
+						$('.quad-rotating-image, .season-rotating-image, .skelly-rotating-image, .elf-rotating-image').css('animation-play-state', 'paused');
+
+					} else if (currentState === 'play') {
+						button.data('state', 'pause');
+						button.html('<b>Pause</b>'); // Replace this with your image code when needed
+						// $('.quad-rotating-image, .season-rotating-image, .skelly-rotating-image, .elf-rotating-image').removeClass('paused');
+						$('.quad-rotating-image, .season-rotating-image, .skelly-rotating-image, .elf-rotating-image').css('animation-play-state', 'unset');
+					}
+				});
+			});
+
+			$(document).ready(function () {
+				//TODO: Why doesn't this work?
+				$('.flippy_pause_button').data('state', 'pause').on('click', function () {
+					var button = $(this);
+					var currentState = button.data('state');
+
+					if (currentState === 'pause') {
+						button.data('state', 'play');
+						button.html('<b>Play</b>'); // Replace this with your image code when needed
+						// $('flip_image, flip_image_animated').addClass('paused');
+						$('.flip_image').css('animation-play-state', 'paused');
+
+					} else if (currentState === 'play') {
+
+						button.data('state', 'pause');
+						button.html('<b>Pause</b>'); // Replace this with your image code when needed
+						// $('flip_image, flip_image_animated').removeClass('paused');
+						$('.flip_image').css('animation-play-state', 'unset');
+					}
+
+				});
+
+			});
 
 
 
 
-	</script>
+		</script>
 
 
-	<h3>A real-life demo <span style="color: ;">[WARNING: SPOILERS!!!]</span></h3>
-	<div style="text-align:center;">
-		<iframe width="700" height="393.5" src="https://www.youtube.com/embed/dt612_cpYl0?rel=0"
-			title="YouTube video player" frameborder="0"
-			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-			allowfullscreen></iframe>
-	</div>
+		<h3>A real-life demo <span style="color: ;">[WARNING: SPOILERS!!!]</span></h3>
+		<div style="text-align:center;">
+			<iframe width="700" height="393.5" src="https://www.youtube.com/embed/dt612_cpYl0?rel=0"
+				title="YouTube video player" frameborder="0"
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+				allowfullscreen></iframe>
+		</div>
 
-	<br>
-	<a target="_blank"
-		href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/hidden_characters_for_colab.ipynb">
-		<h3><img src="images/colab_logo.svg" alt="Google Colab logo" width="30pt" height="30pt"
-				style="vertical-align: middle; margin-right: 10pt;">Try it on Colab!</h3>
-	</a>
+		<br>
+		<a target="_blank"
+			href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/hidden_characters_for_colab.ipynb">
+			<h3><img src="images/colab_logo.svg" alt="Google Colab logo" width="30pt" height="30pt"
+					style="vertical-align: middle; margin-right: 10pt;">Try it on Colab!</h3>
+		</a>
 
 
-	<hr>
+		<hr>
 
-	<h2 id="summary">Demo Summary</h2>
+		<h2 id="summary">Demo Summary</h2>
 
-	<a href="assets/whitepaper.pdf">
-		<h3>Our Paper</h3>
-	</a>
-	<p>Click the <a href="assets/whitepaper.pdf">this link</a> to learn much more about our project!</p>
+		<a href="assets/whitepaper.pdf">
+			<h3>Our Paper</h3>
+		</a>
+		<p>Click the <a href="assets/whitepaper.pdf">this link</a> to learn much more about our project!</p>
 
-	<!-- <p>
+		<!-- <p>
 	<b>Abstract:</b> We study the problem of automatically generating im- ages that may cause illusions when viewed in a certain way using a frozen text-to-image diffusion model. Firstly, we propose a formal definition of generating illusion im- ages computationally. Then we introduce Diffusion Illu- sions, a general pipeline designed for generating a diverse array of illusions without tuning any parameters of the dif- fusion network. We conduct comprehensive experiments across multiple aspects and verify the effectiveness of our proposed method qualitatively and quantitatively. We also highlight the successful creation of physically fabricated versions of our illusions. Our code and results will be re- leased publicly. Please visit our interactive project website: https://diffusionillusions.com
 </p> -->
 
 
-	<h3>Project Overview</h3>
-	<p>The project is comprised of three demonstrations:</p>
-	<ol>
-		<li><strong>Generating images that appear as different objects when flipped upside down</strong> - For example,
-			a giraffe could look like a penguin. <br>
-			Top accomplish this, let's define some functions and variables. We want to create an image "Image" such that
-			when viewed right side up, "Image" matches "Prompt1" (in this case 'Giraffe'). And when Image is upside
-			down, we want it to match the prompt "Penguin"
-			We optimize an image we'll call "Image" using score distillation loss "SD". We optimize SD(Image,prompt_1)
-		</li>
-		<li><strong>Revealing a hidden image through image overlay</strong> - Overlaying four images, such as Hatsune
-			Miku, a bear in a field, Mario, and a pumpkin, to reveal a fifth image, Darth Vader, when light is shone
-			behind it. The four images are optimized to look like the original objects when viewed individually, but
-			when combined, they reveal the hidden image of Darth Vader.</li>
-		<li><strong>Revealing multiple images through image rotation</strong> - Overlaying two images to reveal four
-			different images when rotated. The top image, when overlayed on the bottom image and light shines through,
-			will reveal an image such as Darth Vader. When the top image is rotated 90 degrees, it becomes a different
-			picture such as Pikachu. Another 90-degree rotation reveals another image and a final 90-degree rotation
-			reveals a fourth image.</li>
-	</ol>
+		<h3>Project Overview</h3>
+		<p>The project is comprised of three demonstrations:</p>
+		<ol>
+			<li><strong>Generating images that appear as different objects when flipped upside down</strong> - For
+				example,
+				a giraffe could look like a penguin. <br>
+				Top accomplish this, let's define some functions and variables. We want to create an image "Image" such
+				that
+				when viewed right side up, "Image" matches "Prompt1" (in this case 'Giraffe'). And when Image is upside
+				down, we want it to match the prompt "Penguin"
+				We optimize an image we'll call "Image" using score distillation loss "SD". We optimize
+				SD(Image,prompt_1)
+			</li>
+			<li><strong>Revealing a hidden image through image overlay</strong> - Overlaying four images, such as
+				Hatsune
+				Miku, a bear in a field, Mario, and a pumpkin, to reveal a fifth image, Darth Vader, when light is shone
+				behind it. The four images are optimized to look like the original objects when viewed individually, but
+				when combined, they reveal the hidden image of Darth Vader.</li>
+			<li><strong>Revealing multiple images through image rotation</strong> - Overlaying two images to reveal four
+				different images when rotated. The top image, when overlayed on the bottom image and light shines
+				through,
+				will reveal an image such as Darth Vader. When the top image is rotated 90 degrees, it becomes a
+				different
+				picture such as Pikachu. Another 90-degree rotation reveals another image and a final 90-degree rotation
+				reveals a fourth image.</li>
+		</ol>
 
-	<!-- <h3>Interactive Experience</h3>
+		<!-- <h3>Interactive Experience</h3>
 	<p>The project will include physical items such as transparencies for people to interact with, as well as a live
 		demonstration that will allow people to create their own illusions on the spot. If space permits, we might bring
 		a printer to let people play with the illusions they create. And if we have even more space, perhaps a robot arm
@@ -1817,86 +1829,89 @@
 	<p>In this website you'll find multiple interactive exhibits where you can drag images around as if they were pieces
 		of paper / transparencies. Until we demo at CVPR, this is the next best thing to the physical demo! </p> -->
 
-	<h3>Similar Projects</h3>
-	<p>Another project with a similar goal was released in February: <a target="_blank"
-			href="https://github.com/tancik/Illusion-Diffusion">Illusion-Diffusion</a>, authored by Matthew Tanick. That
-		project only achieves the first part of this demo, aka image flipping.</p>
+		<h3>Similar Projects</h3>
+		<p>Another project with a similar goal was released in February: <a target="_blank"
+				href="https://github.com/tancik/Illusion-Diffusion">Illusion-Diffusion</a>, authored by Matthew Tanick.
+			That
+			project only achieves the first part of this demo, aka image flipping.</p>
 
-	<p>Our paper, <a href="https://ryanndagreat.github.io/peekaboo/">"Peekaboo: Text to Image Diffusion
-			Models are Zero Shot Segmentors"</a>, has an extremely similar formulation to the illusions on this website
-		- it optimizes images using a variant of score distillation loss to perform zero shot segmentation.</p>
+		<p>Our paper, <a href="https://ryanndagreat.github.io/peekaboo/">"Peekaboo: Text to Image Diffusion
+				Models are Zero Shot Segmentors"</a>, has an extremely similar formulation to the illusions on this
+			website
+			- it optimizes images using a variant of score distillation loss to perform zero shot segmentation.</p>
 
 
-	<h3>How it Works: Pseudocode</h3>
-	<p>To help explain how these were calculated, I've included some easy-to-read pseudocode that covers how each of
-		these illusions were made. The full source code can be found at <a target="_blank"
-			href="https://github.com/RyannDaGreat/Diffusion-Illusions">github.com/RyannDaGreat/Diffusion-Illusions</a>,
-		or at any of the Google Colab links throughout this webpage.</p>
-	<h4>Flippy Illusions</h4>
-	<script src="https://gist.github.com/RyannDaGreat/fde3d6c05fb4d6d0cf31e7477658d3fd.js"></script>
-	<br>
-	<h4>Rotating Overlays</h4>
-	<script src="https://gist.github.com/RyannDaGreat/0cb428a7d0a839249f058ef8273b9faf.js"></script>
-	<br>
-	<h4>Hidden Characters</h4>
-	<script src="https://gist.github.com/RyannDaGreat/9dc5d591ec7bbba3743eab69e964b8db.js"></script>
+		<h3>How it Works: Pseudocode</h3>
+		<p>To help explain how these were calculated, I've included some easy-to-read pseudocode that covers how each of
+			these illusions were made. The full source code can be found at <a target="_blank"
+				href="https://github.com/RyannDaGreat/Diffusion-Illusions">github.com/RyannDaGreat/Diffusion-Illusions</a>,
+			or at any of the Google Colab links throughout this webpage.</p>
+		<h4>Flippy Illusions</h4>
+		<script src="https://gist.github.com/RyannDaGreat/fde3d6c05fb4d6d0cf31e7477658d3fd.js"></script>
+		<br>
+		<h4>Rotating Overlays</h4>
+		<script src="https://gist.github.com/RyannDaGreat/0cb428a7d0a839249f058ef8273b9faf.js"></script>
+		<br>
+		<h4>Hidden Characters</h4>
+		<script src="https://gist.github.com/RyannDaGreat/9dc5d591ec7bbba3743eab69e964b8db.js"></script>
 
-	<h3>Timelapses</h3>
+		<h3>Timelapses</h3>
 
-	<p>Diffusion illisions are generated through an iterative process: we optimize the output images with gradient
-		descent, starting from pure noise. Here are some timelapses showing how they evolve over time.</p>
+		<p>Diffusion illisions are generated through an iterative process: we optimize the output images with gradient
+			descent, starting from pure noise. Here are some timelapses showing how they evolve over time.</p>
 
-	<h4>Flippy Illusion Timelapses</h4>
-	<div style="text-align:center;">
-		<iframe width="700" height="700"
-			src="https://www.youtube.com/embed/YRWd4nVcZlA?autoplay=1&loop=1&playlist=YRWd4nVcZlA&rel=0"
-			title="YouTube video player" frameborder="0"
-			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-			allowfullscreen></iframe>
-	</div>
-	<p class="center_text">For reference, here are the end results of the above timelapse video:</p>
-	<div style="text-align: center;">
-		<span class="reset-all-flip-images-button no_mobile" style="margin-right:30px">
-			<b>Click here to reset all rotations</b>
-		</span>
-		<span class="generic_pause_button flippy_pause_button" style="display: inline-block; width: 40pt;">
-			<b>Pause</b>
-		</span>
-	</div>
-	<br>
-	<div class="col">
-		<div class="row">
-			<div class="image-container">
-				<div class="caption">Giraffe / Penguin</div>
-				<img src="images/flippers/giraffepenguin_timelapse.png"
-					class="flip_image flip_image_animated glow-hover-element">
-			</div>
-			<div class="image-container">
-
-				<div class="caption">Angelic Pretty / Victorian Dress</div>
-				<img src="images/flippers/lolo_timelapse.png" class="flip_image flip_image_animated glow-hover-element">
-			</div>
+		<h4>Flippy Illusion Timelapses</h4>
+		<div style="text-align:center;">
+			<iframe width="700" height="700"
+				src="https://www.youtube.com/embed/YRWd4nVcZlA?autoplay=1&loop=1&playlist=YRWd4nVcZlA&rel=0"
+				title="YouTube video player" frameborder="0"
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+				allowfullscreen></iframe>
 		</div>
+		<p class="center_text">For reference, here are the end results of the above timelapse video:</p>
+		<div style="text-align: center;">
+			<span class="reset-all-flip-images-button no_mobile" style="margin-right:30px">
+				<b>Click here to reset all rotations</b>
+			</span>
+			<span class="generic_pause_button flippy_pause_button" style="display: inline-block; width: 40pt;">
+				<b>Pause</b>
+			</span>
+		</div>
+		<br>
+		<div class="col">
+			<div class="row">
+				<div class="image-container">
+					<div class="caption">Giraffe / Penguin</div>
+					<img src="images/flippers/giraffepenguin_timelapse.png"
+						class="flip_image flip_image_animated glow-hover-element">
+				</div>
+				<div class="image-container">
 
+					<div class="caption">Angelic Pretty / Victorian Dress</div>
+					<img src="images/flippers/lolo_timelapse.png"
+						class="flip_image flip_image_animated glow-hover-element">
+				</div>
+			</div>
+
+			<br>
+			<br>
+		</div>
+		<h4>Hidden Character Timelapses</h4>
+		<div style="text-align:center;">
+			<iframe width="1000" height="500"
+				src="https://www.youtube.com/embed/e-ORk5keZNw?autoplay=1&loop=1&playlist=e-ORk5keZNw&rel=0"
+				title="YouTube video player" frameborder="0"
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+				allowfullscreen></iframe>
+		</div>
 		<br>
 		<br>
-	</div>
-	<h4>Hidden Character Timelapses</h4>
-	<div style="text-align:center;">
-		<iframe width="1000" height="500"
-			src="https://www.youtube.com/embed/e-ORk5keZNw?autoplay=1&loop=1&playlist=e-ORk5keZNw&rel=0"
-			title="YouTube video player" frameborder="0"
-			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-			allowfullscreen></iframe>
-	</div>
-	<br>
-	<br>
-	<br>
-	<h3>Bibtex Citation</h3>
-	<div class="citation-box">
-		<pre id="citation-text"></pre>
-	</div>
-	<br>
+		<br>
+		<h3>Bibtex Citation</h3>
+		<div class="citation-box">
+			<pre id="citation-text"></pre>
+		</div>
+		<br>
 
 </body>
 
