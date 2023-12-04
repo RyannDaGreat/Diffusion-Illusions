@@ -81,6 +81,24 @@
 			box-shadow: 0px 0px 50px 3px rgba(46, 140, 255, 0.56);
 		}
 
+		.gif-link {
+    -webkit-box-shadow: 0px 0px 50px 3px rgba(46, 140, 255, 0.26);
+    -moz-box-shadow: 0px 0px 50px 3px rgba(46, 140, 255, 0.26);
+    box-shadow: 0px 0px 50px 3px rgba(46, 140, 255, 0.26);
+    border-radius: 10pt;
+    transition: all 0.2s ease-in-out; /* Smooth transition for all changes */
+}
+
+.gif-link:hover {
+    -webkit-box-shadow: 0px 0px 50px 3px rgba(46, 140, 255, 0.52); /* Brighter and more opaque shadow */
+    -moz-box-shadow: 0px 0px 50px 3px rgba(46, 140, 255, 0.52);
+    box-shadow: 0px 0px 50px 3px rgba(46, 140, 255, 0.52);
+	transform: scale(110%);
+    filter: brightness(110%); /* Make the element 10% brighter */
+}
+
+
+
 		/* Gist Dark Mode End */
 
 		html,
@@ -242,6 +260,8 @@
 			font-weight: bold;
 			margin-top: 5px;
 			background-color: transparent;
+			white-space: nowrap;
+			
 		}
 
 		.rot_image_size {
@@ -683,6 +703,70 @@
 					href="https://youtube.com/clip/Ugkx5Rtt80MHftrU7QxCFSJciszQo6qx1zVm?feature=shared">here</a></li>
 		</ul>
 	</div>
+
+	<h3>Navigation</h3>
+
+	<p><b>Source code: </b><a
+			href="https://github.com/RyannDaGreat/Diffusion-Illusions">github.com/RyannDaGreat/Diffusion-Illusions</a>.
+		If you like it, please give it a star!</p>
+	<p><b>Our Paper: </b><a href="assets/whitepaper.pdf">diffusionillusions.pdf</a> - please give it a read!</p>
+	<p><b>More Details: </b><a class="scroll-to" href="#summary">Check the
+			bottom of the
+			page</a>  to learn more about this project! </p>
+
+			
+	<div class="caption">
+		We present three variants of illusions:
+	</div>
+
+	<div style="display: flex; flex-direction: column; align-items: center;">
+		<a class="scroll-to" href="#hidden_overlays">
+			<div class="image-container" style="width: 100%;">
+				<div class="caption">Hidden Overlay Illusions</div>
+				<img class="gif-link" src="images/hiddens.gif" style="height:220px; max-height: 512px;" />
+			</div>
+		</a>
+		<div style="display: flex; justify-content: center; align-items: center; width: 100%;">
+			<a class="scroll-to" href="#rotation_overlays" >
+				<div class="image-container" style="margin-left: 80px; margin-right: 80px">
+					<div class="caption">Rotation Overlays</div>
+					<img class="gif-link" src="images/rotator.gif" style="height:220px;  max-height: 512px;" />
+				</div>
+			</a>
+			<a class="scroll-to" href="#flippy_illusions" >
+				<div class="image-container" style="margin-left: 80px; margin-right: 80px">
+					<div class="caption">Flippy Illusions</div>
+					<img class="gif-link" src="images/flippy.gif" style="height:220px;  max-height: 512px;"  />
+				</div>
+			</a>
+		</div>
+	</div>
+	
+
+
+
+	<!-- <div style="display: flex; justify-content: center; align-items: center;">
+		<a class="scroll-to" href="#hidden_overlays">
+			<div class="image-container">
+				<div class="caption">Hidden Overlay Illusions</div>
+				<img src="images/hiddens.gif" style="width: 100%" ; />
+			</div>
+		</a>
+		<a class="scroll-to" href="#rotation_overlays">
+			<div class="image-container">
+				<div class="caption">Rotation Overlay Illusions</div>
+				<img src="images/rotator.gif" style="width: 100%" ; />
+			</div>
+		</a>
+		<a class="scroll-to" href="#flippy_illusions">
+			<div class="image-container">
+				<div class="caption">Flippy Illusions</div>
+				<img src="images/flippy.gif" style="width: 100%" ; />
+			</div>
+		</a>
+	
+	</div> -->
+
 	<!-- The demo is available at <a -->
 	<!-- href="https://ryanndagreat.github.io/Diffusion-Illusions/">ryanndagreat.github.io/Diffusion-Illusions</a> -->
 	<!-- A video
@@ -694,23 +778,17 @@
 		demo, we use a variant of score distillation loss to optimize different optical illusions - hiding images in
 		plain sight. -->
 
-	<p><b>Source code: </b><a
-			href="https://github.com/RyannDaGreat/Diffusion-Illusions">github.com/RyannDaGreat/Diffusion-Illusions</a>.
-		If you like it, please give it a star!</p>
-	<p><b>Our Paper: </b><a href="assets/whitepaper.pdf">diffusionillusions.pdf</a> - please give it a read!</p>
-	<p>We'll keep this brief so we can dive right into the pictures - <a class="scroll-to" href="#summary">check the
-			bottom of the
-			page</a> for more details about this project!</p>
 
-	<p>There are three kinds of illusions presented: <a class="scroll-to" href="#flippy_illusions">Flippy Illusions</a>,
-		<a class="scroll-to" href="#rotating_overlays">Rotating Overlays</a>, and
-		<a class="scroll-to" href="#hidden_characters">Hidden Overlays</a>
-	</p>
+	<!-- <p>There are three kinds of illusions presented:
+		<a class="scroll-to" href="#flippy_illusions">Flippy Illusions</a>,
+		<a class="scroll-to" href="#rotation_overlays">Rotating Overlays</a>, and
+		<a class="scroll-to" href="#hidden_overlays">Hidden Overlays</a>
+	</p> -->
 
 	<!-- <ol>
 		  <li><a class="scroll-to" href="#flippy_illusions">Flippy Illusions</a></li>
-	  <li><a class="scroll-to" href="#rotating_overlays">Rotating Overlays</a></li>
-	  <li><a class="scroll-to" href="#hidden_characters">Hidden Overlays</a></li>
+	  <li><a class="scroll-to" href="#rotation_overlays">Rotating Overlays</a></li>
+	  <li><a class="scroll-to" href="#hidden_overlays">Hidden Overlays</a></li>
 	</ol> -->
 
 
@@ -801,7 +879,7 @@
 
 	<hr>
 
-	<h2 id="rotating_overlays">Rotating Overlays</h2>
+	<h2 id="rotation_overlays">Rotating Overlays</h2>
 	<p>In this section, we have examples with two images. As the one on the top is rotated, the image changes! The one
 		on the top is multiplied by the one on the bottom
 		(pixelwise), simulating how light would be filtered through two transparent sheets with images printed on them.
@@ -1088,7 +1166,7 @@
 				allowfullscreen></iframe>
 		</div>
 		<div class="caption">
-			<a target="_blank" href="assets/rotating_overlays.pdf">Click here for a printable PDF</a> full of these
+			<a target="_blank" href="assets/rotation_overlays.pdf">Click here for a printable PDF</a> full of these
 			images,
 			so you can try
 			it yourself!
@@ -1102,7 +1180,7 @@
 
 
 		<hr>
-		<h2 id="hidden_characters">Hidden Overlays</h2>
+		<h2 id="hidden_overlays">Hidden Overlays</h2>
 		<p>In this section, we have sets of 4 images. You can <it><b>click and drag</b></it> them on top of each other!
 			They
 			will all be
