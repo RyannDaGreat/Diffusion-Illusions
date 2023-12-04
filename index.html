@@ -85,21 +85,21 @@
 
 		html,
 		body {
-			background-image: linear-gradient(to top, 
-			rgb(24, 30, 66) 0%, 
-			#3b1837 19%, 
-			/* #09203f 33%,  */
-			rgb(0, 21, 28) 25%, 
-			rgb(0, 55, 22) 35%, 
-			rgb(55, 54, 0) 45%, 
-			rgb(55, 0, 6) 55%, 
+			background-image: linear-gradient(to top,
+					rgb(24, 30, 66) 0%,
+					#3b1837 19%,
+					/* #09203f 33%,  */
+					rgb(0, 21, 28) 25%,
+					rgb(0, 55, 22) 35%,
+					rgb(55, 54, 0) 45%,
+					rgb(55, 0, 6) 55%,
 
-			rgb(24, 30, 66) 65%, 
-			#3c164a 75%, 
+					rgb(24, 30, 66) 65%,
+					#3c164a 75%,
 
-			#170037 85%, 
-			#3c164a 90%, 
-			rgb(24, 30, 66) 100%);
+					#170037 85%,
+					#3c164a 90%,
+					rgb(24, 30, 66) 100%);
 			/* background-image: linear-gradient(to top, #181636 0%, #09203f 33%, #162036 66%, #3c164a 90%, rgb(24, 30, 66) 100%); */
 
 			/* background-image: linear-gradient(to top, #181636 0%, #09203f 33%, #162036 66%, rgba(40, 42, 54, 1) 100%); */
@@ -552,7 +552,8 @@
 			--clip-top: calc(var(--stack-height) * var(--index));
 			--clip-bottom: calc(var(--stack-height) * var(--inverse-index));
 			clip-path: inset(var(--clip-top) 0 var(--clip-bottom) 0);
-			animation: glitch 340ms cubic-bezier(.46,.29,0,1.24) 1 backwards calc(var(--index) * 120ms), glitch 2s ease infinite 2s alternate-reverse;		}
+			animation: glitch 340ms cubic-bezier(.46, .29, 0, 1.24) 1 backwards calc(var(--index) * 120ms), glitch 2s ease infinite 2s alternate-reverse;
+		}
 
 		.glitch-style span:nth-child(odd) {
 			--glitch-translate: 8px;
