@@ -508,77 +508,99 @@
 		}
 
 		.container {
-  color: var(--color);
-  font-size: 1.5rem;
-  display: flex;
-  flex-direction: column;
-}
+			color: var(--color);
+			font-size: 1.5rem;
+			display: flex;
+			flex-direction: column;
+		}
 
-.right {
-  text-align: right;
-  width: 100%;
-}
+		.right {
+			text-align: right;
+			width: 100%;
+		}
 
-.glitch-style {
-	font-family: 'Didact Gothic', sans-serif;
-  display: grid;
-  grid-template-columns: 1fr;
-}
+		.glitch-style {
+			font-family: 'Didact Gothic', sans-serif;
+			display: grid;
+			grid-template-columns: 1fr;
+		}
 
-.glitch-style span {
-  font-weight: bold;
-  grid-row-start: 1;
-  grid-column-start: 1;
-  font-size: 4rem;
-  --stack-height: calc(100% / var(--stacks) - 1px);
-  --inverse-index: calc(calc(var(--stacks) - 1) - var(--index));
-  --clip-top: calc(var(--stack-height) * var(--index));
-  --clip-bottom: calc(var(--stack-height) * var(--inverse-index));
-  clip-path: inset(var(--clip-top) 0 var(--clip-bottom) 0);
-  animation: glitch 19340ms cubic-bezier(.46,.29,0,1.24) 1 backwards calc(var(--index) * 10920ms), glitch 2s ease infinite 2s alternate-reverse;
-}
+		.glitch-style span {
+			font-weight: bold;
+			grid-row-start: 1;
+			grid-column-start: 1;
+			font-size: 4rem;
+			--stack-height: calc(100% / var(--stacks) - 1px);
+			--inverse-index: calc(calc(var(--stacks) - 1) - var(--index));
+			--clip-top: calc(var(--stack-height) * var(--index));
+			--clip-bottom: calc(var(--stack-height) * var(--inverse-index));
+			clip-path: inset(var(--clip-top) 0 var(--clip-bottom) 0);
+			animation: glitch 19340ms cubic-bezier(.46, .29, 0, 1.24) 1 backwards calc(var(--index) * 10920ms), glitch 2s ease infinite 2s alternate-reverse;
+		}
 
-.glitch-style span:nth-child(odd) { --glitch-translate: 8px; }
-.glitch-style span:nth-child(even) { --glitch-translate: -8px; }
+		.glitch-style span:nth-child(odd) {
+			--glitch-translate: 8px;
+		}
 
-@keyframes glitch-style {
-  0% {
-    opacity: 0;
-    transform: translateX(-50%);
-    text-shadow: -2px 3px 0 red, 2px -3px 0 blue;
-  };
-  60% {
-    opacity: 0.5;
-    transform: translateX(50%);
-  }
-  80% {
-    transform: none;
-    opacity: 1;
-    text-shadow: 2px -3px 0 red, -2px 3px 0 blue;
-  }
-  100% {
-    text-shadow: none;
-  }
-}
+		.glitch-style span:nth-child(even) {
+			--glitch-translate: -8px;
+		}
 
-@keyframes glitch {
-  0% {
-    text-shadow: -2px 3px 0 red, 2px -3px 0 blue;
-    transform: translate(var(--glitch-translate));
-  }
-  2% {
-    text-shadow: 2px -3px 0 red, -2px 3px 0 blue;
-  }
-  4%, 100% {  text-shadow: none; transform: none; }
-}
+		@keyframes glitch-style {
+			0% {
+				opacity: 0;
+				transform: translateX(-50%);
+				text-shadow: -2px 3px 0 red, 2px -3px 0 blue;
+			}
+
+			;
+
+			60% {
+				opacity: 0.5;
+				transform: translateX(50%);
+			}
+
+			80% {
+				transform: none;
+				opacity: 1;
+				text-shadow: 2px -3px 0 red, -2px 3px 0 blue;
+			}
+
+			100% {
+				text-shadow: none;
+			}
+		}
+
+		@keyframes glitch {
+			0% {
+				text-shadow: -2px 3px 0 red, 2px -3px 0 blue;
+				transform: translate(var(--glitch-translate));
+			}
+
+			2% {
+				text-shadow: 2px -3px 0 red, -2px 3px 0 blue;
+			}
+
+			4%,
+			100% {
+				text-shadow: none;
+				transform: none;
+			}
+		}
 	</style>
 </head>
 
 <body>
 	<div class="glitch-style center_text" style="--stacks: 3; margin:0px; padding:0px; ">
-		<span style="--index: 0;"><h1 style="font-size:50pt; margin: 0px; margin-bottom:5pt; margin-top: 30pt;">Diffusion Illusions:</h1></span>
-		<span style="--index: 1;"><h1 style="font-size:50pt; margin: 0px; margin-bottom:5pt; margin-top: 30pt;">Diffusion Illusions:</h1></span>
-		<span style="--index: 2;"><h1 style="font-size:50pt; margin: 0px; margin-bottom:5pt; margin-top: 30pt;">Diffusion Illusions:</h1></span>
+		<span style="--index: 0;">
+			<h1 style="font-size:50pt; margin: 0px; margin-bottom:5pt; margin-top: 30pt;">Diffusion Illusions:</h1>
+		</span>
+		<span style="--index: 1;">
+			<h1 style="font-size:50pt; margin: 0px; margin-bottom:5pt; margin-top: 30pt;">Diffusion Illusions:</h1>
+		</span>
+		<span style="--index: 2;">
+			<h1 style="font-size:50pt; margin: 0px; margin-bottom:5pt; margin-top: 30pt;">Diffusion Illusions:</h1>
+		</span>
 	</div>
 	<h1 style="margin:0px;">Hiding Images in Plain Sight</h1>
 
