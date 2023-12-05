@@ -737,9 +737,9 @@
 					<img class="gif-link" src="images/rotator.gif" style="height:220px;  max-height: 512px;" />
 				</div>
 			</a>
-			<a class="scroll-to" href="#flippy_illusions">
+			<a class="scroll-to" href="#flip_illusions">
 				<div class="image-container" style="margin-left: 80px; margin-right: 80px">
-					<div class="caption">Flippy Illusions</div>
+					<div class="caption">Flip Illusions</div>
 					<img class="gif-link" src="images/flippy.gif" style="height:220px;  max-height: 512px;" />
 				</div>
 			</a>
@@ -763,10 +763,10 @@
 				<img src="images/rotator.gif" style="width: 100%" ; />
 			</div>
 		</a>
-		<a class="scroll-to" href="#flippy_illusions">
+		<a class="scroll-to" href="#flip_illusions">
 			<div class="image-container">
-				<div class="caption">Flippy Illusions</div>
-				<img src="images/flippy.gif" style="width: 100%" ; />
+				<div class="caption">Flip Illusions</div>
+				<img src="images/flip.gif" style="width: 100%" ; />
 			</div>
 		</a>
 	
@@ -785,20 +785,20 @@
 
 
 	<!-- <p>There are three kinds of illusions presented:
-		<a class="scroll-to" href="#flippy_illusions">Flippy Illusions</a>,
+		<a class="scroll-to" href="#flip_illusions">Flip Illusions</a>,
 		<a class="scroll-to" href="#rotation_overlays">Rotating Overlays</a>, and
 		<a class="scroll-to" href="#hidden_overlays">Hidden Overlays</a>
 	</p> -->
 
 	<!-- <ol>
-		  <li><a class="scroll-to" href="#flippy_illusions">Flippy Illusions</a></li>
+		  <li><a class="scroll-to" href="#flip_illusions">Flip Illusions</a></li>
 	  <li><a class="scroll-to" href="#rotation_overlays">Rotating Overlays</a></li>
 	  <li><a class="scroll-to" href="#hidden_overlays">Hidden Overlays</a></li>
 	</ol> -->
 
 
 
-	<h2 id="flippy_illusions">Flippy Illusions</h2>
+	<h2 id="flip_illusions">Flip Illusions</h2>
 	<p>If you wait a few seconds, the below images will flip upside-down - to reveal a new image!
 
 		<span class="no_mobile">
@@ -811,7 +811,7 @@
 		<span class="reset-all-flip-images-button no_mobile" style="margin-right:30px">
 			<b>Click here to reset all rotations</b>
 		</span>
-		<span class="generic_pause_button flippy_pause_button" style="display: inline-block; width: 40pt;">
+		<span class="generic_pause_button flip_pause_button" style="display: inline-block; width: 40pt;">
 			<b>Pause</b>
 		</span>
 	</div>
@@ -877,7 +877,7 @@
 	</div>
 	<br>
 	<a target="_blank"
-		href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/flippy_illusions_for_colab.ipynb">
+		href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/flip_illusions_for_colab.ipynb">
 		<h3><img src="images/colab_logo.svg" alt="Google Colab" width="30pt" height="30pt"
 				style="vertical-align: middle; margin-right: 10pt;">Try it on Colab!</h3>
 	</a>
@@ -1974,7 +1974,7 @@
 
 			$(document).ready(function () {
 				//TODO: Why doesn't this work?
-				$('.flippy_pause_button').data('state', 'pause').on('click', function () {
+				$('.flip_pause_button').data('state', 'pause').on('click', function () {
 					var button = $(this);
 					var currentState = button.data('state');
 
@@ -2065,7 +2065,7 @@
 	<p>The project will include physical items such as transparencies for people to interact with, as well as a live
 		demonstration that will allow people to create their own illusions on the spot. If space permits, we might bring
 		a printer to let people play with the illusions they create. And if we have even more space, perhaps a robot arm
-		to automatically demo the flippy images.</p>
+		to automatically demo the flip images.</p>
 
 	<p>In this website you'll find multiple interactive exhibits where you can drag images around as if they were pieces
 		of paper / transparencies. Until we demo at CVPR, this is the next best thing to the physical demo! </p> -->
@@ -2093,7 +2093,7 @@
 			these illusions were made. This code has been oversimplified for the sake of simplicity - for all the details please read our paper. The full source code can be found at <a target="_blank"
 				href="https://github.com/RyannDaGreat/Diffusion-Illusions">github.com/RyannDaGreat/Diffusion-Illusions</a>,
 			or at any of the Google Colab links throughout this webpage.</p>
-		<h4>Flippy Illusions</h4>
+		<h4>Flip Illusions</h4>
 		<script src="https://gist.github.com/RyannDaGreat/fde3d6c05fb4d6d0cf31e7477658d3fd.js"></script>
 		<br>
 		<h4>Rotating Overlays</h4>
@@ -2107,7 +2107,7 @@
 		<p>Diffusion illisions are generated through an iterative process: we optimize the output images with gradient
 			descent, starting from pure noise. Here are some timelapses showing how they evolve over time.</p>
 
-		<h4>Flippy Illusion Timelapses</h4>
+		<h4>Flip Illusion Timelapses</h4>
 		<div style="text-align:center;">
 			<iframe width="700" height="700"
 				src="https://www.youtube.com/embed/YRWd4nVcZlA?autoplay=1&loop=1&playlist=YRWd4nVcZlA&rel=0"
@@ -2120,7 +2120,7 @@
 			<span class="reset-all-flip-images-button no_mobile" style="margin-right:30px">
 				<b>Click here to reset all rotations</b>
 			</span>
-			<span class="generic_pause_button flippy_pause_button" style="display: inline-block; width: 40pt;">
+			<span class="generic_pause_button flip_pause_button" style="display: inline-block; width: 40pt;">
 				<b>Pause</b>
 			</span>
 		</div>
