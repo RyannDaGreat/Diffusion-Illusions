@@ -797,13 +797,13 @@
 
 	<!-- <p>There are three kinds of illusions presented:
 		<a class="scroll-to" href="#flip_illusions">Flip Illusions</a>,
-		<a class="scroll-to" href="#rotation_overlays">Rotating Overlays</a>, and
+		<a class="scroll-to" href="#rotation_overlays">Rotation Overlays</a>, and
 		<a class="scroll-to" href="#hidden_overlays">Hidden Overlays</a>
 	</p> -->
 
 	<!-- <ol>
 		  <li><a class="scroll-to" href="#flip_illusions">Flip Illusions</a></li>
-	  <li><a class="scroll-to" href="#rotation_overlays">Rotating Overlays</a></li>
+	  <li><a class="scroll-to" href="#rotation_overlays">Rotation Overlays</a></li>
 	  <li><a class="scroll-to" href="#hidden_overlays">Hidden Overlays</a></li>
 	</ol> -->
 
@@ -895,7 +895,7 @@
 
 	<hr>
 
-	<h2 id="rotation_overlays">Rotating Overlays</h2>
+	<h2 id="rotation_overlays">Rotation Overlays</h2>
 	<p>In this section, we have examples with two images. As the one on the top is rotated, the image changes! The one
 		on the top is multiplied by the one on the bottom
 		(pixelwise), simulating how light would be filtered through two transparent sheets with images printed on them.
@@ -2048,7 +2048,7 @@
 		<h3>Overview</h3>
 		<p>The project is comprised of three demonstrations:</p>
 		<ol>
-			<li><strong>Generating images that appear as different objects when flipped upside down</strong> - For
+			<li><strong><b>Flip Illusions: </b>Generating images that appear as different objects when flipped upside down</strong> - For
 				example,
 				a giraffe could look like a penguin. The image satisfies two different textual prompts dependint on its orientation. <br>
 				<!-- Top accomplish this, let's define some functions and variables. We want to create an image "Image" such
@@ -2058,14 +2058,14 @@
 				We optimize an image we'll call "Image" using score distillation loss "SD". We optimize
 				SD(Image,prompt_1) -->
 			</li>
-			<li><strong>Revealing multiple images through image rotation</strong> - Overlaying two images to reveal four
+			<li><strong><b>Rotation Overlay Illusions: </b>Revealing multiple images through image rotation</strong> - Overlaying two images to reveal four
 				different images when rotated. The top image, when overlayed on the bottom image and light shines
 				through,
 				will reveal an image such as Darth Vader. When the top image is rotated 90 degrees, it becomes a
 				different
 				picture such as Pikachu. Another 90-degree rotation reveals another image and a final 90-degree rotation
 				reveals a fourth image.</li>
-			<li><strong>Revealing a hidden image through image overlay</strong> - Overlaying four images, such as
+			<li><strong><b>Hidden Overlay Illusions: </b>Revealing a hidden image through image overlay</strong> - Overlaying four images, such as
 				Hatsune
 				Miku, a bear in a field, Mario, and a pumpkin, to reveal a fifth image, Darth Vader, when light is shone
 				behind it. The four images are optimized to look like the original objects when viewed individually, but
@@ -2109,7 +2109,7 @@
 		<h4>Flip Illusions</h4>
 		<script src="https://gist.github.com/RyannDaGreat/fde3d6c05fb4d6d0cf31e7477658d3fd.js"></script>
 		<br>
-		<h4>Rotating Overlays</h4>
+		<h4>Rotation Overlays</h4>
 		<script src="https://gist.github.com/RyannDaGreat/0cb428a7d0a839249f058ef8273b9faf.js"></script>
 		<br>
 		<h4>Hidden Overlays</h4>
