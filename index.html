@@ -26,53 +26,65 @@
 
 
 		.fixed-header {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background-color: white; /* Or your desired background color */
-    z-index: -7; /* Ensures it stays on top */
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1); /* Optional, for visibility */
-}
+			position: fixed;
+			top: 0;
+			width: 100%;
+			background-color: white;
+			/* Or your desired background color */
+			z-index: -7;
+			/* Ensures it stays on top */
+			box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+			/* Optional, for visibility */
+		}
 
-.header-placeholder {
-    display: none;
-    height: 0;
-}
-#custom-navbar {
-    position: fixed; /* Keeps the navbar relative to the viewport */
-    top: 0;
-    left: 0; /* Aligns the navbar to the left edge of the viewport */
-    right: 0; /* Ensures the navbar stretches across the full width of the viewport */
-    width: 100%; /* Full width */
-    background-color: rgba(255, 255, 255, 0.8); /* 80% transparent white */
-    backdrop-filter: blur(10px);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
-    z-index: 10000; /* High z-index to ensure it stays on top */
-}
+		.header-placeholder {
+			display: none;
+			height: 0;
+		}
+
+		#custom-navbar {
+			position: fixed;
+			/* Keeps the navbar relative to the viewport */
+			top: 0;
+			left: 0;
+			/* Aligns the navbar to the left edge of the viewport */
+			right: 0;
+			/* Ensures the navbar stretches across the full width of the viewport */
+			width: 100%;
+			/* Full width */
+			background-color: rgba(255, 255, 255, 0.8);
+			/* 80% transparent white */
+			backdrop-filter: blur(10px);
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 10px;
+			box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+			z-index: 10000;
+			/* High z-index to ensure it stays on top */
+		}
 
 
-#navbar-content {
-    color: black;
-    flex-grow: 1;
-    text-align: center;
-}
+		#navbar-content {
+			color: black;
+			flex-grow: 1;
+			text-align: center;
+		}
 
-#navbar-close, #navbar-to-top {
-    color: black;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
-    user-select: none;
-}
+		#navbar-close,
+		#navbar-to-top {
+			color: black;
+			background-color: rgba(255, 255, 255, 0.5);
+			border-radius: 5px;
+			padding: 5px 10px;
+			cursor: pointer;
+			user-select: none;
+		}
 
-#navbar-close:hover, #navbar-to-top:hover {
-    background-color: rgba(255, 255, 255, 0.7);
-}
+		#navbar-close:hover,
+		#navbar-to-top:hover {
+			background-color: rgba(255, 255, 255, 0.7);
+		}
 
 
 
@@ -2095,47 +2107,47 @@
 
 			// NAVBAR CODE
 
-if(0)//CURRENTLY DISABLED
-{
-			document.addEventListener("DOMContentLoaded", function() {
-    let headers = document.querySelectorAll("h2"); // Change to h2 or any header tag
-    let navbar = createNavbar();
-    let currentStickyHeader = null;
+			if (0)//CURRENTLY DISABLED
+			{
+				document.addEventListener("DOMContentLoaded", function () {
+					let headers = document.querySelectorAll("h2"); // Change to h2 or any header tag
+					let navbar = createNavbar();
+					let currentStickyHeader = null;
 
-    window.addEventListener("scroll", function() {
-        let lastHeaderAboveTop = null;
+					window.addEventListener("scroll", function () {
+						let lastHeaderAboveTop = null;
 
-        headers.forEach(header => {
-            let rect = header.getBoundingClientRect();
-            if (rect.top <= 0) {
-                lastHeaderAboveTop = header;
-            }
-        });
+						headers.forEach(header => {
+							let rect = header.getBoundingClientRect();
+							if (rect.top <= 0) {
+								lastHeaderAboveTop = header;
+							}
+						});
 
-        if (currentStickyHeader !== lastHeaderAboveTop) {
-            updateNavbarContent(lastHeaderAboveTop ? lastHeaderAboveTop.innerText : '');
-            currentStickyHeader = lastHeaderAboveTop;
-        }
-    });
-});
+						if (currentStickyHeader !== lastHeaderAboveTop) {
+							updateNavbarContent(lastHeaderAboveTop ? lastHeaderAboveTop.innerText : '');
+							currentStickyHeader = lastHeaderAboveTop;
+						}
+					});
+				});
 
-function createNavbar() {
-    let navbar = document.createElement('div');
-    navbar.id = 'custom-navbar';
-    navbar.innerHTML = `
+				function createNavbar() {
+					let navbar = document.createElement('div');
+					navbar.id = 'custom-navbar';
+					navbar.innerHTML = `
         <div id="navbar-close" onclick="document.getElementById('custom-navbar').style.display='none';">X</div>
         <div id="navbar-content"></div>
         <div id="navbar-to-top" onclick="window.scrollTo(0, 0);">To Top</div>
     `;
-    document.body.appendChild(navbar);
-    return navbar;
-}
+					document.body.appendChild(navbar);
+					return navbar;
+				}
 
-function updateNavbarContent(text) {
-    let navbarContent = document.getElementById('navbar-content');
-    navbarContent.textContent = "Diffusion Illusions: " + text;
-}
-}
+				function updateNavbarContent(text) {
+					let navbarContent = document.getElementById('navbar-content');
+					navbarContent.textContent = "Diffusion Illusions: " + text;
+				}
+			}
 
 
 
