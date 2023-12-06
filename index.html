@@ -751,40 +751,44 @@
 			bottom of the
 			page</a> to learn more about this project! </p>
 
-			<p><b>Our Paper: </b><a href="assets/diffusion_illusions.pdf">diffusionillusions.pdf</a> - please give it a read!</p>
+	<p><b>Our Paper: </b><a href="assets/diffusion_illusions.pdf">diffusionillusions.pdf</a> - please give it a read!
+	</p>
 	<p><b>Source code: </b><a
 			href="https://github.com/RyannDaGreat/Diffusion-Illusions">github.com/RyannDaGreat/Diffusion-Illusions</a>.
 		If you like it, please give it a star <b>★</b>!</p>
 
-<h3>Make Your Own</h3>
-<!-- <h4><b>Make Your Own</b></h4> -->
-<!-- <p style="margin:0px;">You can also make your own illusions for free on Google Colab!</p> -->
-			<div style="display: flex; justify-content: center; align-items: center;">
-				<div style="display: flex; align-items: center; gap: 20pt;">
-					<!-- All three illusion colab links -->
-					<a target="_blank"
-						href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/flip_illusions_for_colab.ipynb">
-						<h4 style="margin-top:0pt; margin:0pt; margin-bottom:0pt;">
-							<img src="images/colab_logo.svg" alt="Google Colab" width="30pt" height="30pt"
-								style="vertical-align: middle; margin-right: 10pt;"><b>Flip Illuions
-						</b></h4>
-					</a>
-					<a target="_blank"
-						href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/rotation_overlays_for_colab.ipynb">
-						<h4 style="margin-top:0pt; margin:0pt; margin-bottom:0pt;">
-							<img src="images/colab_logo.svg" alt="Google Colab" width="30pt" height="30pt"
-								style="vertical-align: middle; margin-right: 10pt;"><b>Rotation Overlays
-						</b></h4>
-					</a>
-					<a target="_blank"
-						href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/hidden_characters_for_colab.ipynb">
-						<h4 style="margin-top:0pt; margin:0pt; margin-bottom:0pt;">
-							<img src="images/colab_logo.svg" alt="Google Colab" width="30pt" height="30pt"
-								style="vertical-align: middle; margin-right: 10pt;"><b>Hidden Overlays
-						</b></h4>
-					</a>
-				</div>
-			</div>
+	<h3>Make Your Own</h3>
+	<!-- <h4><b>Make Your Own</b></h4> -->
+	<!-- <p style="margin:0px;">You can also make your own illusions for free on Google Colab!</p> -->
+	<div style="display: flex; justify-content: center; align-items: center;">
+		<div style="display: flex; align-items: center; gap: 20pt;">
+			<!-- All three illusion colab links -->
+			<a target="_blank"
+				href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/flip_illusions_for_colab.ipynb">
+				<h4 style="margin-top:0pt; margin:0pt; margin-bottom:0pt;">
+					<img src="images/colab_logo.svg" alt="Google Colab" width="30pt" height="30pt"
+						style="vertical-align: middle; margin-right: 10pt;"><b>Flip Illuions
+					</b>
+				</h4>
+			</a>
+			<a target="_blank"
+				href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/rotation_overlays_for_colab.ipynb">
+				<h4 style="margin-top:0pt; margin:0pt; margin-bottom:0pt;">
+					<img src="images/colab_logo.svg" alt="Google Colab" width="30pt" height="30pt"
+						style="vertical-align: middle; margin-right: 10pt;"><b>Rotation Overlays
+					</b>
+				</h4>
+			</a>
+			<a target="_blank"
+				href="https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/hidden_characters_for_colab.ipynb">
+				<h4 style="margin-top:0pt; margin:0pt; margin-bottom:0pt;">
+					<img src="images/colab_logo.svg" alt="Google Colab" width="30pt" height="30pt"
+						style="vertical-align: middle; margin-right: 10pt;"><b>Hidden Overlays
+					</b>
+				</h4>
+			</a>
+		</div>
+	</div>
 
 	<hr>
 	<br>
@@ -2076,9 +2080,11 @@
 		<h3>Overview</h3>
 		<p>The project is comprised of three demonstrations:</p>
 		<ol>
-			<li><strong><b>Flip Illusions: </b>Generating images that appear as different objects when flipped upside down</strong> - For
+			<li><strong><b>Flip Illusions: </b>Generating images that appear as different objects when flipped upside
+					down</strong> - For
 				example,
-				a giraffe could look like a penguin. The image satisfies two different textual prompts dependint on its orientation. <br>
+				a giraffe could look like a penguin. The image satisfies two different textual prompts dependint on its
+				orientation. <br>
 				<!-- Top accomplish this, let's define some functions and variables. We want to create an image "Image" such
 				that
 				when viewed right side up, "Image" matches "Prompt1" (in this case 'Giraffe'). And when Image is upside
@@ -2086,14 +2092,16 @@
 				We optimize an image we'll call "Image" using score distillation loss "SD". We optimize
 				SD(Image,prompt_1) -->
 			</li>
-			<li><strong><b>Rotation Overlay Illusions: </b>Revealing multiple images through image rotation</strong> - Overlaying two images to reveal four
+			<li><strong><b>Rotation Overlay Illusions: </b>Revealing multiple images through image rotation</strong> -
+				Overlaying two images to reveal four
 				different images when rotated. The top image, when overlayed on the bottom image and light shines
 				through,
 				will reveal an image such as Darth Vader. When the top image is rotated 90 degrees, it becomes a
 				different
 				picture such as Pikachu. Another 90-degree rotation reveals another image and a final 90-degree rotation
 				reveals a fourth image.</li>
-			<li><strong><b>Hidden Overlay Illusions: </b>Revealing a hidden image through image overlay</strong> - Overlaying four images, such as
+			<li><strong><b>Hidden Overlay Illusions: </b>Revealing a hidden image through image overlay</strong> -
+				Overlaying four images, such as
 				Hatsune
 				Miku, a bear in a field, Mario, and a pumpkin, to reveal a fifth image, Darth Vader, when light is shone
 				behind it. The four images are optimized to look like the original objects when viewed individually, but
