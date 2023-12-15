@@ -744,7 +744,7 @@
 						style="color:white; font-size:16pt; margin: 0; display: flex; align-items: center; vertical-align: middle;">Arxiv</b>
 				</a>
 			</div>
-			
+
 			<div class="main-link-button glow-hover-element"
 				style="display: flex; align-items: center; justify-content: center; text-align: center;">
 				<!-- <a target="_blank" href="assets/diffusion_illusions.pdf" -->
@@ -813,7 +813,8 @@
 			<li>
 				<p>
 					<a href="https://cvpr2023.thecvf.com/Conferences/2023/Awards">
-						<img src="images/cvpr_2023_logo.png" alt="CVPR 2023 Logo" width="50pt" style="vertical-align: middle; margin-right: 5pt;"></a>Diffusion Illusions won <a
+						<img src="images/cvpr_2023_logo.png" alt="CVPR 2023 Logo" width="50pt"
+							style="vertical-align: middle; margin-right: 5pt;"></a>Diffusion Illusions won <a
 						href="https://cvpr2023.thecvf.com/Conferences/2023/Awards"> the best demo award
 						in
 						CVPR
@@ -827,7 +828,8 @@
 							style="vertical-align: middle; margin-right: 5pt;"></a>We also exhibited at <a
 						href="https://opensauce.live">OpenSauce 2023.</a> See
 					JacksFilms' reaction
-					<a href="https://www.youtube.com/watch?v=R--zoea87jA"><img src="images/youtube_icon_white.svg" alt="YouTube Logo" width="28pt" style="vertical-align: middle; margin-right: 5pt;">here!</a>
+					<a href="https://www.youtube.com/watch?v=R--zoea87jA"><img src="images/youtube_icon_white.svg"
+							alt="YouTube Logo" width="28pt" style="vertical-align: middle; margin-right: 5pt;">here!</a>
 					<!-- <a href="https://youtube.com/clip/Ugkx5Rtt80MHftrU7QxCFSJciszQo6qx1zVm?feature=shared">here</a> -->
 				</p>
 			</li>
@@ -1238,7 +1240,7 @@
 					// ['tardyb', 'tardyr'],
 					// ['bbadb', 'bbadr'],
 
-					
+
 					['shrekb', 'shrekr'],
 					['shrek2b', 'shrek2r'],
 					['shrek3b', 'shrek3r'],
@@ -1305,20 +1307,24 @@
 				const container = document.getElementById('rotator-container');
 
 				// Creating the top button section
-				const buttonSection = document.createElement('div');
-				buttonSection.className = 'col';
-				buttonSection.innerHTML = `
-			<div style="text-align: center;">
-				<span class="reset-all-rotaters-button" style="margin-right:30px">
-					<b>Click here to reset all positions</b>
-				</span>
-				<span class="generic_pause_button rotation_overlay_pause_button" style="display: inline-block; width: 40pt;">
-					<b>Pause</b>
-				</span>
-			</div>
-			<br><br>
-		`;
-				container.appendChild(buttonSection);
+				function makeButtonSection() {
+					const buttonSection = document.createElement('div');
+					buttonSection.className = 'col';
+					buttonSection.innerHTML = `
+				<div style="text-align: center;">
+					<span class="reset-all-rotaters-button" style="margin-right:30px">
+						<b>Click here to reset all positions</b>
+					</span>
+					<span class="generic_pause_button rotation_overlay_pause_button" style="display: inline-block; width: 40pt;">
+						<b>Pause</b>
+					</span>
+				</div>
+				<br><br>
+			`;
+					return buttonSection;
+
+				}
+
 
 				// Function to create a single image pair container
 				function createImagePair(pair) {
@@ -1357,6 +1363,15 @@
 					container.appendChild(row);
 					container.appendChild(document.createElement('br'));
 					container.appendChild(document.createElement('br'));
+
+					const numRowsPerButton = 4;
+					if (
+						!(i % numRowsPerButton) //Put buttons in-between the rotator rows for easy access
+						||
+						i + row_length >= imagePairs.length - 1 //Put one at the very end too
+					) {
+						container.appendChild(makeButtonSection());
+					}
 				}
 			});
 		</script>
