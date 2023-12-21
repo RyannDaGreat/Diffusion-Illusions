@@ -265,7 +265,7 @@
 		}
 
 
-		.flip_image {
+		.flip_image, .folding-tile-video {
 			-webkit-user-drag: none;
 			user-select: none;
 			-webkit-user-drag: none;
@@ -1052,6 +1052,115 @@
 	</a>
 
 	<hr>
+
+
+
+
+
+
+
+
+	<h2 id="flip_illusions">Folding Tile Illusions</h2>
+	<br>
+	<div class="col">
+		<div class="row">
+			<div class="image-container">
+				<div class="caption">Bunny + Astronaut</div>
+				<video src="images/folding_tiles/mould_bunny_astronaut.mp4" class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+			</div>
+			<div class="image-container">
+				<div class="caption">Cat + Dog</div>
+				<video src="images/folding_tiles/mould_cat_dog.mp4" class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+			</div>
+			<div class="image-container">
+				<div class="caption">Donut + Ice Cream</div>
+				<video src="images/folding_tiles/mould_donut_icecream.mp4" class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+			</div>
+		</div>
+		<div class="row">
+			<div class="image-container">
+				<div class="caption">Woman Face + Floofy Dress</div>
+				<video src="images/folding_tiles/mould_makeup_dress.mp4" class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+			</div>
+			<div class="image-container">
+				<div class="caption">Woman Face + Hatsune Miku</div>
+				<video src="images/folding_tiles/mould_makeup_miku.mp4" class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+			</div>
+			<div class="image-container">
+				<div class="caption">Anime Girl + Hatsune Miku</div>
+				<video src="images/folding_tiles/mould_mikus.mp4" class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+			</div>
+		</div>
+		<div class="row">
+			<div class="image-container">
+				<div class="caption">Emma Watson + Walter White</div>
+				<video src="images/folding_tiles/mould_watson_walter.mp4" class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+			</div>
+			<div class="image-container">
+				<div class="caption">Wonder Woman +  Skeleton</div>
+				<video src="images/folding_tiles/mould_wonderwoman_skeleton.mp4" class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+			</div>
+			<div class="image-container">
+				<div class="caption">Yoda + Weeping Angel</div>
+				<video src="images/folding_tiles/mould_yoda_angel.mp4" class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+			</div>
+		</div>
+	</div>
+	
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			var foldingTileVideos = document.querySelectorAll('.folding-tile-video');
+	
+			foldingTileVideos.forEach(function(video) {
+				var wasPlayingBeforeHover = false;
+				var pausedManually = false;
+	
+				// video.addEventListener('mouseover', function() {
+				// 	if (!video.paused && !pausedManually) {
+				// 		video.pause();
+				// 		wasPlayingBeforeHover = true;
+				// 	}
+				// });
+	
+				// video.addEventListener('mouseout', function() {
+				// 	if (wasPlayingBeforeHover && !pausedManually) {
+				// 		video.play();
+				// 	}
+				// 	wasPlayingBeforeHover = false;
+				// });
+	
+				video.addEventListener('click', function(event) {
+					event.stopPropagation();
+					if (video.paused) {
+						video.play();
+						pausedManually = false;
+					} else {
+						video.pause();
+						pausedManually = true;
+					}
+				});
+			});
+		});
+	</script>
+	
+	<hr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	<h2 id="rotation_overlays">Rotation Overlays</h2>
 	<p>In this section, we have examples with two images. As the one on the top is rotated, the image changes! The one
