@@ -1139,6 +1139,8 @@
 			<b id="buttonLabel">Rotation: Hinged</b>
 		</span>
 	</div>
+	<!-- <br> -->
+	<br>
 	<script>
 		document.getElementById("rotateButton").addEventListener("click", function () {
 			window.tilesRotateInPlace = document.getElementById("buttonLabel").innerHTML === "Rotation: Hinged";
@@ -1156,35 +1158,35 @@
 
 	<script>
 		const items = [
-			{ N: 2, caption_a: "Pyramids", caption_b: "Astronaut", image: "images/folding_tiles/images/2_pyramids_astronaut__download - 2023-12-22T005538.282.jpeg" },
-			{ N: 3, caption_a: "Golden Gate", caption_b: "Big Ben", image: "images/folding_tiles/images/3_ggate_bben__download - 2023-12-20T191843.004.jpeg" },
-			{ N: 3, caption_a: "Miku Variant 1", caption_b: "Miku Variant 2", image: "images/folding_tiles/images/3_miku_miku__asdpofaospdfkoasdf.jpeg" },
-			{ N: 3, caption_a: "Watson", caption_b: "Walter", image: "images/folding_tiles/images/3_watson_walter__download - 2023-12-20T064132.411.jpeg" },
-			{ N: 3, caption_a: "Wonder Woman", caption_b: "Skeleton", image: "images/folding_tiles/images/3_wwoman_skeleton__download - 2023-12-20T173950.110.jpeg" },
-			{ N: 4, caption_a: "Armor", caption_b: "Miku", image: "images/folding_tiles/images/4_armor_miku__download - 2023-12-21T033103.777.jpeg" },
-			{ N: 4, caption_a: "Bunny", caption_b: "Astronaut", image: "images/folding_tiles/images/4_bunny_astronaut__download - 2023-12-20T220017.204.jpeg" },
-			{ N: 4, caption_a: "Cat", caption_b: "Dog", image: "images/folding_tiles/images/4_cat_dog__download - 2023-12-21T033034.858.jpeg" },
-			{ N: 4, caption_a: "Donut", caption_b: "Ice Cream", image: "images/folding_tiles/images/4_donut_icecream__download - 2023-12-20T190621.610.jpeg" },
-			{ N: 4, caption_a: "Link", caption_b: "Eiffel Tower", image: "images/folding_tiles/images/4_link_eiffel__download - 2023-12-20T215937.115.jpeg" },
-			{ N: 4, caption_a: "Miku", caption_b: "Miku Variant", image: "images/folding_tiles/images/4_miku_miku__download - 2023-12-20T174023.166.jpeg" },
-			{ N: 4, caption_a: "Pyramid", caption_b: "Astronaut", image: "images/folding_tiles/images/4_pyramid_astronaut__download - 2023-12-22T002818.961.jpeg" },
-			{ N: 4, caption_a: "Sydney Opera House", caption_b: "Mount Fuji", image: "images/folding_tiles/images/4_sydney_fuji__download - 2023-12-21T195826.386.jpeg" },
-			{ N: 4, caption_a: "Sydney Opera House V2", caption_b: "Mount Fuji V2", image: "images/folding_tiles/images/4_sydney_fuji_v2__download - 2023-12-22T010146.980.jpeg" },
-			{ N: 4, caption_a: "Winter Makeup", caption_b: "Miku", image: "images/folding_tiles/images/4_wintermakeup_miku__download - 2023-12-20T192024.887.jpeg" },
-			{ N: 4, caption_a: "Woman's Face", caption_b: "Dress Girl", image: "images/folding_tiles/images/4_womface_dressgirl__download - 2023-12-20T073507.944.jpeg" },
-			{ N: 4, caption_a: "Woman's Face", caption_b: "Miku", image: "images/folding_tiles/images/4_womface_miku__download - 2023-12-20T155029.724.jpeg" },
-			{ N: 4, caption_a: "Yoda", caption_b: "Angel", image: "images/folding_tiles/images/4_yoda_angel__download - 2023-12-20T164907.843.jpeg" },
-			{ N: 5, caption_a: "Cat", caption_b: "Dog", image: "images/folding_tiles/images/5_cat_dog__download - 2023-12-21T195947.330.jpeg" },
-			{ N: 5, caption_a: "Cow", caption_b: "Giraffe", image: "images/folding_tiles/images/5_cow_giraffe__download - 2023-12-21T204641.199.jpeg" },
-			{ N: 5, caption_a: "Violin", caption_b: "Cat", image: "images/folding_tiles/images/5_violin_cat__download - 2023-12-22T002748.450.jpeg" },
-			{ N: 5, caption_a: "Wonder Woman", caption_b: "Cat Box", image: "images/folding_tiles/images/5_wwoman_catbox__download - 2023-12-22T003119.513.jpeg" },
-			{ N: 6, caption_a: "Ape with Gun", caption_b: "Bunny", image: "images/folding_tiles/images/6_apegun_bunny__download - 2023-12-21T204754.581.jpeg" },
-			{ N: 6, caption_a: "Dragon", caption_b: "Totoro", image: "images/folding_tiles/images/6_dragon_totoro__download - 2023-12-21T195959.073.jpeg" },
-			{ N: 6, caption_a: "Miku", caption_b: "Link", image: "images/folding_tiles/images/6_miku_link__download - 2023-12-22T002707.451.jpeg" },
-			{ N: 6, caption_a: "Woman's Face", caption_b: "Miku", image: "images/folding_tiles/images/6_womface_miku__download - 2023-12-21T200013.735.jpeg" },
-			{ N: 8, caption_a: "Violin", caption_b: "Cat", image: "images/folding_tiles/images/8_violin_cat__download - 2023-12-22T010022.596.jpeg" },
-			{ N: 4, caption_a: "Link", caption_b: "Eiffel Tower", image: "images/folding_tiles/images/4_link_eiffel__download - 2023-12-21T033248.575.jpeg" },
-			{ N: 5, caption_a: "Golden Gate", caption_b: "Big Ben", image: "images/folding_tiles/images/5_ggate_bben__download - 2023-12-21T033212.679.jpeg" }
+			{ N: 2, caption_a: "Pyramids",              caption_b: "Astronaut",      image: "images/folding_tiles/images/2_pyramids_astronaut__download - 2023-12-22T005538.282.jpeg"},
+			{ N: 3, caption_a: "Golden Gate",           caption_b: "Big Ben",        image: "images/folding_tiles/images/3_ggate_bben__download - 2023-12-20T191843.004.jpeg"        },
+			{ N: 3, caption_a: "Miku Variant 1",        caption_b: "Miku Variant 2", image: "images/folding_tiles/images/3_miku_miku__asdpofaospdfkoasdf.jpeg"                       },
+			{ N: 3, caption_a: "Watson",                caption_b: "Walter",         image: "images/folding_tiles/images/3_watson_walter__download - 2023-12-20T064132.411.jpeg"     },
+			{ N: 3, caption_a: "Wonder Woman",          caption_b: "Skeleton",       image: "images/folding_tiles/images/3_wwoman_skeleton__download - 2023-12-20T173950.110.jpeg"   },
+			{ N: 4, caption_a: "Armor",                 caption_b: "Miku",           image: "images/folding_tiles/images/4_armor_miku__download - 2023-12-21T033103.777.jpeg"        },
+			{ N: 4, caption_a: "Bunny",                 caption_b: "Astronaut",      image: "images/folding_tiles/images/4_bunny_astronaut__download - 2023-12-20T220017.204.jpeg"   },
+			{ N: 4, caption_a: "Cat",                   caption_b: "Dog",            image: "images/folding_tiles/images/4_cat_dog__download - 2023-12-21T033034.858.jpeg"           },
+			{ N: 4, caption_a: "Donut",                 caption_b: "Ice Cream",      image: "images/folding_tiles/images/4_donut_icecream__download - 2023-12-20T190621.610.jpeg"    },
+			{ N: 4, caption_a: "Link",                  caption_b: "Eiffel Tower",   image: "images/folding_tiles/images/4_link_eiffel__download - 2023-12-20T215937.115.jpeg"       },
+			{ N: 4, caption_a: "Miku",                  caption_b: "Miku Variant",   image: "images/folding_tiles/images/4_miku_miku__download - 2023-12-20T174023.166.jpeg"         },
+			{ N: 4, caption_a: "Pyramid",               caption_b: "Astronaut",      image: "images/folding_tiles/images/4_pyramid_astronaut__download - 2023-12-22T002818.961.jpeg" },
+			{ N: 4, caption_a: "Sydney Opera House",    caption_b: "Mount Fuji",     image: "images/folding_tiles/images/4_sydney_fuji__download - 2023-12-21T195826.386.jpeg"       },
+			{ N: 4, caption_a: "Sydney Opera House V2", caption_b: "Mount Fuji V2",  image: "images/folding_tiles/images/4_sydney_fuji_v2__download - 2023-12-22T010146.980.jpeg"    },
+			{ N: 4, caption_a: "Winter Makeup",         caption_b: "Miku",           image: "images/folding_tiles/images/4_wintermakeup_miku__download - 2023-12-20T192024.887.jpeg" },
+			{ N: 4, caption_a: "Woman's Face",          caption_b: "Dress Girl",     image: "images/folding_tiles/images/4_womface_dressgirl__download - 2023-12-20T073507.944.jpeg" },
+			{ N: 4, caption_a: "Woman's Face",          caption_b: "Miku",           image: "images/folding_tiles/images/4_womface_miku__download - 2023-12-20T155029.724.jpeg"      },
+			{ N: 4, caption_a: "Yoda",                  caption_b: "Angel",          image: "images/folding_tiles/images/4_yoda_angel__download - 2023-12-20T164907.843.jpeg"        },
+			{ N: 5, caption_a: "Cat",                   caption_b: "Dog",            image: "images/folding_tiles/images/5_cat_dog__download - 2023-12-21T195947.330.jpeg"           },
+			{ N: 5, caption_a: "Cow",                   caption_b: "Giraffe",        image: "images/folding_tiles/images/5_cow_giraffe__download - 2023-12-21T204641.199.jpeg"       },
+			{ N: 5, caption_a: "Violin",                caption_b: "Cat",            image: "images/folding_tiles/images/5_violin_cat__download - 2023-12-22T002748.450.jpeg"        },
+			{ N: 5, caption_a: "Wonder Woman",          caption_b: "Cat Box",        image: "images/folding_tiles/images/5_wwoman_catbox__download - 2023-12-22T003119.513.jpeg"     },
+			{ N: 6, caption_a: "Ape with Gun",          caption_b: "Bunny",          image: "images/folding_tiles/images/6_apegun_bunny__download - 2023-12-21T204754.581.jpeg"      },
+			{ N: 6, caption_a: "Dragon",                caption_b: "Totoro",         image: "images/folding_tiles/images/6_dragon_totoro__download - 2023-12-21T195959.073.jpeg"     },
+			{ N: 6, caption_a: "Miku",                  caption_b: "Link",           image: "images/folding_tiles/images/6_miku_link__download - 2023-12-22T002707.451.jpeg"         },
+			{ N: 6, caption_a: "Woman's Face",          caption_b: "Miku",           image: "images/folding_tiles/images/6_womface_miku__download - 2023-12-21T200013.735.jpeg"      },
+			{ N: 8, caption_a: "Violin",                caption_b: "Cat",            image: "images/folding_tiles/images/8_violin_cat__download - 2023-12-22T010022.596.jpeg"        },
+			{ N: 4, caption_a: "Link",                  caption_b: "Eiffel Tower",   image: "images/folding_tiles/images/4_link_eiffel__download - 2023-12-21T033248.575.jpeg"       },
+			{ N: 5, caption_a: "Golden Gate",           caption_b: "Big Ben",        image: "images/folding_tiles/images/5_ggate_bben__download - 2023-12-21T033212.679.jpeg"         }
 		];
 
 		function generateTiles() {
@@ -1343,12 +1345,16 @@
 					}
 				}
 
+				
 				this.updateEffect(this.alpha);
-				this.updateCaption();
 			}
 
 			updateEffect(alpha) {
+			
 				alpha = this.smooth(alpha);
+				console.log(this);
+				this.updateCaption();
+
 				const rects = this.element.getElementsByTagName('rect');
 				const center = { x: this.gridSize / 2, y: this.gridSize / 2 }; // Center of the SVG
 
@@ -1377,11 +1383,11 @@
 				}
 			}
 			updateCaption() {
-				if (this.alpha > 0.5) {
-					this.element.querySelector('.caption').textContent = this.caption_a;
-				} else {
-					this.element.querySelector('.caption').textContent = this.caption_b;
-				}
+				const caption=(this.alpha > 0.5)?this.caption_a:this.caption_b;
+				// const element=this.element.querySelector('.caption');
+				const element=this.element.parentElement.children[0]
+				element.textContent =caption;
+				console.log(caption)
 			}
 
 			animate() {
