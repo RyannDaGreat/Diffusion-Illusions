@@ -704,34 +704,27 @@
 			margin-bottom:-30px;
 			margin-left:-30px;
 			margin-right:-30px;
-			shape-rendering: optimizeSpeed;
-			/* shape-rendering="crispEdges" */
+			/* shape-rendering: optimizeSpeed; */
+			shape-rendering:crispEdges; 
+			/* shape-rendering: geometricPrecision; */
 			transition: filter 0.1s ease-in-out;
 			box-shadow: none;
 			filter: none; 
+
+
+			    /* Trigger hardware acceleration */
+				/* transform: translateZ(0); */
+    /* backface-visibility: hidden;
+    perspective: 1000px;
+	will-change: transform;
+	transform: translate3d(0, 0, 1px); */
 
 		}
 
 		.tiler svg:active {
 			cursor: grabbing;
-/* 
-			--shadow-opacity: .4;
-			/* Opacity value ranging from 0 to 1 */
-			--shadow-size: 15px;
-			/* Base size of the shadow */
-			--shadow-saturation: 400%; */
 		}
 
-
-
-		.tiler {
-			--shadow-opacity: .4;
-			/* Opacity value ranging from 0 to 1 */
-			--shadow-size: 15px;
-			/* Base size of the shadow */
-			--shadow-saturation: 400%;
-			/* Saturation value ranging from 0% to 100% */
-		}
 
 		.tiler:hover {
 			filter: drop-shadow(0px 0px 20px rgba(255, 255,255, .5)); 
@@ -1302,7 +1295,7 @@ document.addEventListener('DOMContentLoaded', generateTiles);
 					const y = parseInt(rect.getAttribute('y')) + 0.5; // Center y of the rectangle
 	
 					// Calculate new position based on alpha
-					const expand = Math.sin(alpha * Math.PI / 2 + Math.PI / 4) * Math.sqrt(2) - 1;
+					let expand = Math.sin(alpha * Math.PI / 2 + Math.PI / 4) * Math.sqrt(2) - 1;
 					const dx = (x - center.x) * expand;
 					const dy = (y - center.y) * expand;
 					const newX = x + dx;
@@ -1374,20 +1367,59 @@ document.addEventListener('DOMContentLoaded', generateTiles);
 				}
 				this.updateEffect(this.alpha);
 			}
-	
-			animate() {
-				this.updateAnimation();
-				requestAnimationFrame(this.animate.bind(this));
-			}
-	
-			static initAll() {
-				document.querySelectorAll('.tiler').forEach((el, index) => {
+
+
+			
+    // Method to create an intersection observer
+    createObserver() {
+        const options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1 // This proportion of the tiles must be visible or else the animation doesn't play, saving cpu
+        };
+
+        this.observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    this.startAnimation();
+                } else {
+                    this.stopAnimation();
+                }
+            });
+        }, options);
+
+        this.observer.observe(this.element);
+    }
+
+    // Start the animation
+    startAnimation() {
+        if (!this.isAnimating) {
+            this.isAnimating = true;
+            this.animate();
+        }
+    }
+	    // Stop the animation
+		stopAnimation() {
+        this.isAnimating = false;
+    }
+
+    animate() {
+        if (this.isAnimating) {
+            this.updateAnimation();
+            requestAnimationFrame(this.animate.bind(this));
+        }
+    }
+
+	static initAll() {
+        document.querySelectorAll('.tiler').forEach((el, index) => {
 					el.id = `tiler${index}`;
 					const imageUrl = el.getAttribute('image');
 					const gridSize = parseInt(el.getAttribute('N'), 10);
-					new TilerAnimation(el, imageUrl, gridSize);
-				});
-			}
+				            const tilerAnimation = new TilerAnimation(el, imageUrl, gridSize);
+            tilerAnimation.createObserver(); // Attach observer to each tile
+        });
+    }
+
 		}
 	
 		window.onload = function() {
