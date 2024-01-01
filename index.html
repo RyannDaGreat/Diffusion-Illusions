@@ -2966,39 +2966,39 @@
 			</div>
 
 			<script>
-				document.addEventListener('DOMContentLoaded', function () {
-					var foldingTileVideos = document.querySelectorAll('.folding-tile-video');
+				// document.addEventListener('DOMContentLoaded', function () {
+				// 	var foldingTileVideos = document.querySelectorAll('.folding-tile-video');
 
-					foldingTileVideos.forEach(function (video) {
-						var wasPlayingBeforeHover = false;
-						var pausedManually = false;
+				// 	foldingTileVideos.forEach(function (video) {
+				// 		var wasPlayingBeforeHover = false;
+				// 		var pausedManually = false;
 
-						// video.addEventListener('mouseover', function() {
-						// 	if (!video.paused && !pausedManually) {
-						// 		video.pause();
-						// 		wasPlayingBeforeHover = true;
-						// 	}
-						// });
+				// 		// video.addEventListener('mouseover', function() {
+				// 		// 	if (!video.paused && !pausedManually) {
+				// 		// 		video.pause();
+				// 		// 		wasPlayingBeforeHover = true;
+				// 		// 	}
+				// 		// });
 
-						// video.addEventListener('mouseout', function() {
-						// 	if (wasPlayingBeforeHover && !pausedManually) {
-						// 		video.play();
-						// 	}
-						// 	wasPlayingBeforeHover = false;
-						// });
+				// 		// video.addEventListener('mouseout', function() {
+				// 		// 	if (wasPlayingBeforeHover && !pausedManually) {
+				// 		// 		video.play();
+				// 		// 	}
+				// 		// 	wasPlayingBeforeHover = false;
+				// 		// });
 
-						video.addEventListener('click', function (event) {
-							event.stopPropagation();
-							if (video.paused) {
-								video.play();
-								pausedManually = false;
-							} else {
-								video.pause();
-								pausedManually = true;
-							}
-						});
-					});
-				});
+				// 		video.addEventListener('click', function (event) {
+				// 			event.stopPropagation();
+				// 			if (video.paused) {
+				// 				video.play();
+				// 				pausedManually = false;
+				// 			} else {
+				// 				video.pause();
+				// 				pausedManually = true;
+				// 			}
+				// 		});
+				// 	});
+				// });
 			</script>
 
 			<hr>
