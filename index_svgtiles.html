@@ -706,7 +706,7 @@
 			margin-left: -30px;
 			margin-right: -30px;
 			/* shape-rendering: optimizeSpeed; */
-			shape-rendering: crispEdges;
+			/* shape-rendering: crispEdges; */
 			/*aligns more perfectly*/
 			transition: filter 0.1s ease-in-out;
 			box-shadow: none;
@@ -1288,8 +1288,8 @@ function generateTiles() {
 				this.alpha = 0;
 				this.direction = 1;
 				this.isDragging = false;
-				this.animationDuration = 1500*2; // 1.5 seconds for full transition
-				this.pauseDuration = 2000*2; // 2 seconds pause
+				this.animationDuration = 1500; // 1.5 seconds for full transition
+				this.pauseDuration = 2000; // 2 seconds pause
 				this.lastFrameTime = Date.now();
 				this.init();
 				this.pauseTimeLeft = 0;
@@ -1334,6 +1334,7 @@ function generateTiles() {
 				}
 
 				this.element.appendChild(svg);
+				this.svg=svg;
 				svg.addEventListener('mousedown', this.startDrag.bind(this));
 				window.addEventListener('mousemove', this.doDrag.bind(this));
 				window.addEventListener('mouseup', this.endDrag.bind(this));
@@ -1372,11 +1373,13 @@ function generateTiles() {
 				let now = Date.now();
 				let timeDelta = (now - this.lastFrameTime) / 1000;
 				this.lastFrameTime = now;
+				
 
 				if (this.pauseTimeLeft > 0) {
 					this.pauseTimeLeft -= timeDelta;
 					if (this.pauseTimeLeft <= 0) {
 						this.direction *= -1;
+						
 					}
 				} else if (!this.isDragging) {
 					let alphaDelta = timeDelta * this.direction / (this.animationDuration / 1000);
@@ -1395,7 +1398,9 @@ function generateTiles() {
 				if(this.old_alpha===alpha){
 					return;
 				}
+				
 				this.old_alpha=alpha;
+				this.svg.style['shape-rendering'] = (alpha>=1 || alpha<=0) ? 'crispEdges' : 'auto'; //When in either side of the animation set it to crisp to get rid of any visible seams left by antialising in the browser 
 
 
 				alpha = this.smooth(alpha);
