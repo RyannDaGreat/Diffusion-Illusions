@@ -7,8 +7,18 @@
 
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Century+Gothic|Open+Sans">
 	<!-- <link rel="stylesheet" href="dracula.css"> -->
+	
+	<script>
+		function isMobileDevice() {
+			var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+			return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+		}
 
-
+		function isWebkitBrowser() {
+			return /webkit/i.test(navigator.userAgent);
+		}
+	</script>
+	
 	<style>
 		/* Gist Dark Mode Start */
 
@@ -1960,9 +1970,9 @@
 
 		<h2 id="folding_tiles">Folding Tile Illusions</h2>
 		<p>
-			Auxetic mechanical linkages of connected squares -
+			Auxetic mechanical linkages of connected squares.
 			<span class="no_mobile">
-				<it><b>click and drag</b></it> them from left and right!
+				<it><b>Click and drag</b></it> them from left and right!
 			</span>
 			<!-- WARNING: This runs slowly in safari! -->
 		</p>
@@ -1981,6 +1991,9 @@
 		<!-- <br> -->
 		<br>
 		<script>
+			if(isWebkitBrowser()){
+				document.getElementById("tileRotationButton").innerHTML = "Rotation: In-Place";
+			}
 			document.getElementById("rotateButton").addEventListener("click", function () {
 				window.tilesRotateInPlace = document.getElementById("tileRotationButton").innerHTML === "Rotation: Hinged";
 				if (window.tilesRotateInPlace) {
@@ -2008,7 +2021,9 @@
 		</script>
 
 
-		<div id='tile_placeholder'></div>
+		<div class="no_mobile">
+			<div id='tile_placeholder'></div>
+		</div>
 
 		<script>
 			let items = [
@@ -2053,37 +2068,10 @@
 
 			];
 
-			function isWebkitBrowser() {
-				return /webkit/i.test(navigator.userAgent);
-			} function isMobile() {
-				const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-				const isTouchScreen = 'ontouchstart' in document.documentElement;
-				const maxMobileWidth = 800; // You can adjust this value
-
-				// Check user agent
-				if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {
-					return true;
-				}
-
-				// Check if device supports touch events
-				if (isTouchScreen) {
-					return true;
-				}
-
-				// Check the screen width
-				if (window.innerWidth <= maxMobileWidth) {
-					return true;
-				}
-
-				// Additional or more specific checks can be added here if needed
-
-				return false;
-			}
-
 
 			// if( isWebkitBrowser() || isMobile()){
 			// if( isWebkitBrowser() && isMobile()){
-			if (isMobile()) {
+			if (isMobileDevice()) {
 				items = []; //TOo slow  - crashes iphones
 			}
 
@@ -2754,10 +2742,6 @@
 			})();
 
 
-			function isMobileDevice() {
-				var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-				return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
-			}
 			$(document).ready(function () {
 				if (isMobileDevice()) {
 					$('.no_mobile').css('display', 'none');
