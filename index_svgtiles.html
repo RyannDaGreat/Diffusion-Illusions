@@ -824,23 +824,32 @@
 	<h3>Illusion Types</h3>
 
 	<div class="caption">
-		We present three variants of illusions:
+		We present four variants of illusions:
 	</div>
 
 	<div style="display: flex; flex-direction: column; align-items: center;">
 		<div style="display: flex; justify-content: center; align-items: center; width: 100%;">
 			<a class="scroll-to" href="#flip_illusions">
-				<div class="image-container" style="margin-left: 80px; margin-right: 80px">
+				<div class="image-container" style="margin-left: 40px; margin-right: 40px">
 					<div class="caption">Flip Illusions</div>
 					<img class="gif-link" src="images/flippy.gif" style="height:220px;  max-height: 512px;" />
 				</div>
 			</a>
 			<a class="scroll-to" href="#rotation_overlays">
-				<div class="image-container" style="margin-left: 80px; margin-right: 80px">
+				<div class="image-container" style="margin-left: 40px; margin-right: 40px">
 					<div class="caption">Rotation Overlays</div>
 					<img class="gif-link" src="images/rotator.gif" style="height:220px;  max-height: 512px;" />
 				</div>
 			</a>
+
+			<a class="scroll-to" href="#folding_tiles">
+				<div class="image-container" style="margin-left: 40px; margin-right: 40px">
+					<div class="caption">Folding Tiles</div>
+					<!-- <video  class="gif-link" src="images/folding_tiles/mould_cat_dog.mp4" class="folding-tile-video glow-hover-element" style="height:220px;  max-height: 512px;" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video> -->
+					<img class="gif-link" src="images/folding_tiles/mould_cat_dog.gif" style="height:220px;  max-height: 512px;" />
+				</div>
+			</a>
+
 		</div>
 		<a class="scroll-to" href="#hidden_overlays">
 			<div class="image-container" style="width: 100%;">
@@ -1125,30 +1134,49 @@
 
 
 
-	<h2 id="tile_illusions">Folding Tile Illusions</h2>
+	<h2 id="folding_tiles">Folding Tile Illusions</h2>
 	<p>
 		Auxetic mechanical linkages of connected squares - 
 		<span class="no_mobile">
 			<it><b>click and drag</b></it> them from left and right!</span>
+			<!-- WARNING: This runs slowly in safari! -->
 	</p>
 	<br>
 
 
 	<div style="text-align: center;">
-		<span class="generic_pause_button" style="display: inline-block; width: 86pt;" id="rotateButton">
-			<b id="buttonLabel">Rotation: Hinged</b>
+		<span class="generic_pause_button" style="display: inline-block; width: 86pt; margin-right:30px;" id="rotateButton">
+			<b id="tileRotationButton">Rotation: Hinged</b>
+		</span>
+		<span class="generic_pause_button" style="display: inline-block; width: 40pt;" id="tilePauseButton">
+			<b id="tilePauseButtonText">Pause</b>
 		</span>
 	</div>
 	<!-- <br> -->
 	<br>
 	<script>
 		document.getElementById("rotateButton").addEventListener("click", function () {
-			window.tilesRotateInPlace = document.getElementById("buttonLabel").innerHTML === "Rotation: Hinged";
+			window.tilesRotateInPlace = document.getElementById("tileRotationButton").innerHTML === "Rotation: Hinged";
 			if (window.tilesRotateInPlace) {
-				document.getElementById("buttonLabel").innerHTML = "Rotation: In-Place";
+				document.getElementById("tileRotationButton").innerHTML = "Rotation: In-Place";
 			} else {
-				document.getElementById("buttonLabel").innerHTML = "Rotation: Hinged";
+				document.getElementById("tileRotationButton").innerHTML = "Rotation: Hinged";
 			}
+		});
+
+		document.getElementById("tilePauseButton").addEventListener("click", function () {
+			window.tilePauseButtonTextActivated = document.getElementById("tilePauseButtonText").innerHTML === "Pause";
+			if (window.tilePauseButtonActivated) {
+				document.getElementById("buttonLabel").innerHTML = "Play";
+			} else {
+				document.getElementById("buttonLabel").innerHTML = "Pause";
+			}
+		});
+
+		document.getElementById("tilePauseButton").addEventListener("click", function () {
+			var pauseButton = document.getElementById("tilePauseButtonText");
+			window.tilePauseButtonActivated = pauseButton.innerHTML === "Pause"; // Corrected variable name
+			pauseButton.innerHTML = window.tilePauseButtonActivated ? "Play" : "Pause";
 		});
 
 	</script>
@@ -1260,11 +1288,14 @@ function generateTiles() {
 				this.alpha = 0;
 				this.direction = 1;
 				this.isDragging = false;
-				this.pauseTimeLeft = 0;
-				this.animationDuration = 1500; // 1.5 seconds for full transition
-				this.pauseDuration = 2000; // 2 seconds pause
+				this.animationDuration = 1500*2; // 1.5 seconds for full transition
+				this.pauseDuration = 2000*2; // 2 seconds pause
 				this.lastFrameTime = Date.now();
 				this.init();
+				this.pauseTimeLeft = 0;
+				// this.pauseTimeLeft = Math.floor(Math.random() * (2  * this.pauseDuration + 2 * this.animationDuration)); //Random starts 
+				// this.pauseTimeLeft = Math.floor(Math.random() * (1000)); //Random starts 
+
 			}
 
 			init() {
@@ -1356,15 +1387,18 @@ function generateTiles() {
 						this.pauseTimeLeft = this.pauseDuration / 1000;
 					}
 				}
-
 				
-				this.updateEffect(this.alpha);
 			}
 
 			updateEffect(alpha) {
 			
+				if(this.old_alpha===alpha){
+					return;
+				}
+				this.old_alpha=alpha;
+
+
 				alpha = this.smooth(alpha);
-				console.log(this);
 				this.updateCaption();
 
 				const rects = this.element.getElementsByTagName('rect');
@@ -1445,7 +1479,7 @@ function generateTiles() {
 				let timeDelta = (now - this.lastFrameTime) / 1000; // Time delta in seconds
 				this.lastFrameTime = now;
 
-				if (this.pauseTimeLeft > 0 || pauseAllTiles) {
+				if (this.pauseTimeLeft > 0 || pauseAllTiles || window.tilePauseButtonActivated) {
 					this.pauseTimeLeft -= timeDelta;
 					if (this.pauseTimeLeft <= 0) {
 						this.pauseTimeLeft = 0;
@@ -2923,7 +2957,7 @@ function generateTiles() {
 
 
 		<h3>Overview</h3>
-		<p>The project is comprised of three demonstrations:</p>
+		<p>The project is comprised of four demonstrations:</p>
 		<ol>
 			<li><strong><b>Flip Illusions: </b>Generating images that appear as different objects when flipped upside
 					down</strong> - For
@@ -2937,6 +2971,8 @@ function generateTiles() {
 				We optimize an image we'll call "Image" using score distillation loss "SD". We optimize
 				SD(Image,prompt_1) -->
 			</li>
+			<li><strong><b>Folding Tile Illusions: </b>A mechanical linkage of small squares</strong> -
+				We splice an image up into a checkerboard-grid of small tiles, and rotate each even tile 90 degrees and each odd tile -90 degrees. This can be built as a bunch of small squares with hinges on them! </li>
 			<li><strong><b>Rotation Overlay Illusions: </b>Revealing multiple images through image rotation</strong> -
 				Overlaying two images to reveal four
 				different images when rotated. The top image, when overlayed on the bottom image and light shines
