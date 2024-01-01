@@ -1993,9 +1993,9 @@
 		<!-- <br> -->
 		<br>
 		<script>
-			if (isWebkitBrowser()) {
-				document.getElementById("tileRotationButton").innerHTML = "Rotation: In-Place";
-			}
+			// if (isWebkitBrowser()) {
+			// 	document.getElementById("tileRotationButton").innerHTML = "Rotation: In-Place";
+			// }
 			document.getElementById("rotateButton").addEventListener("click", function () {
 				window.tilesRotateInPlace = document.getElementById("tileRotationButton").innerHTML === "Rotation: Hinged";
 				if (window.tilesRotateInPlace) {
