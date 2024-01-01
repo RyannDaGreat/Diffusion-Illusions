@@ -265,7 +265,8 @@
 		}
 
 
-		.flip_image, .folding-tile-video {
+		.flip_image,
+		.folding-tile-video {
 			-webkit-user-drag: none;
 			user-select: none;
 			-webkit-user-drag: none;
@@ -700,20 +701,21 @@
 			/* filter: drop-shadow(0px 20px 20px rgba(0, 0, 0, .5)); */
 			cursor: grab;
 			width: 380px;
-			margin-top:-50px;
-			margin-bottom:-30px;
-			margin-left:-30px;
-			margin-right:-30px;
+			margin-top: -50px;
+			margin-bottom: -30px;
+			margin-left: -30px;
+			margin-right: -30px;
 			/* shape-rendering: optimizeSpeed; */
-			shape-rendering:crispEdges;  /*aligns more perfectly*/ 
+			shape-rendering: crispEdges;
+			/*aligns more perfectly*/
 			transition: filter 0.1s ease-in-out;
 			box-shadow: none;
-			filter: none; 
+			filter: none;
 
 
-			    /* Trigger hardware acceleration */
-				/* transform: translateZ(0); */
-    /* backface-visibility: hidden;
+			/* Trigger hardware acceleration */
+			/* transform: translateZ(0); */
+			/* backface-visibility: hidden;
     perspective: 1000px;
 	will-change: transform;
 	transform: translate3d(0, 0, 1px); */
@@ -722,12 +724,12 @@
 
 		.tiler svg:active {
 			cursor: grabbing;
-			filter: drop-shadow(0px 0px 20px rgba(255, 255,255, .5)); 
+			filter: drop-shadow(0px 0px 20px rgba(255, 255, 255, .5));
 		}
 
 
 		.tiler:hover {
-			filter: drop-shadow(0px 0px 10px rgba(255, 255,255, .5)); 
+			filter: drop-shadow(0px 0px 10px rgba(255, 255, 255, .5));
 		}
 
 
@@ -1128,100 +1130,100 @@
 		Auxetic mechanical linkages of connected squares!
 		<span class="no_mobile">
 			You can <it><b>click an animation</b></it> to pause it.</span>
-		</p>
+	</p>
 	<br>
 
-	
+
 	<div style="text-align: center;">
 		<span class="generic_pause_button" style="display: inline-block; width: 86pt;" id="rotateButton">
 			<b id="buttonLabel">Rotation: Hinged</b>
 		</span>
 	</div>
-<script>
-	document.getElementById("rotateButton").addEventListener("click", function() {
-    window.tilesRotateInPlace = document.getElementById("buttonLabel").innerHTML === "Rotation: Hinged";
-    if (window.tilesRotateInPlace) {
-        document.getElementById("buttonLabel").innerHTML = "Rotation: In-Place";
-    } else {
-        document.getElementById("buttonLabel").innerHTML = "Rotation: Hinged";
-    }
-});
+	<script>
+		document.getElementById("rotateButton").addEventListener("click", function () {
+			window.tilesRotateInPlace = document.getElementById("buttonLabel").innerHTML === "Rotation: Hinged";
+			if (window.tilesRotateInPlace) {
+				document.getElementById("buttonLabel").innerHTML = "Rotation: In-Place";
+			} else {
+				document.getElementById("buttonLabel").innerHTML = "Rotation: Hinged";
+			}
+		});
 
-</script>	
+	</script>
 
 
 	<div id='tile_placeholder'></div>
 
-<script>
-const items = [
-    { N: 2, caption_a: "Pyramids",              caption_b: "Astronaut",      image: "images/folding_tiles/images/2_pyramids_astronaut__download - 2023-12-22T005538.282.jpeg"},
-    { N: 3, caption_a: "Golden Gate",           caption_b: "Big Ben",        image: "images/folding_tiles/images/3_ggate_bben__download - 2023-12-20T191843.004.jpeg"        },
-    { N: 3, caption_a: "Miku Variant 1",        caption_b: "Miku Variant 2", image: "images/folding_tiles/images/3_miku_miku__asdpofaospdfkoasdf.jpeg"                       },
-    { N: 3, caption_a: "Watson",                caption_b: "Walter",         image: "images/folding_tiles/images/3_watson_walter__download - 2023-12-20T064132.411.jpeg"     },
-    { N: 3, caption_a: "Wonder Woman",          caption_b: "Skeleton",       image: "images/folding_tiles/images/3_wwoman_skeleton__download - 2023-12-20T173950.110.jpeg"   },
-    { N: 4, caption_a: "Armor",                 caption_b: "Miku",           image: "images/folding_tiles/images/4_armor_miku__download - 2023-12-21T033103.777.jpeg"        },
-    { N: 4, caption_a: "Bunny",                 caption_b: "Astronaut",      image: "images/folding_tiles/images/4_bunny_astronaut__download - 2023-12-20T220017.204.jpeg"   },
-    { N: 4, caption_a: "Cat",                   caption_b: "Dog",            image: "images/folding_tiles/images/4_cat_dog__download - 2023-12-21T033034.858.jpeg"           },
-    { N: 4, caption_a: "Donut",                 caption_b: "Ice Cream",      image: "images/folding_tiles/images/4_donut_icecream__download - 2023-12-20T190621.610.jpeg"    },
-    { N: 4, caption_a: "Link",                  caption_b: "Eiffel Tower",   image: "images/folding_tiles/images/4_link_eiffel__download - 2023-12-20T215937.115.jpeg"       },
-    { N: 4, caption_a: "Miku",                  caption_b: "Miku Variant",   image: "images/folding_tiles/images/4_miku_miku__download - 2023-12-20T174023.166.jpeg"         },
-    { N: 4, caption_a: "Pyramid",               caption_b: "Astronaut",      image: "images/folding_tiles/images/4_pyramid_astronaut__download - 2023-12-22T002818.961.jpeg" },
-    { N: 4, caption_a: "Sydney Opera House",    caption_b: "Mount Fuji",     image: "images/folding_tiles/images/4_sydney_fuji__download - 2023-12-21T195826.386.jpeg"       },
-    { N: 4, caption_a: "Sydney Opera House V2", caption_b: "Mount Fuji V2",  image: "images/folding_tiles/images/4_sydney_fuji_v2__download - 2023-12-22T010146.980.jpeg"    },
-    { N: 4, caption_a: "Winter Makeup",         caption_b: "Miku",           image: "images/folding_tiles/images/4_wintermakeup_miku__download - 2023-12-20T192024.887.jpeg" },
-    { N: 4, caption_a: "Woman's Face",          caption_b: "Dress Girl",     image: "images/folding_tiles/images/4_womface_dressgirl__download - 2023-12-20T073507.944.jpeg" },
-    { N: 4, caption_a: "Woman's Face",          caption_b: "Miku",           image: "images/folding_tiles/images/4_womface_miku__download - 2023-12-20T155029.724.jpeg"      },
-    { N: 4, caption_a: "Yoda",                  caption_b: "Angel",          image: "images/folding_tiles/images/4_yoda_angel__download - 2023-12-20T164907.843.jpeg"        },
-	{ N: 5, caption_a: "Cat",                   caption_b: "Dog",            image: "images/folding_tiles/images/5_cat_dog__download - 2023-12-21T195947.330.jpeg"           },
-    { N: 5, caption_a: "Cow",                   caption_b: "Giraffe",        image: "images/folding_tiles/images/5_cow_giraffe__download - 2023-12-21T204641.199.jpeg"       },
-    { N: 5, caption_a: "Violin",                caption_b: "Cat",            image: "images/folding_tiles/images/5_violin_cat__download - 2023-12-22T002748.450.jpeg"        },
-    { N: 5, caption_a: "Wonder Woman",          caption_b: "Cat Box",        image: "images/folding_tiles/images/5_wwoman_catbox__download - 2023-12-22T003119.513.jpeg"     },
-    { N: 6, caption_a: "Ape with Gun",          caption_b: "Bunny",          image: "images/folding_tiles/images/6_apegun_bunny__download - 2023-12-21T204754.581.jpeg"      },
-    { N: 6, caption_a: "Dragon",                caption_b: "Totoro",         image: "images/folding_tiles/images/6_dragon_totoro__download - 2023-12-21T195959.073.jpeg"     },
-    { N: 6, caption_a: "Miku",                  caption_b: "Link",           image: "images/folding_tiles/images/6_miku_link__download - 2023-12-22T002707.451.jpeg"         },
-    { N: 6, caption_a: "Woman's Face",          caption_b: "Miku",           image: "images/folding_tiles/images/6_womface_miku__download - 2023-12-21T200013.735.jpeg"      },
-    { N: 8, caption_a: "Violin",                caption_b: "Cat",            image: "images/folding_tiles/images/8_violin_cat__download - 2023-12-22T010022.596.jpeg"        },
-    { N: 4, caption_a: "Link",                  caption_b: "Eiffel Tower",   image: "images/folding_tiles/images/4_link_eiffel__download - 2023-12-21T033248.575.jpeg"       },
-    { N: 5, caption_a: "Golden Gate",           caption_b: "Big Ben",        image: "images/folding_tiles/images/5_ggate_bben__download - 2023-12-21T033212.679.jpeg"         }
-];
+	<script>
+		const items = [
+			{ N: 2, caption_a: "Pyramids", caption_b: "Astronaut", image: "images/folding_tiles/images/2_pyramids_astronaut__download - 2023-12-22T005538.282.jpeg" },
+			{ N: 3, caption_a: "Golden Gate", caption_b: "Big Ben", image: "images/folding_tiles/images/3_ggate_bben__download - 2023-12-20T191843.004.jpeg" },
+			{ N: 3, caption_a: "Miku Variant 1", caption_b: "Miku Variant 2", image: "images/folding_tiles/images/3_miku_miku__asdpofaospdfkoasdf.jpeg" },
+			{ N: 3, caption_a: "Watson", caption_b: "Walter", image: "images/folding_tiles/images/3_watson_walter__download - 2023-12-20T064132.411.jpeg" },
+			{ N: 3, caption_a: "Wonder Woman", caption_b: "Skeleton", image: "images/folding_tiles/images/3_wwoman_skeleton__download - 2023-12-20T173950.110.jpeg" },
+			{ N: 4, caption_a: "Armor", caption_b: "Miku", image: "images/folding_tiles/images/4_armor_miku__download - 2023-12-21T033103.777.jpeg" },
+			{ N: 4, caption_a: "Bunny", caption_b: "Astronaut", image: "images/folding_tiles/images/4_bunny_astronaut__download - 2023-12-20T220017.204.jpeg" },
+			{ N: 4, caption_a: "Cat", caption_b: "Dog", image: "images/folding_tiles/images/4_cat_dog__download - 2023-12-21T033034.858.jpeg" },
+			{ N: 4, caption_a: "Donut", caption_b: "Ice Cream", image: "images/folding_tiles/images/4_donut_icecream__download - 2023-12-20T190621.610.jpeg" },
+			{ N: 4, caption_a: "Link", caption_b: "Eiffel Tower", image: "images/folding_tiles/images/4_link_eiffel__download - 2023-12-20T215937.115.jpeg" },
+			{ N: 4, caption_a: "Miku", caption_b: "Miku Variant", image: "images/folding_tiles/images/4_miku_miku__download - 2023-12-20T174023.166.jpeg" },
+			{ N: 4, caption_a: "Pyramid", caption_b: "Astronaut", image: "images/folding_tiles/images/4_pyramid_astronaut__download - 2023-12-22T002818.961.jpeg" },
+			{ N: 4, caption_a: "Sydney Opera House", caption_b: "Mount Fuji", image: "images/folding_tiles/images/4_sydney_fuji__download - 2023-12-21T195826.386.jpeg" },
+			{ N: 4, caption_a: "Sydney Opera House V2", caption_b: "Mount Fuji V2", image: "images/folding_tiles/images/4_sydney_fuji_v2__download - 2023-12-22T010146.980.jpeg" },
+			{ N: 4, caption_a: "Winter Makeup", caption_b: "Miku", image: "images/folding_tiles/images/4_wintermakeup_miku__download - 2023-12-20T192024.887.jpeg" },
+			{ N: 4, caption_a: "Woman's Face", caption_b: "Dress Girl", image: "images/folding_tiles/images/4_womface_dressgirl__download - 2023-12-20T073507.944.jpeg" },
+			{ N: 4, caption_a: "Woman's Face", caption_b: "Miku", image: "images/folding_tiles/images/4_womface_miku__download - 2023-12-20T155029.724.jpeg" },
+			{ N: 4, caption_a: "Yoda", caption_b: "Angel", image: "images/folding_tiles/images/4_yoda_angel__download - 2023-12-20T164907.843.jpeg" },
+			{ N: 5, caption_a: "Cat", caption_b: "Dog", image: "images/folding_tiles/images/5_cat_dog__download - 2023-12-21T195947.330.jpeg" },
+			{ N: 5, caption_a: "Cow", caption_b: "Giraffe", image: "images/folding_tiles/images/5_cow_giraffe__download - 2023-12-21T204641.199.jpeg" },
+			{ N: 5, caption_a: "Violin", caption_b: "Cat", image: "images/folding_tiles/images/5_violin_cat__download - 2023-12-22T002748.450.jpeg" },
+			{ N: 5, caption_a: "Wonder Woman", caption_b: "Cat Box", image: "images/folding_tiles/images/5_wwoman_catbox__download - 2023-12-22T003119.513.jpeg" },
+			{ N: 6, caption_a: "Ape with Gun", caption_b: "Bunny", image: "images/folding_tiles/images/6_apegun_bunny__download - 2023-12-21T204754.581.jpeg" },
+			{ N: 6, caption_a: "Dragon", caption_b: "Totoro", image: "images/folding_tiles/images/6_dragon_totoro__download - 2023-12-21T195959.073.jpeg" },
+			{ N: 6, caption_a: "Miku", caption_b: "Link", image: "images/folding_tiles/images/6_miku_link__download - 2023-12-22T002707.451.jpeg" },
+			{ N: 6, caption_a: "Woman's Face", caption_b: "Miku", image: "images/folding_tiles/images/6_womface_miku__download - 2023-12-21T200013.735.jpeg" },
+			{ N: 8, caption_a: "Violin", caption_b: "Cat", image: "images/folding_tiles/images/8_violin_cat__download - 2023-12-22T010022.596.jpeg" },
+			{ N: 4, caption_a: "Link", caption_b: "Eiffel Tower", image: "images/folding_tiles/images/4_link_eiffel__download - 2023-12-21T033248.575.jpeg" },
+			{ N: 5, caption_a: "Golden Gate", caption_b: "Big Ben", image: "images/folding_tiles/images/5_ggate_bben__download - 2023-12-21T033212.679.jpeg" }
+		];
 
-function generateTiles() {
-    const container = document.getElementById('tile_placeholder');
+		function generateTiles() {
+			const container = document.getElementById('tile_placeholder');
 
-    items.forEach((item, index) => {
-        // Create a new row for every 3 items
-        if (index % 3 === 0) {
-            const rowDiv = document.createElement('div');
-            rowDiv.className = 'row';
-            container.appendChild(rowDiv);
-        }
+			items.forEach((item, index) => {
+				// Create a new row for every 3 items
+				if (index % 3 === 0) {
+					const rowDiv = document.createElement('div');
+					rowDiv.className = 'row';
+					container.appendChild(rowDiv);
+				}
 
-        // Create the container for each tiling image
-        const imageContainer = document.createElement('div');
-        imageContainer.className = 'tiler-image-container';
+				// Create the container for each tiling image
+				const imageContainer = document.createElement('div');
+				imageContainer.className = 'tiler-image-container';
 
-        // Create the caption
-        const captionDiv = document.createElement('div');
-        captionDiv.className = 'caption';
-        captionDiv.textContent = item.caption_a; // Initialize with caption_a
+				// Create the caption
+				const captionDiv = document.createElement('div');
+				captionDiv.className = 'caption';
+				captionDiv.textContent = item.caption_a; // Initialize with caption_a
 
-        // Create the tiler div
-        const tilerDiv = document.createElement('div');
-        tilerDiv.className = 'tiler';
-        tilerDiv.setAttribute('N', item.N.toString());
-        tilerDiv.setAttribute('image', item.image);
+				// Create the tiler div
+				const tilerDiv = document.createElement('div');
+				tilerDiv.className = 'tiler';
+				tilerDiv.setAttribute('N', item.N.toString());
+				tilerDiv.setAttribute('image', item.image);
 
-        // Append the caption and tiler div to the image container
-        imageContainer.appendChild(captionDiv);
-        imageContainer.appendChild(tilerDiv);
+				// Append the caption and tiler div to the image container
+				imageContainer.appendChild(captionDiv);
+				imageContainer.appendChild(tilerDiv);
 
-        // Append the image container to the last created row
-        container.lastChild.appendChild(imageContainer);
-    });
-}
+				// Append the image container to the last created row
+				container.lastChild.appendChild(imageContainer);
+			});
+		}
 
-// Call this function when the document is ready
-document.addEventListener('DOMContentLoaded', generateTiles);
+		// Call this function when the document is ready
+		document.addEventListener('DOMContentLoaded', generateTiles);
 
 
 
@@ -1233,180 +1235,82 @@ document.addEventListener('DOMContentLoaded', generateTiles);
 
 
 		//FOLDING TILE CODE
-		let pauseAllTiles=false;
+		let pauseAllTiles = false;
 		class TilerAnimation {
-    constructor(element, imageUrl, gridSize, caption_a, caption_b) {
-        this.element = element;
-        this.imageUrl = imageUrl;
-        this.gridSize = gridSize;
-        this.caption_a = caption_a;
-        this.caption_b = caption_b;
-        this.alpha = 0;
-        this.direction = 1;
-        this.isDragging = false;
-        this.pauseTimeLeft = 0;
-        this.animationDuration = 1500; // 1.5 seconds for full transition
-        this.pauseDuration = 2000; // 2 seconds pause
-        this.lastFrameTime = Date.now();
-        this.init();
-    }
+			constructor(element, imageUrl, gridSize, caption_a, caption_b) {
+				this.element = element;
+				this.imageUrl = imageUrl;
+				this.gridSize = gridSize;
+				this.caption_a = caption_a;
+				this.caption_b = caption_b;
+				this.alpha = 0;
+				this.direction = 1;
+				this.isDragging = false;
+				this.pauseTimeLeft = 0;
+				this.animationDuration = 1500; // 1.5 seconds for full transition
+				this.pauseDuration = 2000; // 2 seconds pause
+				this.lastFrameTime = Date.now();
+				this.init();
+			}
 
-    init() {
-        const svgNS = "http://www.w3.org/2000/svg";
-        let svg = document.createElementNS(svgNS, "svg");
+			init() {
+				const svgNS = "http://www.w3.org/2000/svg";
+				let svg = document.createElementNS(svgNS, "svg");
 
-        const boundExpansionFactor = 1.3;
-        const boundSizeDelta = (boundExpansionFactor - 1) * this.gridSize;
-        const lb = -boundSizeDelta; // Lower Bound
-        const ub = boundSizeDelta * 2 + this.gridSize; // Upper Bound
+				const boundExpansionFactor = 1.3;
+				const boundSizeDelta = (boundExpansionFactor - 1) * this.gridSize;
+				const lb = -boundSizeDelta; // Lower Bound
+				const ub = boundSizeDelta * 2 + this.gridSize; // Upper Bound
 
-        this.setAttributes(svg, { "viewBox": `${lb} ${lb} ${ub} ${ub}` });
+				this.setAttributes(svg, { "viewBox": `${lb} ${lb} ${ub} ${ub}` });
 
-        let defs = document.createElementNS(svgNS, "defs");
-        let pattern = document.createElementNS(svgNS, "pattern");
-        this.setAttributes(pattern, { "id": `pattern${this.element.id}`, "patternUnits": "userSpaceOnUse", "width": this.gridSize, "height": this.gridSize });
+				let defs = document.createElementNS(svgNS, "defs");
+				let pattern = document.createElementNS(svgNS, "pattern");
+				this.setAttributes(pattern, { "id": `pattern${this.element.id}`, "patternUnits": "userSpaceOnUse", "width": this.gridSize, "height": this.gridSize });
 
-        let image = document.createElementNS(svgNS, "image");
-        this.setAttributes(image, { "href": this.imageUrl, "width": this.gridSize, "height": this.gridSize });
-        image.setAttributeNS("http://www.w3.org/1999/xlink", "href", this.imageUrl);
+				let image = document.createElementNS(svgNS, "image");
+				this.setAttributes(image, { "href": this.imageUrl, "width": this.gridSize, "height": this.gridSize });
+				image.setAttributeNS("http://www.w3.org/1999/xlink", "href", this.imageUrl);
 
-        pattern.appendChild(image);
-        defs.appendChild(pattern);
-        svg.appendChild(defs);
+				pattern.appendChild(image);
+				defs.appendChild(pattern);
+				svg.appendChild(defs);
 
-        for (let y = 0; y < this.gridSize; y++) {
-            for (let x = 0; x < this.gridSize; x++) {
-                let rect = document.createElementNS(svgNS, "rect");
-                this.setAttributes(rect, {
-                    x: x, y: y,
-                    width: 1, height: 1,
-                    fill: `url(#pattern${this.element.id})`
-                });
-                svg.appendChild(rect);
-            }
-        }
-
-        this.element.appendChild(svg);
-        svg.addEventListener('mousedown', this.startDrag.bind(this));
-        window.addEventListener('mousemove', this.doDrag.bind(this));
-        window.addEventListener('mouseup', this.endDrag.bind(this));
-        this.animate();
-    }
-
-    setAttributes(element, attributes) {
-        for (let key in attributes) {
-            element.setAttribute(key, attributes[key]);
-        }
-    }
-
-    startDrag(e) {
-        this.isDragging = true;
-        this.pauseTimeLeft = 0;
-        this.lastX = e.clientX;
-        e.preventDefault();
-    }
-
-    doDrag(e) {
-        if (this.isDragging) {
-            let dx = e.clientX - this.lastX;
-            let deltaAlpha = dx / window.innerWidth * 2;
-            this.alpha += deltaAlpha;
-            this.alpha = Math.max(0, Math.min(this.alpha, 1));
-            this.lastX = e.clientX;
-            this.updateEffect(this.alpha);
-        }
-    }
-
-    endDrag() {
-        this.isDragging = false;
-    }
-
-    updateAnimation() {
-        let now = Date.now();
-        let timeDelta = (now - this.lastFrameTime) / 1000;
-        this.lastFrameTime = now;
-
-        if (this.pauseTimeLeft > 0) {
-            this.pauseTimeLeft -= timeDelta;
-            if (this.pauseTimeLeft <= 0) {
-                this.direction *= -1;
-            }
-        } else if (!this.isDragging) {
-            let alphaDelta = timeDelta * this.direction / (this.animationDuration / 1000);
-            this.alpha += alphaDelta;
-            this.alpha = Math.max(0, Math.min(this.alpha, 1));
-
-            if (this.alpha === 0 || this.alpha === 1) {
-                this.pauseTimeLeft = this.pauseDuration / 1000;
-            }
-        }
-
-        this.updateEffect(this.alpha);
-        this.updateCaption();
-    }
-
-			updateEffect(alpha) {
-				alpha = this.smooth(alpha);
-				const rects = this.element.getElementsByTagName('rect');
-				const center = { x: this.gridSize / 2, y: this.gridSize / 2 }; // Center of the SVG
-	
-				for (let rect of rects) {
-					const x = parseInt(rect.getAttribute('x')) + 0.5; // Center x of the rectangle
-					const y = parseInt(rect.getAttribute('y')) + 0.5; // Center y of the rectangle
-	
-					// Calculate new position based on alpha
-					let expand = Math.sin(alpha * Math.PI / 2 + Math.PI / 4) * Math.sqrt(2) - 1;
-					if(window.tilesRotateInPlace){
-						expand=0;
+				for (let y = 0; y < this.gridSize; y++) {
+					for (let x = 0; x < this.gridSize; x++) {
+						let rect = document.createElementNS(svgNS, "rect");
+						this.setAttributes(rect, {
+							x: x, y: y,
+							width: 1, height: 1,
+							fill: `url(#pattern${this.element.id})`
+						});
+						svg.appendChild(rect);
 					}
-					const dx = (x - center.x) * expand;
-					const dy = (y - center.y) * expand;
-					const newX = x + dx;
-					const newY = y + dy;
-	
-					// Calculate rotation angle
-					const angle = alpha * 90 * -1 ; 
-					const sign = (x + y) % 2 ? 1 : -1;
-	
-					// Update position and rotation
-					this.setAttributes(rect, {
-						transform: `translate(${newX - x}, ${newY - y}) rotate(${angle * sign} ${x} ${y})`
-					});
+				}
+
+				this.element.appendChild(svg);
+				svg.addEventListener('mousedown', this.startDrag.bind(this));
+				window.addEventListener('mousemove', this.doDrag.bind(this));
+				window.addEventListener('mouseup', this.endDrag.bind(this));
+				this.animate();
+			}
+
+			setAttributes(element, attributes) {
+				for (let key in attributes) {
+					element.setAttribute(key, attributes[key]);
 				}
 			}
-			updateCaption() {
-        if (this.alpha > 0.5) {
-            this.element.querySelector('.caption').textContent = this.caption_a;
-        } else {
-            this.element.querySelector('.caption').textContent = this.caption_b;
-        }
-    }
 
-    animate() {
-        if (!this.isDragging) {
-            this.updateAnimation();
-            requestAnimationFrame(this.animate.bind(this));
-        }
-    }
-	
-			smooth(x) {
-				const x2 = x * x;
-				const x3 = x2 * x;
-				return -2 * x3 + 3 * x2;
-			}
-	
 			startDrag(e) {
 				this.isDragging = true;
 				this.pauseTimeLeft = 0;
 				this.lastX = e.clientX;
-				pauseAllTiles=true;
 				e.preventDefault();
 			}
-	
+
 			doDrag(e) {
 				if (this.isDragging) {
 					let dx = e.clientX - this.lastX;
-					dx*=3; //Dragging Sensitivity
 					let deltaAlpha = dx / window.innerWidth * 2;
 					this.alpha += deltaAlpha;
 					this.alpha = Math.max(0, Math.min(this.alpha, 1));
@@ -1414,17 +1318,115 @@ document.addEventListener('DOMContentLoaded', generateTiles);
 					this.updateEffect(this.alpha);
 				}
 			}
-	
+
 			endDrag() {
 				this.isDragging = false;
-				pauseAllTiles=false;
 			}
-	
+
+			updateAnimation() {
+				let now = Date.now();
+				let timeDelta = (now - this.lastFrameTime) / 1000;
+				this.lastFrameTime = now;
+
+				if (this.pauseTimeLeft > 0) {
+					this.pauseTimeLeft -= timeDelta;
+					if (this.pauseTimeLeft <= 0) {
+						this.direction *= -1;
+					}
+				} else if (!this.isDragging) {
+					let alphaDelta = timeDelta * this.direction / (this.animationDuration / 1000);
+					this.alpha += alphaDelta;
+					this.alpha = Math.max(0, Math.min(this.alpha, 1));
+
+					if (this.alpha === 0 || this.alpha === 1) {
+						this.pauseTimeLeft = this.pauseDuration / 1000;
+					}
+				}
+
+				this.updateEffect(this.alpha);
+				this.updateCaption();
+			}
+
+			updateEffect(alpha) {
+				alpha = this.smooth(alpha);
+				const rects = this.element.getElementsByTagName('rect');
+				const center = { x: this.gridSize / 2, y: this.gridSize / 2 }; // Center of the SVG
+
+				for (let rect of rects) {
+					const x = parseInt(rect.getAttribute('x')) + 0.5; // Center x of the rectangle
+					const y = parseInt(rect.getAttribute('y')) + 0.5; // Center y of the rectangle
+
+					// Calculate new position based on alpha
+					let expand = Math.sin(alpha * Math.PI / 2 + Math.PI / 4) * Math.sqrt(2) - 1;
+					if (window.tilesRotateInPlace) {
+						expand = 0;
+					}
+					const dx = (x - center.x) * expand;
+					const dy = (y - center.y) * expand;
+					const newX = x + dx;
+					const newY = y + dy;
+
+					// Calculate rotation angle
+					const angle = alpha * 90 * -1;
+					const sign = (x + y) % 2 ? 1 : -1;
+
+					// Update position and rotation
+					this.setAttributes(rect, {
+						transform: `translate(${newX - x}, ${newY - y}) rotate(${angle * sign} ${x} ${y})`
+					});
+				}
+			}
+			updateCaption() {
+				if (this.alpha > 0.5) {
+					this.element.querySelector('.caption').textContent = this.caption_a;
+				} else {
+					this.element.querySelector('.caption').textContent = this.caption_b;
+				}
+			}
+
+			animate() {
+				if (!this.isDragging) {
+					this.updateAnimation();
+					requestAnimationFrame(this.animate.bind(this));
+				}
+			}
+
+			smooth(x) {
+				const x2 = x * x;
+				const x3 = x2 * x;
+				return -2 * x3 + 3 * x2;
+			}
+
+			startDrag(e) {
+				this.isDragging = true;
+				this.pauseTimeLeft = 0;
+				this.lastX = e.clientX;
+				pauseAllTiles = true;
+				e.preventDefault();
+			}
+
+			doDrag(e) {
+				if (this.isDragging) {
+					let dx = e.clientX - this.lastX;
+					dx *= 3; //Dragging Sensitivity
+					let deltaAlpha = dx / window.innerWidth * 2;
+					this.alpha += deltaAlpha;
+					this.alpha = Math.max(0, Math.min(this.alpha, 1));
+					this.lastX = e.clientX;
+					this.updateEffect(this.alpha);
+				}
+			}
+
+			endDrag() {
+				this.isDragging = false;
+				pauseAllTiles = false;
+			}
+
 			updateAnimation() {
 				let now = Date.now();
 				let timeDelta = (now - this.lastFrameTime) / 1000; // Time delta in seconds
 				this.lastFrameTime = now;
-	
+
 				if (this.pauseTimeLeft > 0 || pauseAllTiles) {
 					this.pauseTimeLeft -= timeDelta;
 					if (this.pauseTimeLeft <= 0) {
@@ -1437,7 +1439,7 @@ document.addEventListener('DOMContentLoaded', generateTiles);
 					let alphaDelta = timeDelta * this.direction / (this.animationDuration / 1000);
 					this.alpha += alphaDelta;
 					this.alpha = Math.max(0, Math.min(this.alpha, 1)); // Clamp alpha between 0 and 1
-	
+
 					if (this.alpha === 0 || this.alpha === 1) {
 						this.pauseTimeLeft = this.pauseDuration / 1000; // Start pause
 					}
@@ -1446,61 +1448,61 @@ document.addEventListener('DOMContentLoaded', generateTiles);
 			}
 
 
-			
-    // Method to create an intersection observer
-    createObserver() {
-        const options = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1 // This proportion of the tiles must be visible or else the animation doesn't play, saving cpu
-        };
 
-        this.observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    this.startAnimation();
-                } else {
-                    this.stopAnimation();
-                }
-            });
-        }, options);
+			// Method to create an intersection observer
+			createObserver() {
+				const options = {
+					root: null,
+					rootMargin: '0px',
+					threshold: 0.1 // This proportion of the tiles must be visible or else the animation doesn't play, saving cpu
+				};
 
-        this.observer.observe(this.element);
-    }
+				this.observer = new IntersectionObserver((entries) => {
+					entries.forEach(entry => {
+						if (entry.isIntersecting) {
+							this.startAnimation();
+						} else {
+							this.stopAnimation();
+						}
+					});
+				}, options);
 
-    // Start the animation
-    startAnimation() {
-        if (!this.isAnimating) {
-            this.isAnimating = true;
-            this.animate();
-        }
-    }
-	    // Stop the animation
-		stopAnimation() {
-        this.isAnimating = false;
-    }
+				this.observer.observe(this.element);
+			}
 
-    animate() {
-        if (this.isAnimating) {
-            this.updateAnimation();
-            requestAnimationFrame(this.animate.bind(this));
-        }
-    }
+			// Start the animation
+			startAnimation() {
+				if (!this.isAnimating) {
+					this.isAnimating = true;
+					this.animate();
+				}
+			}
+			// Stop the animation
+			stopAnimation() {
+				this.isAnimating = false;
+			}
 
-	static initAll() {
-		document.querySelectorAll('.tiler').forEach((el, index) => {
-    const item = items[index];
-    el.id = `tiler${index}`;
-    const imageUrl = el.getAttribute('image');
-    const gridSize = parseInt(el.getAttribute('N'), 10);
-    const tilerAnimation = new TilerAnimation(el, imageUrl, gridSize, item.caption_a, item.caption_b);
-    tilerAnimation.createObserver();
-});
-    }
+			animate() {
+				if (this.isAnimating) {
+					this.updateAnimation();
+					requestAnimationFrame(this.animate.bind(this));
+				}
+			}
+
+			static initAll() {
+				document.querySelectorAll('.tiler').forEach((el, index) => {
+					const item = items[index];
+					el.id = `tiler${index}`;
+					const imageUrl = el.getAttribute('image');
+					const gridSize = parseInt(el.getAttribute('N'), 10);
+					const tilerAnimation = new TilerAnimation(el, imageUrl, gridSize, item.caption_a, item.caption_b);
+					tilerAnimation.createObserver();
+				});
+			}
 
 		}
-	
-		window.onload = function() {
+
+		window.onload = function () {
 			TilerAnimation.initAll();
 		};
 	</script>
@@ -1531,76 +1533,87 @@ document.addEventListener('DOMContentLoaded', generateTiles);
 		Auxetic mechanical linkages of connected squares!
 		<span class="no_mobile">
 			You can <it><b>click an animation</b></it> to pause it.</span>
-		</p>
+	</p>
 	<br>
 	<div class="col">
 		<div class="row">
 			<div class="image-container">
 				<div class="caption">Bunny + Astronaut</div>
-				<video src="images/folding_tiles/mould_bunny_astronaut.mp4" class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+				<video src="images/folding_tiles/mould_bunny_astronaut.mp4"
+					class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true"
+					onmouseout="this.controls=false"></video>
 			</div>
 			<div class="image-container">
 				<div class="caption">Cat + Dog</div>
-				<video src="images/folding_tiles/mould_cat_dog.mp4" class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+				<video src="images/folding_tiles/mould_cat_dog.mp4" class="folding-tile-video glow-hover-element"
+					autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
 			</div>
 			<div class="image-container">
 				<div class="caption">Donut + Ice Cream</div>
-				<video src="images/folding_tiles/mould_donut_icecream.mp4" class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+				<video src="images/folding_tiles/mould_donut_icecream.mp4" class="folding-tile-video glow-hover-element"
+					autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
 			</div>
 		</div>
 		<div class="row">
 			<div class="image-container">
 				<div class="caption">Woman Face + Floofy Dress</div>
-				<video src="images/folding_tiles/mould_makeup_dress.mp4" class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+				<video src="images/folding_tiles/mould_makeup_dress.mp4" class="folding-tile-video glow-hover-element"
+					autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
 			</div>
 			<div class="image-container">
 				<div class="caption">Woman Face + Hatsune Miku</div>
-				<video src="images/folding_tiles/mould_makeup_miku.mp4" class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+				<video src="images/folding_tiles/mould_makeup_miku.mp4" class="folding-tile-video glow-hover-element"
+					autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
 			</div>
 			<div class="image-container">
 				<div class="caption">Anime Girl + Hatsune Miku</div>
-				<video src="images/folding_tiles/mould_mikus.mp4" class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+				<video src="images/folding_tiles/mould_mikus.mp4" class="folding-tile-video glow-hover-element" autoplay
+					loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
 			</div>
 		</div>
 		<div class="row">
 			<div class="image-container">
 				<div class="caption">Emma Watson + Walter White</div>
-				<video src="images/folding_tiles/mould_watson_walter.mp4" class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+				<video src="images/folding_tiles/mould_watson_walter.mp4" class="folding-tile-video glow-hover-element"
+					autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
 			</div>
 			<div class="image-container">
-				<div class="caption">Wonder Woman +  Skeleton</div>
-				<video src="images/folding_tiles/mould_wonderwoman_skeleton.mp4" class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+				<div class="caption">Wonder Woman + Skeleton</div>
+				<video src="images/folding_tiles/mould_wonderwoman_skeleton.mp4"
+					class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true"
+					onmouseout="this.controls=false"></video>
 			</div>
 			<div class="image-container">
 				<div class="caption">Yoda + Weeping Angel</div>
-				<video src="images/folding_tiles/mould_yoda_angel.mp4" class="folding-tile-video glow-hover-element" autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+				<video src="images/folding_tiles/mould_yoda_angel.mp4" class="folding-tile-video glow-hover-element"
+					autoplay loop muted onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
 			</div>
 		</div>
 	</div>
-	
+
 	<script>
-		document.addEventListener('DOMContentLoaded', function() {
+		document.addEventListener('DOMContentLoaded', function () {
 			var foldingTileVideos = document.querySelectorAll('.folding-tile-video');
-	
-			foldingTileVideos.forEach(function(video) {
+
+			foldingTileVideos.forEach(function (video) {
 				var wasPlayingBeforeHover = false;
 				var pausedManually = false;
-	
+
 				// video.addEventListener('mouseover', function() {
 				// 	if (!video.paused && !pausedManually) {
 				// 		video.pause();
 				// 		wasPlayingBeforeHover = true;
 				// 	}
 				// });
-	
+
 				// video.addEventListener('mouseout', function() {
 				// 	if (wasPlayingBeforeHover && !pausedManually) {
 				// 		video.play();
 				// 	}
 				// 	wasPlayingBeforeHover = false;
 				// });
-	
-				video.addEventListener('click', function(event) {
+
+				video.addEventListener('click', function (event) {
 					event.stopPropagation();
 					if (video.paused) {
 						video.play();
@@ -1613,7 +1626,7 @@ document.addEventListener('DOMContentLoaded', generateTiles);
 			});
 		});
 	</script>
-	
+
 	<hr>
 
 
