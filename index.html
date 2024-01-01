@@ -7,7 +7,7 @@
 
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Century+Gothic|Open+Sans">
 	<!-- <link rel="stylesheet" href="dracula.css"> -->
-	
+
 	<script>
 		function isMobileDevice() {
 			var userAgent = navigator.userAgent || navigator.vendor || window.opera;
@@ -18,7 +18,7 @@
 			return /webkit/i.test(navigator.userAgent);
 		}
 	</script>
-	
+
 	<style>
 		/* Gist Dark Mode Start */
 
@@ -855,7 +855,10 @@
 			<a class="scroll-to" href="#folding_tiles">
 				<div class="image-container" style="margin-left: 40px; margin-right: 40px">
 					<div class="caption">Folding Tiles</div>
-					<video  class="gif-link" src="images/folding_tiles/mould_cat_dog.mp4" class="folding-tile-video glow-hover-element" style="height:220px;  max-height: 512px;" autoplay loop muted playsinline onmouseover="this.controls=true" onmouseout="this.controls=false"></video>
+					<video class="gif-link" src="images/folding_tiles/mould_cat_dog.mp4"
+						class="folding-tile-video glow-hover-element" style="height:220px;  max-height: 512px;" autoplay
+						loop muted playsinline onmouseover="this.controls=true"
+						onmouseout="this.controls=false"></video>
 					<!-- <img class="gif-link" src="images/folding_tiles/mould_cat_dog.gif" style="height:220px;  max-height: 512px;" /> -->
 				</div>
 			</a>
@@ -1990,7 +1993,7 @@
 		<!-- <br> -->
 		<br>
 		<script>
-			if(isWebkitBrowser()){
+			if (isWebkitBrowser()) {
 				document.getElementById("tileRotationButton").innerHTML = "Rotation: In-Place";
 			}
 			document.getElementById("rotateButton").addEventListener("click", function () {
@@ -2936,7 +2939,7 @@
 					<div class="image-container">
 						<div class="caption">Anime Girl + Hatsune Miku</div>
 						<video src="images/folding_tiles/mould_mikus.mp4" class="folding-tile-video glow-hover-element"
-							autoplay loop muted onmouseover="this.controls=true"
+							autoplay loop muted playsinline onmouseover="this.controls=true"
 							onmouseout="this.controls=false"></video>
 					</div>
 				</div>
