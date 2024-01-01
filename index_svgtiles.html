@@ -705,8 +705,7 @@
 			margin-left:-30px;
 			margin-right:-30px;
 			/* shape-rendering: optimizeSpeed; */
-			shape-rendering:crispEdges; 
-			/* shape-rendering: geometricPrecision; */
+			shape-rendering:crispEdges;  /*aligns more perfectly*/ 
 			transition: filter 0.1s ease-in-out;
 			box-shadow: none;
 			filter: none; 
@@ -723,11 +722,12 @@
 
 		.tiler svg:active {
 			cursor: grabbing;
+			filter: drop-shadow(0px 0px 20px rgba(255, 255,255, .5)); 
 		}
 
 
 		.tiler:hover {
-			filter: drop-shadow(0px 0px 20px rgba(255, 255,255, .5)); 
+			filter: drop-shadow(0px 0px 10px rgba(255, 255,255, .5)); 
 		}
 
 
@@ -1132,6 +1132,22 @@
 	<br>
 
 	
+	<div>
+		<span class="generic_pause_button" style="display: inline-block; width: 40pt;" id="rotateButton">
+			<b id="buttonLabel">Rotation: Hinged</b>
+		</span>
+	</div>
+<script>
+	document.getElementById("rotateButton").addEventListener("click", function() {
+    window.tilesRotateInPlace = document.getElementById("buttonLabel").innerHTML === "Rotation: Hinged";
+    if (window.tilesRotateInPlace) {
+        document.getElementById("buttonLabel").innerHTML = "Rotation: In-Place";
+    } else {
+        document.getElementById("buttonLabel").innerHTML = "Rotation: Hinged";
+    }
+});
+
+</script>	
 
 
 	<div id='tile_placeholder'></div>
@@ -1296,6 +1312,9 @@ document.addEventListener('DOMContentLoaded', generateTiles);
 	
 					// Calculate new position based on alpha
 					let expand = Math.sin(alpha * Math.PI / 2 + Math.PI / 4) * Math.sqrt(2) - 1;
+					if(window.tilesRotateInPlace){
+						expand=0;
+					}
 					const dx = (x - center.x) * expand;
 					const dy = (y - center.y) * expand;
 					const newX = x + dx;
