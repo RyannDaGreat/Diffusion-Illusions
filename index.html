@@ -2011,7 +2011,7 @@
 	<div id='tile_placeholder'></div>
 
 	<script>
-		const items = [
+		let items = [
 			// { N: 5, caption_a: "Golden Gate Bridge", caption_b: "Big Ben", image: "images/folding_tiles/images/5_ggate_bben__download - 2023-12-21T033212.679.jpeg" },
 			// { N: 4, caption_a: "Link", caption_b: "Eiffel Tower", image: "images/folding_tiles/images/4_link_eiffel__download - 2023-12-21T033248.575.jpeg" },
 
@@ -2052,6 +2052,41 @@
 			{ N: 4, caption_a: "Sydney Opera House", caption_b: "Mount Fuji", image: "images/folding_tiles/images/4_sydney_fuji_v2__download - 2023-12-22T010146.980.jpeg" },
 
 		];
+
+		function isWebkitBrowser() {
+    return /webkit/i.test(navigator.userAgent);
+}function isMobile() {
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    const isTouchScreen = 'ontouchstart' in document.documentElement;
+    const maxMobileWidth = 800; // You can adjust this value
+
+    // Check user agent
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {
+        return true;
+    }
+
+    // Check if device supports touch events
+    if (isTouchScreen) {
+        return true;
+    }
+
+    // Check the screen width
+    if (window.innerWidth <= maxMobileWidth) {
+        return true;
+    }
+
+    // Additional or more specific checks can be added here if needed
+
+    return false;
+}
+
+
+// if( isWebkitBrowser() || isMobile()){
+// if( isWebkitBrowser() && isMobile()){
+if( isMobile()){ 
+	items=[]; //TOo slow  - crashes iphones
+}
+
 
 
 		function generateTiles() {
