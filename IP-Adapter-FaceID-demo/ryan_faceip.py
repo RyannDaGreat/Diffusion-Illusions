@@ -1,16 +1,9 @@
 #GAME PLAN:
 #    upon creating faceID adapter, it monkey-patches the pipeline. We gonna have to use FaceIP adapter for all of them unless we can undo its set_ip_adapter() function (which, should be possible...not sure what variable name is changed but we can revert it right?)
-#    secondly, it replaces the prompt embeddings with longer ones, concatt'd with the image prompt embeddings...
-#TODO:
-#    monitor changes made by 
-#    Make IPAdapterFaceID label objects that require an IPAdapter instance and FaceAnalysis object (used here) and list of face images
-#       (as rp images). It stores a private _average_embedding object as seen in here, but thats only an intermediate value  -  it functions as a normal
-#    Ideally, pipe could be dynamically patched and unpatched when it detects its using a label....
-#       BUT...we can probably just use a WITH block instead or something...
-#    We need IPAdapterFaceID to be able to patch the pipe in our StableDiffusion pipeline
-#       Just keep track of pipe.unet.attn_processors  -  this is what gets changed and it can be reverted.
-#           Perhaps subclass IPAdapterFaceID so that it doesn't modify the pipe right away, and maybe add an undo function as well? 
+#    secondlyps subclass IPAdapterFaceID so that it doesn't modify the pipe right away, and maybe add an undo function as well? 
+#TODO: Get this working and see if we can get a Steve in sd_previewer.ipynb
 
+import rp
 import torch
 from diffusers import StableDiffusionPipeline, DDIMScheduler, AutoencoderKL
 from ip_adapter.ip_adapter_faceid import IPAdapterFaceID
@@ -19,10 +12,13 @@ from insightface.app import FaceAnalysis
 import gradio as gr
 import cv2
 from glob import glob
+from contextlib import contextmanager
+
 
 import source.stable_diffusion as stable_diffusion
 import source.stable_diffusion_labels as stable_diffusion_labels
 
+@rp.CachedInstances
 class IPAdapterPatcher:
 
     def __init__(self):
@@ -41,32 +37,77 @@ class IPAdapterPatcher:
         self.ip_model = IPAdapterFaceID(self.sd.pipe, self.ip_ckpt, self.device)
         self.ipadapter_attn_processors = self.sd.unet.attn_processors
 
-        self.unset_attns() # Don't change anything right now
+        self.unpatch() # Don't change anything right now
 
-    def unset_attns(self):
+    def patch(self):
+        self.sd.unet.set_attn_processor(self.ipadapter_attn_processors)
+
+    def unpatch(self):
         self.sd.unet.set_attn_processor(self.original_attn_processors)
 
-    def set_attns(self):
-        self.sd.unet.set_attn_processor(self.original_attn_processors)
+    def __enter__(self):
+        self.patch()
 
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.unpatch()
+
+@rp.memoized
+def get_face_analysis_app():
+    app = FaceAnalysis(name="buffalo_l", providers=['CUDAExecutionProvider', 'CPUExecutionProvider'])
+    app.prepare(ctx_id=0, det_size=(640, 640))
+    return app
+
+def get_average_face_embedding(faces):
+    assert all(rp.is_image  (face) for face in faces)
+
+    #Make it as if it were straight out of cv2.imread
+    face=[rp.as_rgb_image   (face) for face in faces]
+    face=[rp.as_byte_image  (face) for face in faces]
+    face=[rp.cv_bgr_rgb_swap(face) for face in faces]
+
+    app=get_face_analysis_app()
+
+    #Straight from the original inference code
+    faceid_all_embeds = []
+    for face in faces:
+        faces = app.get(face)
+        faceid_embed = torch.from_numpy(faces[0].normed_embedding).unsqueeze(0)
+        faceid_all_embeds.append(faceid_embed)
+    average_embedding = torch.mean(torch.stack(faceid_all_embeds, dim=0), dim=0)
+
+    return average_embedding
+    
 
 class IPAdapterLabel(stable_diffusion_labels.BaseLabel):
+    def __init__(self, images, prompt="", negative_prompt=""):
+        app=get_face_analysis_app()
+
     pass
 
 
 def generate_image(prompt, negative_prompt):
-    pipe.to(device)
-    app = FaceAnalysis(name="buffalo_l", providers=['CUDAExecutionProvider', 'CPUExecutionProvider'])
-    app.prepare(ctx_id=0, det_size=(640, 640))
+#THIS IS JUST HERE FOR REFERENCE
+    # sd = stable_diffusion._get_stable_diffusion_singleton()
+    # pipe=sd.pipe
 
-    faceid_all_embeds = []
-    for image in glob('./*.jpg'):
-        face = cv2.imread(image)
-        faces = app.get(face)
-        faceid_embed = torch.from_numpy(faces[0].normed_embedding).unsqueeze(0)
-        faceid_all_embeds.append(faceid_embed)
+    # pipe.to(device)
+    # app = FaceAnalysis(name="buffalo_l", providers=['CUDAExecutionProvider', 'CPUExecutionProvider'])
+    # app.prepare(ctx_id=0, det_size=(640, 640))
+
+    # faceid_all_embeds = []
+    # for image in glob('./*.jpg'):
+    #     face = cv2.imread(image)
+    #     faces = app.get(face)
+    #     faceid_embed = torch.from_numpy(faces[0].normed_embedding).unsqueeze(0)
+    #     faceid_all_embeds.append(faceid_embed)
     
-    average_embedding = torch.mean(torch.stack(faceid_all_embeds, dim=0), dim=0)
+    # average_embedding = torch.mean(torch.stack(faceid_all_embeds, dim=0), dim=0)
+
+    patcher = IPAdapterPatcher()
+    patcher.patch()
+    ip_model=patcher.ip_model
+
+    average_embedding
     
     image = ip_model.generate(
         prompt=prompt, negative_prompt=negative_prompt, faceid_embeds=average_embedding, width=512, height=512, num_inference_steps=30
