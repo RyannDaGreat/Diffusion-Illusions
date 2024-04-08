@@ -39,7 +39,9 @@ pipe = StableDiffusionPipeline.from_pretrained(
 #       (as rp images). It stores a private _average_embedding object as seen in here, but thats only an intermediate value  -  it functions as a normal
 #    Ideally, pipe could be dynamically patched and unpatched when it detects its using a label....
 #       BUT...we can probably just use a WITH block instead or something...
-#    We need IPAdapterFaceID to be able to patch the pipe in our StableDiffusion pipeline...but our pipeline already saves the unet elsewhere...
+#    We need IPAdapterFaceID to be able to patch the pipe in our StableDiffusion pipeline
+#       Just keep track of pipe.unet.attn_processors  -  this is what gets changed and it can be reverted.
+#           Perhaps subclass IPAdapterFaceID so that it doesn't modify the pipe right away, and maybe add an undo function as well? 
 
 ip_model = IPAdapterFaceID(pipe, ip_ckpt, device)
 
