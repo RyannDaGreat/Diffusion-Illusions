@@ -1,0 +1,10 @@
+insightface==0.7.3
+diffusers
+transformers
+accelerate
+safetensors
+einops
+onnxruntime-gpu
+spaces
+opencv-python
+git+https://github.com/tencent-ailab/IP-Adapter.git
