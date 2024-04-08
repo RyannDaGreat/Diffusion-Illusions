@@ -65,12 +65,14 @@ class StableDiffusion(nn.Module):
         
         pipe.scheduler = PNDMScheduler(beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear", num_train_timesteps=self.num_train_timesteps) #Error from scheduling_lms_discrete.py
         
-        self.pipe         = pipe
-        self.vae          = pipe.vae         .to(self.device) ; assert isinstance(self.vae          , AutoencoderKL       ),type(self.vae          )
-        self.tokenizer    = pipe.tokenizer                    ; assert isinstance(self.tokenizer    , CLIPTokenizer       ),type(self.tokenizer    )
-        self.text_encoder = pipe.text_encoder.to(self.device) ; assert isinstance(self.text_encoder , CLIPTextModel       ),type(self.text_encoder )
-        self.unet         = pipe.unet        .to(self.device) ; assert isinstance(self.unet         , UNet2DConditionModel),type(self.unet         )
-        self.scheduler    = pipe.scheduler                    ; #assert isinstance(self.scheduler    , PNDMScheduler       ),type(self.scheduler    )
+        self.pipe              = pipe
+        self.pipe.vae          = pipe.vae         .to(self.device) ; assert isinstance(self.vae          , AutoencoderKL       ),type(self.vae          )
+        self.pipe.tokenizer    = pipe.tokenizer                    ; assert isinstance(self.tokenizer    , CLIPTokenizer       ),type(self.tokenizer    )
+        self.pipe.text_encoder = pipe.text_encoder.to(self.device) ; assert isinstance(self.text_encoder , CLIPTextModel       ),type(self.text_encoder )
+        self.pipe.unet         = pipe.unet        .to(self.device) ; assert isinstance(self.unet         , UNet2DConditionModel),type(self.unet         )
+        self.pipe.scheduler    = pipe.scheduler                    ; #assert isinstance(self.scheduler   , PNDMScheduler       ),type(self.scheduler    )
+
+
         
         self.uncond_text=''
 
@@ -79,6 +81,21 @@ class StableDiffusion(nn.Module):
         self.alphas = self.scheduler.alphas_cumprod.to(self.device) # for convenience
 
         print(f'[INFO] sd.py: loaded stable diffusion!')
+
+    @property
+    def vae(self): return self.pipe.vae
+
+    @property
+    def tokenizer(self): return self.pipe.tokenizer
+
+    @property
+    def text_encoder(self): return self.pipe.text_encoder
+
+    @property
+    def unet(self): return self.pipe.unet
+
+    @property
+    def scheduler(self): return self.pipe.scheduler
 
     def get_text_embeddings(self, prompts: Union[str, List[str]])->torch.Tensor:
         
