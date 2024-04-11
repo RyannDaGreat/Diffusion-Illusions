@@ -2,6 +2,8 @@ import click
 import rp
 import torch
 
+from pathlib import Path
+
 from torchvision.transforms.functional import gaussian_blur
 
 import source.stable_diffusion as sd
@@ -115,7 +117,7 @@ def train_images(prompt, negative_prompt, classes, recon_weight, weights, model_
 
     # Save the images
     for label, image in zip(classes, images):
-        rp.save_image(rp.as_numpy_image(image()), output_dir / label)
+        rp.save_image(rp.as_numpy_image(image().repeat(3, 1, 1)), output_dir + f'/{label}.png', False)
 
     # TODO: Save intermediate images
 
