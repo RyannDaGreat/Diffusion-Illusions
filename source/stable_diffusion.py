@@ -141,10 +141,10 @@ class StableDiffusion(nn.Module):
         binary = torch.exp(imgs * temperature) / (torch.exp(imgs * temperature) + torch.exp((max_intensity - imgs) * temperature))
         
         # unsqueeze mooney
-        mooney = mooney.unsqueeze(0).repeat(imgs.shape[0], 1, 1)
+        mooney = mooney.repeat(imgs.shape[0], 1, 1)
 
         # calculate the MSE loss between the mooney image and each one of the binary images
-        mse_loss = F.mse_loss(binary, mooney)
+        mse_loss = F.mse_loss(binary[:, 0], mooney)
         
         return mse_loss
 
