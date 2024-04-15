@@ -1,9 +1,7 @@
-#GAME PLANc:
+#GAME PLAN:
 #    upon creating faceID adapter, it monkey-patches the pipeline. We gonna have to use FaceIP adapter for all of them unless we can undo its set_ip_adapter() function (which, should be possible...not sure what variable name is changed but we can revert it right?)
 #    secondlyps subclass IPAdapterFaceID so that it doesn't modify the pipe right away, and maybe add an undo function as well? 
 #TODO: Get this working and see if we can get a Steve in sd_previewer.ipynb
-##TODO: Figure out why unpatching has no effect
-##TODO: Integrate the ip_model generate func prompt embedding thing into pipe and label...
 
 import rp
 import torch
@@ -20,7 +18,8 @@ from contextlib import contextmanager
 import source.stable_diffusion as stable_diffusion
 import source.stable_diffusion_labels as stable_diffusion_labels
 
-class IPAdapterPatcher(CachedInstances):
+@rp.CachedInstances
+class IPAdapterPatcher:
 
     def __init__(self):
         self.sd = stable_diffusion._get_stable_diffusion_singleton()
@@ -35,10 +34,10 @@ class IPAdapterPatcher(CachedInstances):
 
 
         self.original_attn_processors = self.sd.unet.attn_processors
-        self.ip_model = IPAdapterFaceID(self.sd.pipe, self.ip_ckpt, self.device,torch_dtype=self.sd.unet.dtype)
+        self.ip_model = IPAdapterFaceID(self.sd.pipe, self.ip_ckpt, self.device)
         self.ipadapter_attn_processors = self.sd.unet.attn_processors
 
-        #self.unpatch() # Don't change anything right now
+        self.unpatch() # Don't change anything right now
 
     def patch(self):
         self.sd.unet.set_attn_processor(self.ipadapter_attn_processors)
@@ -58,6 +57,7 @@ def get_face_analysis_app():
     app.prepare(ctx_id=0, det_size=(640, 640))
     return app
 
+@rp.memoized
 def get_average_face_embedding(faces):
     assert all(rp.is_image  (face) for face in faces)
 
@@ -104,21 +104,11 @@ def generate_image(prompt, negative_prompt):
     
     # average_embedding = torch.mean(torch.stack(faceid_all_embeds, dim=0), dim=0)
 
-    try:
-        stable_diffusion._get_stable_diffusion_singleton()
-    except Exception:
-        stable_diffusion.StableDiffusion(select_torch_device(),checkpoint_path='SG161222/Realistic_Vision_V4.0_noVAE')
-        
     patcher = IPAdapterPatcher()
     patcher.patch()
-    #patcher.unpatch() #Unpatching seems to make a small difference...with him sometimes being a girl otherwise? Needs more testing...
-    
     ip_model=patcher.ip_model
 
-    images=['/data/hdd2/ws1nfs/ryan/CleanCode/Projects/Peekaboo/Experiments/Github/Diffusion-Illusions/IP-Adapter-FaceID-demo/steve1.jpg', '/data/hdd2/ws1nfs/ryan/CleanCode/Projects/Peekaboo/Experiments/Github/Diffusion-Illusions/IP-Adapter-FaceID-demo/steve3.jpg']
-    images=load_images(images)
-    average_embedding=get_average_face_embedding(images)
-    average_embedding=local_paste()
+    average_embedding
     
     image = ip_model.generate(
         prompt=prompt, negative_prompt=negative_prompt, faceid_embeds=average_embedding, width=512, height=512, num_inference_steps=30

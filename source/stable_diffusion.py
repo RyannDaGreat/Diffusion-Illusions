@@ -63,7 +63,9 @@ class StableDiffusion(nn.Module):
                 safety_checker=None,
             )
         
-        pipe.scheduler = PNDMScheduler(beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear", num_train_timesteps=self.num_train_timesteps) #Error from scheduling_lms_discrete.py
+        #SHOCKINGLY, THIS NEEDED TO BE COMMENTED OUT TO WORK WITH IP-ADAPTER. THIS SCREWED IT ALL UP...
+        #WE CAN REPLACE WITH DDIM SCHEDULER FOUND IN XIANG'S ORIGINAL EXAMPLE IF THIS DOESNT WORK WITH DIFFILU
+        # pipe.scheduler = PNDMScheduler(beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear", num_train_timesteps=self.num_train_timesteps) #Error from scheduling_lms_discrete.py
         
         self.pipe              = pipe
         self.pipe.vae          = pipe.vae         .to(self.device) ; assert isinstance(self.vae          , AutoencoderKL       ),type(self.vae          )
