@@ -161,6 +161,59 @@ class LearnableLatentImage(nn.Module):
 
     def forward(self):
         return self.decoder(self.learnable_image())
+    
+
+class Learnable512LatentImage(nn.Module):
+    def __init__(self,
+                 freeze_decoder : bool = True):
+        super().__init__()     
+        from source.stable_diffusion import _get_stable_diffusion_singleton
+        self.learnable_image=LearnableImageRaster(64,64,4)
+        #Take some representation of a latent space and use it to generate images
+    
+        # self.learnable_image=learnable_image
+        self.freeze_decoder=freeze_decoder
+        
+        def decoder(x):
+            sd = _get_stable_diffusion_singleton()
+            return sd.vae.decode(x[None]).sample
+
+        
+        
+        if freeze_decoder:
+            self.decoder=NoParamsDecoderWrapper(decoder)
+        else:
+            self.decoder=decoder
+
+    def forward(self):
+        return self.decoder(self.learnable_image())
+    
+class Learnable256LatentImage(nn.Module):
+    def __init__(self,
+                 freeze_decoder : bool = True):
+        super().__init__()     
+        from source.stable_diffusion import _get_stable_diffusion_singleton
+        self.learnable_image=LearnableImageRaster(32,32,4)
+        #Take some representation of a latent space and use it to generate images
+    
+        # self.learnable_image=learnable_image
+        self.freeze_decoder=freeze_decoder
+        
+        def decoder(x):
+            sd = _get_stable_diffusion_singleton()
+            return sd.vae.decode(x[None]).sample
+
+        
+        
+        if freeze_decoder:
+            self.decoder=NoParamsDecoderWrapper(decoder)
+        else:
+            self.decoder=decoder
+
+    def forward(self):
+        return self.decoder(self.learnable_image())
+
+
 
 class LearnableImageRasterSigmoided(LearnableImage):
     def __init__(self,
