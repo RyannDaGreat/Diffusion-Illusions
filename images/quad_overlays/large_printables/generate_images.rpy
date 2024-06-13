@@ -4,28 +4,40 @@ def process_path(path):
         bordered_image_solid_color(
             labeled_image(
                 labeled_image(
-                    bordered_image_solid_color(
-                        cv_resize_image(
-                            load_image(path, use_cache=True),
-                            (1024, 1024),
+                    labeled_image(
+                        labeled_image(
+                            bordered_image_solid_color(
+                                cv_resize_image(
+                                    load_image(path, use_cache=True),
+                                    (1024, 1024),
+                                ),
+                                thickness=round(32 * border_scale),
+                            ),
+                            text="Hidden Overlay %i / 4"
+                            % (int(strip_file_extension(path)[-1]) + 1),
+                            size=round(64 * border_scale),
+                            text_color=(0, 0, 0),
+                            background_color=(255, 255, 255),
+                            position="bottom",
                         ),
-                        thickness=round(32 * border_scale),
+                        text=get_file_name(path, include_file_extension=False),
+                        size=round(64 * border_scale),
+                        text_color=(0, 0, 0),
+                        background_color=(255, 255, 255),
                     ),
-                    text="Hidden Overlay %i / 4"
-                    % (int(strip_file_extension(path)[-1]) + 1),
+                    text="diffusionillusions.com",
                     size=round(64 * border_scale),
                     text_color=(0, 0, 0),
                     background_color=(255, 255, 255),
-                    position="bottom",
+                    position="left",
                 ),
-                text=get_file_name(path, include_file_extension=False),
+                text="Display Only! Do not take",
                 size=round(64 * border_scale),
-                text_color=(0, 0, 0),
+                text_color=(255, 0, 0),
                 background_color=(255, 255, 255),
+                position="right",
             ),
-            thickness=round((64 + 32) * border_scale),
-            bottom=round(32 * border_scale),
-            top=round(32 * border_scale),
+            thickness=round(32 * border_scale),
         ),
         color=(0, 0, 0, 1),
         thickness=2,
