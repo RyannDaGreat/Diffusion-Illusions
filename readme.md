@@ -4,6 +4,7 @@ Please visit [diffusionillusions.com](https://diffusionillusions.com)
 
 Or equivalently, [ryanndagreat.github.io/Diffusion-Illusions](https://ryanndagreat.github.io/Diffusion-Illusions)
 
+TODO: Add the Colab Notebooks for the puzzles and twisting square illusions, as well as Hidden Overlays with a given target image. Stay tuned in the next few days (Sep15+)!
 
 ![](assets/DiffusionIllusionsGif2.gif)
 
