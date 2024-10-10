@@ -11,6 +11,7 @@ import torch.nn as nn
 import numpy as np
 import einops
 import rp
+from PIL import Image
 
 #This file contains three types of learnable images:
 #    Raster: A simple RGB pixel grid
@@ -313,8 +314,91 @@ class LearnableImageFourier(LearnableImage):
     #    assert len(uv_maps.shape)==(4), 'uv_maps should be BCHW'
     #    assert uv_maps.shape[1]==2, 'Should have two channels: u,v'
     #    return self.model(self.feature_extractor(uv_maps))
-    
-    
+
+class LearnableImageFourierFromPNG(LearnableImageFourier):
+    def __init__(self,
+                 image_path   :str,
+                 height       :int=256,
+                 width        :int=256,
+                 num_channels :int=3,
+                 hidden_dim   :int=256,
+                 num_features :int=128,
+                 scale        :int=10,
+                 num_iters    :int=1000,
+                 lr           :float=1e-3,
+                 device       :str='cuda:0'):
+        """
+        Initializes the Fourier feature network and optimizes it to match the given image.
+
+        Parameters:
+            image_path   : Path to the PNG image.
+            height       : Height of the image.
+            width        : Width of the image.
+            num_channels : Number of color channels.
+            hidden_dim   : Number of dimensions per hidden layer of the MLP.
+            num_features : Number of Fourier features per coordinate.
+            scale        : Scale of the Fourier features.
+            num_iters    : Number of iterations to optimize the network.
+            lr           : Learning rate for the optimizer.
+            device       : Device to run the computations on ('cuda' or 'cpu').
+        """
+        super().__init__(height, width, num_channels, hidden_dim, num_features, scale)
+        self.device = device
+        self.to(self.device)
+
+        # Load and preprocess the target image
+        self.target_image = self.load_and_preprocess_image(image_path, height, width).to(self.device)
+
+        # Optimize the network to match the target image
+        self.optimize_to_match_image(num_iters, lr)
+
+    def load_and_preprocess_image(self, image_path, height, width):
+        # Load the image using PIL
+        image = Image.open(image_path).convert('RGB')
+
+        # This is to handle the case where the input image is an output
+        # image from a previous training session. The mid-training image 
+        # previews are a single PNG with both images side-by-side
+        # 
+        image = image.crop((0, 0, width, height))
+
+        # Resize the image if necessary
+        if image.size != (width, height):
+            image = image.resize((width, height), Image.LANCZOS)
+
+        # Convert to np array and normalize to [0, 1]
+        image_array = np.array(image).astype(np.float32) / 255.0
+
+        # Convert to torch tensor and rearrange dimensions to [C, H, W]
+        image_tensor = torch.from_numpy(image_array).permute(2, 0, 1)
+
+        return image_tensor
+
+    def optimize_to_match_image(self, num_iters, lr):
+        # Set up the optimizer
+        optimizer = torch.optim.Adam(self.parameters(), lr=lr)
+
+        # Define the loss function
+        criterion = nn.MSELoss()
+
+        # Training loop
+        for iter_num in range(1, num_iters + 1):
+            optimizer.zero_grad()
+            output = self.forward()  # Output shape: (C, H, W)
+            loss = criterion(output, self.target_image)
+            loss.backward()
+            optimizer.step()
+
+            # Optionally print the loss every 100 iterations
+            if iter_num % 100 == 0 or iter_num == num_iters:
+                print(f"Optimization Iteration {iter_num}/{num_iters}, Loss: {loss.item():.6f}")
+
+    def forward(self, condition=None):
+        # Return the generated image from the network
+        features = self.get_features(condition)
+        output = self.model(features).squeeze(0)
+        return output
+
 ###############################
 ######## TEXTURE PACKS ########
 ###############################
