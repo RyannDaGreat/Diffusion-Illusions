@@ -15,4 +15,4 @@ Colab Notebooks:
 2. [Rotation Overlays](https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/rotation_overlays_for_colab.ipynb)
 3. [Hidden Characters](https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/hidden_characters_for_colab.ipynb)
 4. [Parker Puzzles](https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/parker_puzzle_colab.ipynb)
-5. [Twisting Squares](https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/twisting_squares.ipynb)
+5. [Twisting Squares](https://githubtocolab.com/RyannDaGreat/Diffusion-Illusions/blob/master/twisting_squares_colab.ipynb)
