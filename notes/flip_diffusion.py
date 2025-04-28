@@ -168,11 +168,16 @@ class FlipIllusion(nn.Module):
         image = rp.as_torch_image(
             image, device=self.device, dtype=torch.float32
         )  # If given a numpy image or PIL image, convert it. Else, if given torch image, leaves it alone.
+
+        image = image[None] # CHW -> 1CHW
         
         image = 2 * image - 1
         image = image.to(device=self.device)
         latents = self.vae.encode(image).latent_dist.sample()
         latents = 0.18215 * latents
+
+        latents = latents[0] #1CHW -> CHW
+
         return latents
 
     @torch.no_grad()
@@ -197,10 +202,12 @@ class FlipIllusion(nn.Module):
     @torch.no_grad()
     def flip_latent(self, latent):
         """
+        latent is CHW
         Decode latent to image, flip it, and re-encode to latent
         """
+        print(latent.shape)
         image = self.decode_latent(latent)
-        flipped_image = torch.flip(image, dims=[2, 3])
+        flipped_image = torch.flip(image, dims=[1, 2])
         flipped_latent = self.encode_image(flipped_image)
         return flipped_latent
 
@@ -225,7 +232,6 @@ class FlipIllusion(nn.Module):
         return noise_pred
 
     def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5):
-
         text_embeddings = [self.get_text_embedding(x) for x in prompts]
 
         latents = [
@@ -233,47 +239,26 @@ class FlipIllusion(nn.Module):
         ]
 
         self.scheduler.set_timesteps(num_steps, device=self.device)
+        alphas_cumprod = self.scheduler.alphas_cumprod
         timesteps = self.scheduler.timesteps
 
         for t in tqdm(timesteps, total=len(timesteps)):
-            noise_preds = []
-            clean_preds = []
             for i, (latent, text_embedding) in enumerate(zip(latents, text_embeddings)):
-                noise_pred = self.pred_noise(latent, t, guidance_scale, text_embeddings[0])
-
-                clean_pred = noise_pred 
-
-                noise_preds.append(noise_pred)
-
-
-            clean_preds = []
-                latent = self.scheduler.step(noise_pred, t, latent).prev_sample
-                latents[i]=latent
-
-        all_images = self.decode_latents(latents)
-        
-        #Convert from CHW torch tensors to HWC numpy arrays
-        all_images = rp.as_numpy_images(all_images)
-
-        return all_images
-
-    def flip_sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5):
-        assert len(prompts)==2
-
-        text_embeddings = [self.get_text_embedding(x) for x in prompts]
-
-        latents = [
-            torch.randn(4, 64, 64).to(self.device, torch.float32) for x in prompts
-        ]
-
-        self.scheduler.set_timesteps(num_steps, device=self.device)
-        timesteps = self.scheduler.timesteps
-
-        for t in tqdm(timesteps, total=len(timesteps)):
-            noise_pred = self.pred_noise(latent, t, guidance_scale, text_embeddings[0])
-
-            for i, (latent, text_embedding) in enumerate(zip(latents, text_embeddings)):
-                noise_pred = self.pred_noise(latent, t, guidance_scale, text_embeddings[0])
+                noise_pred = self.pred_noise(latent, t, guidance_scale, text_embedding)
+                
+                clean_pred = get_clean_sample(
+                    sample=latent,
+                    model_output=noise_pred,
+                    pred_type="epsilon",
+                    timestep=t,
+                    alphas_cumprod=alphas_cumprod,
+                )
+                
+                clean_pred = self.flip_latent(clean_pred)
+                
+                
+                display_image(self.decode_latent(clean_pred))
+                
                 latent = self.scheduler.step(noise_pred, t, latent).prev_sample
                 latents[i]=latent
 
@@ -290,7 +275,10 @@ if __name__ == "__main__":
         checkpoint_path="stable-diffusion-v1-5/stable-diffusion-v1-5"
     )
 
-    prompts = ["Oil painting of Golden Retriever", "Oil painting of Golden Retriever"]
+    prompts = [
+        # "Oil painting of Golden Retriever",
+        "Oil painting of Golden Retriever",
+    ]
 
     images = diffusion.sample(prompts)
     for i, image in enumerate(images):
