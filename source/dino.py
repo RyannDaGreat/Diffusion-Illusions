@@ -16,6 +16,7 @@ def get_dino_map(image, contrast=4):
     norm_image = rp.as_torch_image(
         rp.as_rgb_image(rp.as_float_image(rp.cv_resize_image(image, (224, 224))))
     )
+    
     norm_image = normalize(norm_image, IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD)
 
     sample = norm_image[None]
