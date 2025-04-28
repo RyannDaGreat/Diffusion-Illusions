@@ -81,21 +81,6 @@ class FlipIllusion(nn.Module):
         flipped_latent = 0.18215 * flipped_latent
         return flipped_latent
     
-    def create_latents(self, height=512, width=512):
-        """
-        First create regular latent
-        """
-        latent_shape = (1, self.unet.config.in_channels, height // 8, width // 8)
-        unflip_latent = torch.randn(latent_shape, device=self.device)
-        flip_latent = self.flip_latent(unflip_latent) #YOU CAN'T DO THAT - This is noise!!! 
-        
-        h = latent_shape[2]  
-        sharpness = 50.0  
-        normalized_positions = torch.linspace(-1, 1, h).to(self.device)
-        gradient_mask = torch.sigmoid(sharpness * -normalized_positions).view(1, 1, h, 1).repeat(1, latent_shape[1], 1, latent_shape[3])
-        final_latent = unflip_latent * gradient_mask + flip_latent * (1 - gradient_mask)
-        return unflip_latent, flip_latent, final_latent, gradient_mask
-
     @torch.no_grad()
     def get_images(self, latents: list):
         images = []
@@ -107,65 +92,37 @@ class FlipIllusion(nn.Module):
             image = image.permute(0, 2, 3, 1).squeeze(0)
             images.append(Image.fromarray(image.cpu().numpy()))
         return tuple(images)
-    
+
+    @torch.no_grad
+    def pred_noise(self, latents, t, guidance_scale, text_embedding):
+        model_input = torch.cat([latents] * 2)
+        model_input = self.scheduler.scale_model_input(model_input, t)
+
+        noise_pred = self.unet(
+            model_input, t, encoder_hidden_states=text_embedding
+        ).sample
+
+        noise_pred_uncond, noise_pred_cond = noise_pred.chunk(2)
+        noise_pred = noise_pred_uncond + guidance_scale * (
+            noise_pred_cond - noise_pred_uncond
+        )
+
+        return noise_pred
+
     def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5):
 
-        text_embeddings = []
-        for prompt in prompts:
-            embedding = self.get_text_embedding(prompt)
-            text_embeddings.append(embedding)
+        text_embeddings = [self.get_text_embedding(x) for x in prompts]
 
-        latents = self.create_latents()
-        unflip_latent, flip_latent, final_latent, gradient_mask = latents
-
-        # Sanity Check
-        print(f"Unflip Latent Shape: {unflip_latent.shape}")
-        print(f"Flip Latent Shape: {flip_latent.shape}")
+        latents = torch.randn(1,4,64,64).to(self.device, torch.float32)
 
         self.scheduler.set_timesteps(num_steps, device=self.device)
         timesteps = self.scheduler.timesteps
 
         for i, t in tqdm(enumerate(timesteps), total=len(timesteps)):
-            # Process the first prompt (unflipped)
-            latent_model_input_1 = torch.cat([unflip_latent] * 2) if guidance_scale > 1.0 else unflip_latent
-            latent_model_input_1 = self.scheduler.scale_model_input(latent_model_input_1, t)
-            
-            # Get noise prediction for first prompt
-            with torch.no_grad():
-                noise_pred_1 = self.unet(
-                    latent_model_input_1, t, encoder_hidden_states=text_embeddings[0]
-                ).sample
-            
-            # Process the second prompt (flipped latent)
-            latent_model_input_2 = torch.cat([flip_latent] * 2) 
-            latent_model_input_2 = self.scheduler.scale_model_input(latent_model_input_2, t)
-            
-            # Get noise prediction for second prompt
-            with torch.no_grad():
-                noise_pred_2 = self.unet(
-                    latent_model_input_2, t, encoder_hidden_states=text_embeddings[1]
-                ).sample
-                
-            # Flip the noise prediction for the second prompt
-            noise_pred_2_flipped = self.flip_latent(noise_pred_2)
-            
-            unflip_noise_uncond, unflip_noise_cond = noise_pred_1.chunk(2)
-            flip_noise_uncond_f , flip_noise_cond_f  = noise_pred_2_flipped.chunk(2)
-            
-            # Combine noise predictions using gradient mask
-            combined_noise_pred = noise_pred_1 * gradient_mask[0:1] + noise_pred_2 * (1 - gradient_mask[0:1])
+            noise_pred = self.pred_noise(latents, t, guidance_scale, text_embeddings[0])
+            latents = self.scheduler.step( noise_pred, t,latents).prev_sample
 
-            # Get Noise Predict for All
-            unflip_noise_pred = unflip_noise_uncond + guidance_scale * (unflip_noise_cond - unflip_noise_uncond)
-            flip_noise_pred = flip_noise_uncond_f + guidance_scale * (flip_noise_cond_f - flip_noise_uncond_f)
-            avg_noise_pred = (unflip_noise_pred + flip_noise_pred) * 0.5
-
-            # Update individual latents
-            unflip_latent = self.scheduler.step(unflip_noise_pred, t, unflip_latent).prev_sample
-            flip_latent = self.scheduler.step(flip_noise_pred, t, flip_latent).prev_sample
-            final_latent = self.scheduler.step(unflip_noise_pred , t, final_latent).prev_sample
-
-        all_images = self.get_images([unflip_latent, flip_latent, final_latent])
+        all_images = self.get_images([latents])
         return all_images
     
 
