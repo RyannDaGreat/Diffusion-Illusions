@@ -101,11 +101,9 @@ class FlipIllusion(nn.Module):
         """
         Decode latent to image, flip it, and re-encode to latent
         """
-        latent_scaled = latent / 0.18215
-        image = self.vae.decode(latent_scaled).sample
+        image = self.decode_latent(latent)
         flipped_image = torch.flip(image, dims=[2, 3])
-        flipped_latent = self.vae.encode(flipped_image).latent_dist.sample()
-        flipped_latent = 0.18215 * flipped_latent
+        flipped_latent = self.encode_image(flipped_image)
         return flipped_latent
 
     @torch.no_grad
