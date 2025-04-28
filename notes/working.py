@@ -6,6 +6,104 @@ from tqdm import tqdm
 from PIL import Image
 
 
+def add_noise(
+    clean_sample,
+    noise,
+    timestep,
+    alphas_cumprod,
+):
+    # clean_sample is x_0 [aka original_sample].
+    # Returns x_T
+    # Larger alpha_prod --> less noise added  (more alpha --> less noise)
+    # Earlier --> larger alpha_prod
+
+    alpha_prod = alphas_cumprod[timestep]
+    beta_prod  = 1 - alpha_prod
+    sqrt_alpha_prod = alpha_prod**0.5
+    sqrt_beta_prod  = beta_prod **0.5
+
+    noisy_samples = sqrt_alpha_prod * clean_sample + sqrt_beta_prod * noise
+    return noisy_samples
+
+
+def get_velocity(
+    sample,
+    noise,
+    timestep,
+    alphas_cumprod,
+):
+    
+    alpha_prod = alphas_cumprod[timestep]
+    beta_prod  = 1 - alpha_prod
+    sqrt_alpha_prod = alpha_prod**0.5
+    sqrt_beta_prod  = beta_prod **0.5
+
+    velocity = sqrt_alpha_prod * noise - sqrt_beta_prod * sample
+    return velocity
+
+
+def get_epsilon(
+    sample,
+    model_output,
+    timestep,
+    alphas_cumprod,
+    pred_type,
+):
+    # Given the model might be trained on different objectives (predicting noise, clean samples, or v_prediction)
+    # this function extracts the noise implicitly preidcted by it
+    
+    alpha_prod = alphas_cumprod[timestep]
+    beta_prod  = 1 - alpha_prod
+    sqrt_alpha_prod = alpha_prod**0.5
+    sqrt_beta_prod  = beta_prod **0.5
+
+    if pred_type == "epsilon":
+        return model_output
+
+    elif pred_type == "sample":
+        return (sample - sqrt_alpha_prod * model_output) / sqrt_beta_prod
+
+    elif pred_type == "v_prediction":
+        return sqrt_alpha_prod * model_output + sqrt_beta_prod * sample
+        return add_noise(clean_sample=model_output, noise=sample, timestep=timestep)  # Weird but equivalent
+
+
+def get_clean_sample(
+    sample,
+    model_output,
+    timestep,
+    alphas_cumprod,
+    pred_type,
+):
+    
+    alpha_prod = alphas_cumprod[timestep]
+    beta_prod  = 1 - alpha_prod
+    sqrt_alpha_prod = alpha_prod**0.5
+    sqrt_beta_prod  = beta_prod **0.5
+
+    if pred_type == "epsilon":
+        return (sample - sqrt_beta_prod * model_output) / sqrt_alpha_prod
+
+    elif pred_type == "sample":
+        return sample
+
+    elif pred_type == "v_prediction":
+        return sqrt_alpha_prod * sample - sqrt_beta_prod * model_output
+
+    if pred_type == "epsilon":
+        pred_original_sample = (sample - sqrt_beta_prod * model_output) / alpha_prod ** 0.5
+        pred_epsilon         = model_output
+    elif pred_type == "sample":
+        pred_original_sample = model_output
+        pred_epsilon         = (sample - alpha_prod ** 0.5 * pred_original_sample) / sqrt_beta_prod
+    elif pred_type == "v_prediction":
+        pred_original_sample = (alpha_prod**0.5) * sample - (beta_prod**0.5) * model_output
+        pred_epsilon         = (alpha_prod**0.5) * model_output + (beta_prod**0.5) * sample
+
+    return pred_epsilon, pred_original_sample
+
+
+
 class FlipIllusion(nn.Module):
     def __init__(self, checkpoint_path, device="mps", pipe=None):
         super().__init__()
@@ -138,6 +236,42 @@ class FlipIllusion(nn.Module):
         timesteps = self.scheduler.timesteps
 
         for t in tqdm(timesteps, total=len(timesteps)):
+            noise_preds = []
+            clean_preds = []
+            for i, (latent, text_embedding) in enumerate(zip(latents, text_embeddings)):
+                noise_pred = self.pred_noise(latent, t, guidance_scale, text_embeddings[0])
+
+                clean_pred = noise_pred 
+
+                noise_preds.append(noise_pred)
+
+
+            clean_preds = []
+                latent = self.scheduler.step(noise_pred, t, latent).prev_sample
+                latents[i]=latent
+
+        all_images = self.decode_latents(latents)
+        
+        #Convert from CHW torch tensors to HWC numpy arrays
+        all_images = rp.as_numpy_images(all_images)
+
+        return all_images
+
+    def flip_sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5):
+        assert len(prompts)==2
+
+        text_embeddings = [self.get_text_embedding(x) for x in prompts]
+
+        latents = [
+            torch.randn(4, 64, 64).to(self.device, torch.float32) for x in prompts
+        ]
+
+        self.scheduler.set_timesteps(num_steps, device=self.device)
+        timesteps = self.scheduler.timesteps
+
+        for t in tqdm(timesteps, total=len(timesteps)):
+            noise_pred = self.pred_noise(latent, t, guidance_scale, text_embeddings[0])
+
             for i, (latent, text_embedding) in enumerate(zip(latents, text_embeddings)):
                 noise_pred = self.pred_noise(latent, t, guidance_scale, text_embeddings[0])
                 latent = self.scheduler.step(noise_pred, t, latent).prev_sample
