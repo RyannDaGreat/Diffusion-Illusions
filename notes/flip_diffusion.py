@@ -2,6 +2,7 @@ from diffusers import StableDiffusionPipeline
 from diffusers import DDIMScheduler
 import torch
 import torch.nn as nn
+import inspect
 from tqdm import tqdm
 import rp
 
@@ -355,9 +356,18 @@ class PixelArtDiffusion(ImageFilterDiffusion):
         image = rp.torch_resize_image(image, PIXEL_SIZE, interp='nearest')
         return image
     
-class FlipDiffusion(Diffusion):
+class DiffusionIllusion(Diffusion):
+    
+    def reconcile_images(self, image_a, image_b):
+        """ This function is responsible for approximating any primes needed then creating their approx derived images, and returning those derived images """
+        raise NotImplementedError
+    
+    @property
+    def num_derived_images(self):
+        return len(inspect.signature(self.reconcile_images).parameters)
+    
     def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5):
-        assert len(prompts) == 2
+        assert len(prompts) == self.num_derived_images, f'len(prompts)={len(prompts)}  !=  num_derived_images={self.num_derived_images}'
 
         text_embeddings = [self.get_text_embedding(x) for x in prompts]
 
@@ -369,11 +379,6 @@ class FlipDiffusion(Diffusion):
 
         def identity(image):
             return image
-
-        def flip_image(image):
-            return image.flip(1,2)
-
-        views = [identity, flip_image]
 
         for t in tqdm(self.timesteps):
             noise_preds = []
@@ -397,11 +402,7 @@ class FlipDiffusion(Diffusion):
                 clean_preds.append(clean_pred)
                 image_preds.append(image_pred)
 
-            #Mean them
-            canonical_image = views[0](image_preds[0]) + views[1](image_preds[1])
-            canonical_image = canonical_image / 2
-
-            derived_images = [views[0](canonical_image), views[1](canonical_image)]
+            derived_images = self.reconcile_images(*image_preds)
             derived_clean_preds = self.encode_images(derived_images)
 
             noise_preds = [
@@ -426,10 +427,21 @@ class FlipDiffusion(Diffusion):
 
         return all_images
 
-
-
+class FlipIllusion(DiffusionIllusion):
     
+    def reconcile_images(self, image_a, image_b):
+        """ This function is responsible for approximating any primes needed then creating their approx derived images, and returning those derived images """
+        def flip_image(image):
+            return image.flip(1,2)
 
+        merged_image = (image_a + flip_image(image_b)) / 2
+
+        new_image_a = merged_image
+        new_image_b = flip_image(merged_image)
+
+        return [new_image_a, new_image_b]
+    
+    
 if __name__ == "__main__":
     with torch.no_grad():
         torch.manual_seed(42)
