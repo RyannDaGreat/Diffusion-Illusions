@@ -106,7 +106,7 @@ def get_clean_sample(
 
 if not 'get_pipeline' in vars():
     @rp.memoized
-    def get_pipeline(checkpoint_path):
+    def get_pipeline(checkpoint_path, device):
         pipe = StableDiffusionPipeline.from_pretrained(
             checkpoint_path,
             scheduler=DDIMScheduler.from_pretrained(
@@ -117,25 +117,28 @@ if not 'get_pipeline' in vars():
             requires_safety_checker=False,
             safety_checker=None,
         )
+        pipe = pipe.to(device)
+
+        rp.fansi_print(f'Init Pipe: device={device},  checkpoint_path={checkpoint_path}', 'green bold')
+
         return pipe
 
 
 class Diffusion(nn.Module):
-    def __init__(self, checkpoint_path, device=None, pipe=None):
+    def __init__(self, *, checkpoint_path="stable-diffusion-v1-5/stable-diffusion-v1-5", device=None):
         super().__init__()
-        self.device = torch.device(device)
-
-        if pipe is None:
-            pipe = get_pipeline(checkpoint_path)
 
         if device is None:
             device = rp.select_torch_device(prefer_used=True)
 
+        pipe = get_pipeline(checkpoint_path, device)
+
         self.pipe         = pipe
-        self.vae          = pipe.vae.to(self.device)
+        self.device       = pipe.device
+        self.vae          = pipe.vae
         self.tokenizer    = pipe.tokenizer
-        self.text_encoder = pipe.text_encoder.to(self.device)
-        self.unet         = pipe.unet.to(self.device)
+        self.text_encoder = pipe.text_encoder
+        self.unet         = pipe.unet
         self.scheduler    = pipe.scheduler
 
         self.uncond_text = ""
@@ -642,13 +645,9 @@ if __name__ == "__main__":
       with torch.no_grad():
         #torch.manual_seed(38)
         
-        diffusion = FlipIllusion(
-            checkpoint_path="stable-diffusion-v1-5/stable-diffusion-v1-5"
-        )
+        diffusion = FlipIllusion()
 
-        diffusion = HiddenOverlayIllusion(
-            checkpoint_path="stable-diffusion-v1-5/stable-diffusion-v1-5"
-        )
+        diffusion = HiddenOverlayIllusion()
 
         prompts = [
              "Oil painting of a Chicken",
