@@ -103,34 +103,49 @@ def get_clean_sample(
     return pred_epsilon, pred_original_sample
 
 
+if not 'get_pipeline' in vars():
+    @memoized
+    def get_pipeline(checkpoint_path):
+        pipe = StableDiffusionPipeline.from_pretrained(
+            checkpoint_path,
+            scheduler=DDIMScheduler.from_pretrained(
+                checkpoint_path, subfolder="scheduler"
+            ),
+            torch_dtype=torch.float,
+            use_safetensors=True,
+            requires_safety_checker=False,
+            safety_checker=None,
+        )
+        return pipe
 
-class FlipIllusion(nn.Module):
+
+class RyanDiffusion(nn.Module):
     def __init__(self, checkpoint_path, device="mps", pipe=None):
         super().__init__()
         self.device = torch.device(device)
 
         if pipe is None:
-            pipe = StableDiffusionPipeline.from_pretrained(
-                checkpoint_path,
-                scheduler=DDIMScheduler.from_pretrained(
-                    checkpoint_path, subfolder="scheduler"
-                ),
-                torch_dtype=torch.float,
-                use_safetensors=True,
-                requires_safety_checker=False,
-                safety_checker=None,
-            )
+            pipe = get_pipeline(checkpoint_path)
 
-        self.pipe = pipe
-        self.vae = pipe.vae.to(self.device)
-        self.tokenizer = pipe.tokenizer
+        self.pipe         = pipe
+        self.vae          = pipe.vae.to(self.device)
+        self.tokenizer    = pipe.tokenizer
         self.text_encoder = pipe.text_encoder.to(self.device)
-        self.unet = pipe.unet.to(self.device)
-        self.scheduler = pipe.scheduler
+        self.unet         = pipe.unet.to(self.device)
+        self.scheduler    = pipe.scheduler
 
         self.uncond_text = ""
         self.checkpoint_path = checkpoint_path
+        
+    @property
+    def timesteps(self):
+        return self.scheduler.timesteps
+    
+    @property
+    def alphas_cumprod(self):
+        return self.scheduler.alphas_cumprod
 
+    @torch.no_grad
     def get_text_embedding(self, prompts, negative_prompt=None):
         """
         Embed Fucking text into Token Space
@@ -154,9 +169,8 @@ class FlipIllusion(nn.Module):
             return_tensors="pt",
         ).input_ids.to(self.device)
 
-        with torch.no_grad():
-            text_embeddings = self.text_encoder(text_input.to(self.device))[0]
-            uncond_embeddings = self.text_encoder(uncond_input.to(self.device))[0]
+        text_embeddings   = self.text_encoder(text_input.to(self.device))[0]
+        uncond_embeddings = self.text_encoder(uncond_input.to(self.device))[0]
 
         output_embeddings = torch.cat([uncond_embeddings, text_embeddings])
 
@@ -165,6 +179,7 @@ class FlipIllusion(nn.Module):
     @torch.no_grad
     def encode_image(self, image):
         """ Takes in 3HW torch tensor with values between 0 and 1, returns latent CHW tensor """
+
         image = rp.as_torch_image(
             image, device=self.device, dtype=torch.float32
         )  # If given a numpy image or PIL image, convert it. Else, if given torch image, leaves it alone.
@@ -173,6 +188,7 @@ class FlipIllusion(nn.Module):
         
         image = 2 * image - 1
         image = image.to(device=self.device)
+
         latents = self.vae.encode(image).latent_dist.sample()
         latents = 0.18215 * latents
 
@@ -180,13 +196,14 @@ class FlipIllusion(nn.Module):
 
         return latents
 
-    @torch.no_grad()
+    @torch.no_grad
     def decode_latent(self, latent):
         """ Takes in latent CHW torch tensor, returns 3HW torch tensor with values between 0 and 1 """
         
         latent = latent[None] #CHW -> 1CHW
-        
+
         latent = latent / 0.18215
+        
         image = self.vae.decode(latent).sample
         image = (image / 2 + 0.5).clamp(0, 1)
         
@@ -194,24 +211,10 @@ class FlipIllusion(nn.Module):
         
         return image
 
-    @torch.no_grad()
     def decode_latents(self, latents: list):
         """ Takes in list of latent CHW torch tensors, returns list of 3HW torch tensors with values between 0 and 1 """
         return [self.decode_latent(x) for x in latents]
 
-    @torch.no_grad()
-    def flip_latent(self, latent):
-        """
-        latent is CHW
-        Decode latent to image, flip it, and re-encode to latent
-        """
-        print(latent.shape)
-        image = self.decode_latent(latent)
-        flipped_image = torch.flip(image, dims=[1, 2])
-        flipped_latent = self.encode_image(flipped_image)
-        return flipped_latent
-
-    @torch.no_grad
     def pred_noise(self, latent, t, guidance_scale, text_embedding):
         latent=latent[None] #CHW -> 1CHW
         
@@ -219,13 +222,12 @@ class FlipIllusion(nn.Module):
         model_input = self.scheduler.scale_model_input(model_input, t)
 
         noise_pred = self.unet(
-            model_input, t, encoder_hidden_states=text_embedding
+            model_input, t, encoder_hidden_states=text_embedding,
         ).sample
 
         noise_pred_uncond, noise_pred_cond = noise_pred.chunk(2)
-        noise_pred = noise_pred_uncond + guidance_scale * (
-            noise_pred_cond - noise_pred_uncond
-        )
+        noise_pred_guidance = noise_pred_cond - noise_pred_uncond
+        noise_pred = noise_pred_uncond + guidance_scale * noise_pred_guidance
         
         noise_pred=noise_pred[0] #1CHW -> CHW
 
@@ -242,22 +244,9 @@ class FlipIllusion(nn.Module):
         alphas_cumprod = self.scheduler.alphas_cumprod
         timesteps = self.scheduler.timesteps
 
-        for t in tqdm(timesteps, total=len(timesteps)):
+        for t in tqdm(self.timesteps, total=len(self.timesteps)):
             for i, (latent, text_embedding) in enumerate(zip(latents, text_embeddings)):
                 noise_pred = self.pred_noise(latent, t, guidance_scale, text_embedding)
-                
-                clean_pred = get_clean_sample(
-                    sample=latent,
-                    model_output=noise_pred,
-                    pred_type="epsilon",
-                    timestep=t,
-                    alphas_cumprod=alphas_cumprod,
-                )
-                
-                clean_pred = self.flip_latent(clean_pred)
-                
-                
-                display_image(self.decode_latent(clean_pred))
                 
                 latent = self.scheduler.step(noise_pred, t, latent).prev_sample
                 latents[i]=latent
@@ -269,9 +258,142 @@ class FlipIllusion(nn.Module):
 
         return all_images
 
+class Illusion(RyanDiffusion):
+    def apply_image_func_to_clean_latent(self, func, clean_latent):
+        """ 
+        Apply an image function to a non-noisy latent (func is a function operating on a 3x512x512 torch tensor with values between 0 and 1)
+        """
+        image = self.decode_latent(clean_latent)
+        modified_image = func(image)
+        modified_latent = self.encode_image(modified_image)
+        return modified_latent
+
+    def apply_image_func_to_noisy_latent(self, func, noisy_latent, noise_pred, t):
+        """ 
+        Apply an image function (func is a function operating on a 3x512x512 torch tensor with values between 0 and 1)
+        to a noisy latent, gracefully - only applying it to the clean portion
+        """
+        clean_pred = get_clean_sample(
+            sample         = noisy_latent,
+            model_output   = noise_pred,
+            pred_type      = "epsilon",
+            timestep       = t,
+            alphas_cumprod = self.alphas_cumprod,
+        )
+
+        modified_clean_pred = self.apply_image_func_to_clean_latent(func, clean_pred)
+
+        modified_noisy_latent = get_epsilon(
+            sample         = noisy_latent,
+            model_output   = modified_clean_pred,
+            pred_type      = "sample",
+            timestep       = t,
+            alphas_cumprod = self.alphas_cumprod,
+        )
+
+        return modified_noisy_latent
+
+
+class ImageFilterDiffusion(Illusion):
+
+    def image_filter(self, image):
+        #Basic filter - should be overridden
+        return image
+
+    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5):
+        text_embeddings = [self.get_text_embedding(x) for x in prompts]
+
+        latents = [
+            torch.randn(4, 64, 64).to(self.device, torch.float32) for x in prompts
+        ]
+
+        self.scheduler.set_timesteps(num_steps, device=self.device)
+
+        for t in tqdm(self.timesteps, total=len(self.timesteps)):
+            for i, (latent, text_embedding) in enumerate(zip(latents, text_embeddings)):
+                noise_pred = self.pred_noise(latent, t, guidance_scale, text_embedding)
+
+                noise_pred = self.apply_image_func_to_noisy_latent(
+                    self.image_filter,
+                    latent,
+                    noise_pred,
+                    t,
+                )
+
+                #UNCOMMENT TO VIEW PROGRESS AS IT DIFFUSES! PRETTY COOL TO SEE!
+                clean_pred = get_clean_sample(
+                    sample         = latent,
+                    model_output   = noise_pred,
+                    pred_type      = "epsilon",
+                    timestep       = t,
+                    alphas_cumprod = self.alphas_cumprod,
+                )
+                display_image(self.decode_latent(clean_pred))
+                
+                latent = self.scheduler.step(noise_pred, t, latent).prev_sample
+                latents[i] = latent
+
+        all_images = self.decode_latents(latents)
+        
+        #Convert from CHW torch tensors to HWC numpy arrays
+        all_images = rp.as_numpy_images(all_images)
+
+        return all_images
+
+class GrayscaleFilterDiffusion(ImageFilterDiffusion):
+    def image_filter(self, image):
+        """ A grayscale image filter for a 3HW tensor """
+        return image.mean(0,keepdim=True).repeat(3,1,1)
+
+
+class PixelArt(Illusion):
+
+    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5):
+        text_embeddings = [self.get_text_embedding(x) for x in prompts]
+
+        latents = [
+            torch.randn(4, 64, 64).to(self.device, torch.float32) for x in prompts
+        ]
+
+        self.scheduler.set_timesteps(num_steps, device=self.device)
+
+        for t in tqdm(self.timesteps, total=len(self.timesteps)):
+            for i, (latent, text_embedding) in enumerate(zip(latents, text_embeddings)):
+                noise_pred = self.pred_noise(latent, t, guidance_scale, text_embedding)
+                
+                def rgb_to_grayscale(image):
+                    return image.mean(0,keepdim=True).repeat(3,1,1)
+
+                noise_pred = self.apply_image_func_to_noisy_latent(
+                    rgb_to_grayscale,
+                    latent,
+                    noise_pred,
+                    t,
+                )
+
+                # clean_pred = get_clean_sample(
+                #     sample         = latent,
+                #     model_output   = noise_pred,
+                #     pred_type      = "epsilon",
+                #     timestep       = t,
+                #     alphas_cumprod = self.alphas_cumprod,
+                # )
+                # display_image(self.decode_latent(clean_pred))
+                
+                latent = self.scheduler.step(noise_pred, t, latent).prev_sample
+                latents[i] = latent
+
+        all_images = self.decode_latents(latents)
+        
+        #Convert from CHW torch tensors to HWC numpy arrays
+        all_images = rp.as_numpy_images(all_images)
+
+        return all_images
 
 if __name__ == "__main__":
-    diffusion = FlipIllusion(
+    torch.manual_seed(42)
+    
+    diffusion = GrayscaleFilterDiffusion(
         checkpoint_path="stable-diffusion-v1-5/stable-diffusion-v1-5"
     )
 
