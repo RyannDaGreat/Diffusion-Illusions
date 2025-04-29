@@ -367,11 +367,26 @@ class DiffusionIllusion(Diffusion):
 
         text_embeddings = [self.get_text_embedding(x) for x in prompts]
 
+        #UNCOMMENT TO USE DIFFERENT INITIAL NOISES
+        # latents = [
+        #     torch.randn(4, 64, 64).to(self.device, torch.float32) for x in prompts
+        # ]
+
+        #UNCOMMENT TO USE SAME INITIAL NOISES
         latents = [
-            torch.randn(4, 64, 64).to(self.device, torch.float32) for x in prompts
-        ]
+            torch.randn(4, 64, 64).to(self.device, torch.float32)
+        ] * len(prompts)
 
         self.scheduler.set_timesteps(num_steps, device=self.device)
+
+        # # Add some timesteps to the beginning...
+        # timesteps_list = as_numpy_array(self.scheduler.timesteps).tolist()
+        # self.scheduler.timesteps = torch.tensor(
+        #     sorted(sorted(timesteps_list)[-5:] * 5 + timesteps_list, reverse=True),
+        #     dtype=self.scheduler.timesteps.dtype,
+        #     device=self.scheduler.timesteps.device,
+        # )
+        # fansi_print(f"TIMESTEPS: {self.scheduler.timesteps}", "green bold")
 
         def identity(image):
             return image
@@ -393,6 +408,7 @@ class DiffusionIllusion(Diffusion):
                 )
 
                 image_pred = self.decode_latent(clean_pred)
+                image_pred = image_pred.clamp(0,1)
 
                 noise_preds.append(noise_pred)
                 clean_preds.append(clean_pred)
@@ -459,7 +475,7 @@ def _reconcile_hidden_overlays_initial(Ta, Tb, Tc, Td, Tz, Lz, backlight):
     return [A, B, C, D, Z]
 
 
-def reconcile_hidden_overlays(Ta, Tb, Tc, Td, Tz, Lz=2, backlight=2):
+def reconcile_hidden_overlays(Ta, Tb, Tc, Td, Tz, Lz=1, backlight=3):
     """
     Refined estimate of A, B, C, D, Z by gradient steps starting from closed-form initialization.
     Math done with mathematica + chatGPT: https://chatgpt.com/share/680fbe46-239c-8006-89c7-87f32a381c5c
@@ -590,6 +606,7 @@ class HiddenOverlayIllusion(DiffusionIllusion):
     
     def reconcile_targets(self, image_a, image_b, image_c, image_d, image_z):
         """ This function is responsible for approximating any primes needed then creating their approx derived images, and returning those derived images """
+        
         output = reconcile_hidden_overlays(image_a, image_b, image_c, image_d, image_z)
         
         display_image(
@@ -605,8 +622,9 @@ class HiddenOverlayIllusion(DiffusionIllusion):
 
     
 if __name__ == "__main__":
-    with torch.no_grad():
-        torch.manual_seed(38)
+    for _ in range(100) :
+      with torch.no_grad():
+        #torch.manual_seed(38)
         
         diffusion = FlipIllusion(
             checkpoint_path="stable-diffusion-v1-5/stable-diffusion-v1-5"
@@ -617,22 +635,23 @@ if __name__ == "__main__":
         )
 
         prompts = [
-             #"Oil painting of Golden Retriever",
-             #"Oil painting of a cat",
-             #"Oil painting of a Chicken",
-             #"professional portrait photograph of a gorgeous Norwegian girl in winter clothing with long wavy blonde hair, freckles, gorgeous symmetrical face, cute natural makeup, wearing elegant warm winter fashion clothing, ((standing outside))",
+             "Oil painting of Golden Retriever",
+             "Oil painting of a cat",
+             "Oil painting of a Chicken",
+             "professional portrait photograph of a gorgeous Norwegian girl in winter clothing with long wavy blonde hair, freckles, gorgeous symmetrical face, cute natural makeup, wearing elegant warm winter fashion clothing, ((standing outside))",
              #"A orange cute kitten in a cardboard box in times square",
              #"Walter white, oil painting, octane render, 8 0 s camera, portrait",
-             "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
-             "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
-             "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
-             "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
+             #"Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
+             # "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
+             #" mario 3d nintendo video game",
+             #"Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
+             #"Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
              "Still of jean - luc picard in star trek = the next generation ( 1 9 8 7 )",
             #"Pixel art sprite of a Golden Retriever",
             #"Pixel art mario"
         ]
 
-        images = diffusion.sample(prompts,guidance_scale=10,num_steps=20)
+        images = diffusion.sample(prompts,guidance_scale=7.5,num_steps=20)
         image_paths = rp.save_images(images)
         rp.fansi_print(
             f'SAVED IMAGES:\n{rp.indentify(rp.line_join(image_paths), "    • ")}',
