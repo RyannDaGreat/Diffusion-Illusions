@@ -227,7 +227,7 @@ class Diffusion(nn.Module):
         return [self.encode_image(x) for x in images]
 
     def correct_encoding_order1(self, latent):
-        print("CORRECTING")
+        # print("CORRECTING")
         e1=latent
         d1=self.decode_latent(e1)
         e2=self._encode_image(d1)
@@ -633,6 +633,121 @@ def demo_reconcile_hidden_overlays():
         block=False,
     )
 
+import torch
+def _laplacian_blend_annoying(image_a, image_b):
+    #image_a and image_b are [3,512,512] torch tensors
+    #They have same device and dtype
+    import torch
+    import torch.nn.functional as F
+    
+    # Get device and dtype from inputs
+    device = image_a.device
+    dtype = image_a.dtype
+    
+    # Create Gaussian pyramid for both images
+    # Start with original images
+    gauss_a = [image_a]
+    gauss_b = [image_b]
+    
+    # Number of pyramid levels
+    levels = 5
+    
+    # Generate Gaussian pyramid by repeatedly downsampling
+    for i in range(levels - 1):
+        # Apply Gaussian blur using a 5x5 kernel
+        # Then downsample by factor of 2
+        next_a = F.avg_pool2d(gauss_a[-1], kernel_size=2, stride=2)
+        next_b = F.avg_pool2d(gauss_b[-1], kernel_size=2, stride=2)
+        
+        gauss_a.append(next_a)
+        gauss_b.append(next_b)
+    
+    # Create Laplacian pyramid by computing differences
+    # between adjacent Gaussian levels
+    lapl_a = []
+    lapl_b = []
+    
+    for i in range(levels - 1):
+        # Get current and next level from Gaussian pyramid
+        current_a, current_b = gauss_a[i], gauss_b[i]
+        next_a, next_b = gauss_a[i + 1], gauss_b[i + 1]
+        
+        # Upsample the next level
+        upsampled_a = F.interpolate(next_a, scale_factor=2, mode='bilinear', align_corners=False)
+        upsampled_b = F.interpolate(next_b, scale_factor=2, mode='bilinear', align_corners=False)
+        
+        # Ensure upsampled images match the dimensions of current level
+        if upsampled_a.shape != current_a.shape:
+            target_size = current_a.shape[2:]
+            upsampled_a = F.interpolate(upsampled_a, size=target_size, mode='bilinear', align_corners=False)
+            upsampled_b = F.interpolate(upsampled_b, size=target_size, mode='bilinear', align_corners=False)
+        
+        # Compute Laplacian as difference between current level and upsampled next level
+        lapl_a.append(current_a - upsampled_a)
+        lapl_b.append(current_b - upsampled_b)
+    
+    # Add the coarsest level of the Gaussian pyramid to the Laplacian pyramid
+    lapl_a.append(gauss_a[-1])
+    lapl_b.append(gauss_b[-1])
+    
+    # Create a weight mask that transitions smoothly from 0 to 1
+    # For simplicity, using a horizontal gradient
+    mask = torch.linspace(0, 1, image_a.shape[2], device=device, dtype=dtype)
+    mask[:]=.5 #BLEND HALF WAY EVERYWHERE
+    mask = mask.view(1, 1, 1, -1).expand(1, 3, image_a.shape[1], image_a.shape[2])
+    
+    # Blend the Laplacian pyramids using the mask
+    blended_pyramid = []
+    
+    for la, lb in zip(lapl_a, lapl_b):
+        # Adjust mask size to match current pyramid level
+        if mask.shape[2:] != la.shape[2:]:
+            resized_mask = F.interpolate(mask, size=la.shape[2:], mode='bilinear', align_corners=False)
+        else:
+            resized_mask = mask
+            
+        # Blend using the mask
+        blended = la * (1 - resized_mask) + lb * resized_mask
+        blended_pyramid.append(blended)
+    
+    # Reconstruct the blended image from the Laplacian pyramid
+    blended_image = blended_pyramid[-1]  # Start with coarsest level
+    
+    # Iteratively upsample and add differences
+    for i in range(levels - 2, -1, -1):
+        # Upsample the current reconstruction
+        upsampled = F.interpolate(blended_image, scale_factor=2, mode='bilinear', align_corners=False)
+        
+        # Ensure dimensions match
+        current_diff = blended_pyramid[i]
+        if upsampled.shape != current_diff.shape:
+            upsampled = F.interpolate(upsampled, size=current_diff.shape[2:], mode='bilinear', align_corners=False)
+        
+        # Add the difference from the current level
+        blended_image = upsampled + current_diff
+    
+    return blended_image
+
+def laplacian_blend(image_a,image_b):
+    #Junkily implemented quickly. Best to scrap and start agian one day but for now it works...
+    r = _laplacian_blend_annoying(image_a[0:1][None],image_b[0:1][None])[0]
+    g = _laplacian_blend_annoying(image_a[1:2][None],image_b[1:2][None])[0]
+    b = _laplacian_blend_annoying(image_a[2:3][None],image_b[2:3][None])[0]
+    output  = torch.cat([r,g,b])[::3]
+    print(image_a.shape,output.shape)
+    return output
+    #
+    # images = resize_images_to_min_size(
+    #     as_rgb_images(
+    #         crop_images_to_square(
+    #             load_images(
+    #                 "https://upload.wikimedia.org/wikipedia/en/thumb/7/7d/Lenna_%28test_image%29.png/500px-Lenna_%28test_image%29.png",
+    #                 "https://i1.adis.ws/i/canon/canon-pro-christian-ziegler-image1-1200?w=1140&qlt=70&fmt=jpg&fmt.options=interlaced&bg=rgb(255,255,255)",
+    #             )
+    #         )
+    #     )
+    # )
+
 class FlipIllusion(DiffusionIllusion):
     
     def reconcile_targets(self, image_a, image_b):
@@ -640,7 +755,8 @@ class FlipIllusion(DiffusionIllusion):
         def flip_image(image):
             return image.flip(1,2)
 
-        merged_image = (image_a + flip_image(image_b).to(image_a.device)) / 2
+        # merged_image = (image_a + flip_image(image_b).to(image_a.device)) / 2
+        merged_image = laplacian_blend(image_a , flip_image(image_b).to(image_a.device))
 
         new_image_a = merged_image
         new_image_b = flip_image(merged_image).to(image_b.device)
@@ -682,42 +798,61 @@ class HiddenOverlayIllusion(DiffusionIllusion):
 
     
 if __name__ == "__main__":
+    if not 'illusion_pairs' in vars():
+        illusion_pairs = []
+
+    illusion = FlipIllusion(
+        [
+            Diffusion(device="cuda:0"),
+            Diffusion(device="cuda:1"),
+        ]
+    )
+
+    # illusion = HiddenOverlayIllusion(
+    #     [
+    #         Diffusion(device="cuda:0"),
+    #         Diffusion(device="cuda:1"),
+    #         Diffusion(device="cuda:2"),
+    #         Diffusion(device="cuda:3"),
+    #         Diffusion(device="cuda:0"),
+    #     ]
+    # )
+
     for _ in range(100) :
       with torch.no_grad():
         #torch.manual_seed(38)
-        
-        #diffusion = FlipIllusion()
-
-        diffusion = HiddenOverlayIllusion(
-            [
-                Diffusion(device="cuda:0"),
-                Diffusion(device="cuda:1"),
-                Diffusion(device="cuda:2"),
-                Diffusion(device="cuda:3"),
-                Diffusion(device="cuda:0"),
-            ]
-        )
 
         prompts = [
              "Oil painting of a Chicken",
              "professional portrait photograph of a gorgeous Norwegian girl in winter clothing with long wavy blonde hair, freckles, gorgeous symmetrical face, cute natural makeup, wearing elegant warm winter fashion clothing, ((standing outside))",
-             #"A orange cute kitten in a cardboard box in times square",
+             "A orange cute kitten in a cardboard box in times square",
              "Walter white, oil painting, octane render, 8 0 s camera, portrait",
              "Oil painting of a cat",
              "Oil painting of Golden Retriever",
-             #"Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
              # "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
-             #" mario 3d nintendo video game",
-             #"Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
-             #"Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
-             #"Still of jean - luc picard in star trek = the next generation ( 1 9 8 7 )",
-            #"Pixel art sprite of a Golden Retriever",
-            #"Pixel art mario"
+             "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
+             " mario 3d nintendo video game",
+             "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
+             # "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
+             "Still of jean - luc picard in star trek = the next generation ( 1 9 8 7 )",
+            "Pixel art sprite of a Golden Retriever",
+            "Pixel art mario"
         ]
 
-        images = diffusion.sample(prompts,guidance_scale=7.5,num_steps=20)
+        prompts = random_batch(prompts, illusion.num_derived_images)
+        fansi_print(f'PROMPTS:\n{indentify(line_join(prompts),"    - ")}', 'cyan gray')
+
+        images = illusion.sample(
+            prompts,
+            guidance_scale=10,
+            num_steps=100,
+        )
+
+        illusion_pairs.append(images)
+        display_image(horizontally_concatenated_images(images))
         image_paths = rp.save_images(images)
         rp.fansi_print(
             f'SAVED IMAGES:\n{rp.indentify(rp.line_join(image_paths), "    • ")}',
             "green bold",
+
         )
