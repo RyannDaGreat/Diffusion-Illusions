@@ -3,7 +3,7 @@ from diffusers import DDIMScheduler
 import torch
 import torch.nn as nn
 from tqdm import tqdm
-from PIL import Image
+import rp
 
 
 def add_noise(
@@ -104,7 +104,7 @@ def get_clean_sample(
 
 
 if not 'get_pipeline' in vars():
-    @memoized
+    @rp.memoized
     def get_pipeline(checkpoint_path):
         pipe = StableDiffusionPipeline.from_pretrained(
             checkpoint_path,
@@ -119,7 +119,7 @@ if not 'get_pipeline' in vars():
         return pipe
 
 
-class RyanDiffusion(nn.Module):
+class Diffusion(nn.Module):
     def __init__(self, checkpoint_path, device="mps", pipe=None):
         super().__init__()
         self.device = torch.device(device)
@@ -215,6 +215,9 @@ class RyanDiffusion(nn.Module):
         """ Takes in list of latent CHW torch tensors, returns list of 3HW torch tensors with values between 0 and 1 """
         return [self.decode_latent(x) for x in latents]
 
+    def encode_images(self, images: list):
+        return [self.encode_image(x) for x in images]
+
     def pred_noise(self, latent, t, guidance_scale, text_embedding):
         latent=latent[None] #CHW -> 1CHW
         
@@ -241,10 +244,8 @@ class RyanDiffusion(nn.Module):
         ]
 
         self.scheduler.set_timesteps(num_steps, device=self.device)
-        alphas_cumprod = self.scheduler.alphas_cumprod
-        timesteps = self.scheduler.timesteps
 
-        for t in tqdm(self.timesteps, total=len(self.timesteps)):
+        for t in tqdm(self.timesteps):
             for i, (latent, text_embedding) in enumerate(zip(latents, text_embeddings)):
                 noise_pred = self.pred_noise(latent, t, guidance_scale, text_embedding)
                 
@@ -258,7 +259,7 @@ class RyanDiffusion(nn.Module):
 
         return all_images
 
-class Illusion(RyanDiffusion):
+class ImageFilterDiffusion(Diffusion):
     def apply_image_func_to_clean_latent(self, func, clean_latent):
         """ 
         Apply an image function to a non-noisy latent (func is a function operating on a 3x512x512 torch tensor with values between 0 and 1)
@@ -293,9 +294,6 @@ class Illusion(RyanDiffusion):
 
         return modified_noisy_latent
 
-
-class ImageFilterDiffusion(Illusion):
-
     def image_filter(self, image):
         #Basic filter - should be overridden
         return image
@@ -309,7 +307,7 @@ class ImageFilterDiffusion(Illusion):
 
         self.scheduler.set_timesteps(num_steps, device=self.device)
 
-        for t in tqdm(self.timesteps, total=len(self.timesteps)):
+        for t in tqdm(self.timesteps):
             for i, (latent, text_embedding) in enumerate(zip(latents, text_embeddings)):
                 noise_pred = self.pred_noise(latent, t, guidance_scale, text_embedding)
 
@@ -346,9 +344,21 @@ class GrayscaleFilterDiffusion(ImageFilterDiffusion):
         return image.mean(0,keepdim=True).repeat(3,1,1)
 
 
-class PixelArt(Illusion):
-
+class PixelArtDiffusion(ImageFilterDiffusion):
+    def image_filter(self, image):
+        """ A grayscale image filter for a 3HW tensor """
+        #return image
+        PIXEL_SIZE=16
+        QUANT=8 #Number of colors per channel
+        image = rp.torch_resize_image(image, 1/PIXEL_SIZE,interp='nearest')
+        image = (image * QUANT).round()/QUANT
+        image = rp.torch_resize_image(image, PIXEL_SIZE, interp='nearest')
+        return image
+    
+class FlipDiffusion(Diffusion):
     def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5):
+        assert len(prompts) == 2
+
         text_embeddings = [self.get_text_embedding(x) for x in prompts]
 
         latents = [
@@ -357,31 +367,57 @@ class PixelArt(Illusion):
 
         self.scheduler.set_timesteps(num_steps, device=self.device)
 
-        for t in tqdm(self.timesteps, total=len(self.timesteps)):
+        def identity(image):
+            return image
+
+        def flip_image(image):
+            return image.flip(1,2)
+
+        views = [identity, flip_image]
+
+        for t in tqdm(self.timesteps):
+            noise_preds = []
+            clean_preds = []
+            image_preds = []
+
             for i, (latent, text_embedding) in enumerate(zip(latents, text_embeddings)):
                 noise_pred = self.pred_noise(latent, t, guidance_scale, text_embedding)
-                
-                def rgb_to_grayscale(image):
-                    return image.mean(0,keepdim=True).repeat(3,1,1)
 
-                noise_pred = self.apply_image_func_to_noisy_latent(
-                    rgb_to_grayscale,
-                    latent,
-                    noise_pred,
-                    t,
+                clean_pred = get_clean_sample(
+                    sample         = latent,
+                    model_output   = noise_pred,
+                    pred_type      = "epsilon",
+                    timestep       = t,
+                    alphas_cumprod = self.alphas_cumprod,
                 )
 
-                # clean_pred = get_clean_sample(
-                #     sample         = latent,
-                #     model_output   = noise_pred,
-                #     pred_type      = "epsilon",
-                #     timestep       = t,
-                #     alphas_cumprod = self.alphas_cumprod,
-                # )
-                # display_image(self.decode_latent(clean_pred))
-                
+                image_pred = self.decode_latent(clean_pred)
+
+                noise_preds.append(noise_pred)
+                clean_preds.append(clean_pred)
+                image_preds.append(image_pred)
+
+            #Mean them
+            canonical_image = views[0](image_preds[0]) + views[1](image_preds[1])
+            canonical_image = canonical_image / 2
+
+            derived_images = [views[0](canonical_image), views[1](canonical_image)]
+            derived_clean_preds = self.encode_images(derived_images)
+
+            noise_preds = [
+                get_epsilon(
+                    sample=latent,
+                    model_output=derived_clean_pred,
+                    pred_type="sample",
+                    timestep=t,
+                    alphas_cumprod=self.alphas_cumprod,
+                )
+                for latent, derived_clean_pred in zip(latents, derived_clean_preds)
+            ]
+
+            for i, (latent, noise_pred) in enumerate(zip(latents, noise_preds)):
                 latent = self.scheduler.step(noise_pred, t, latent).prev_sample
-                latents[i] = latent
+                latents[i]=latent
 
         all_images = self.decode_latents(latents)
         
@@ -390,19 +426,28 @@ class PixelArt(Illusion):
 
         return all_images
 
-if __name__ == "__main__":
-    torch.manual_seed(42)
+
+
     
-    diffusion = GrayscaleFilterDiffusion(
-        checkpoint_path="stable-diffusion-v1-5/stable-diffusion-v1-5"
-    )
 
-    prompts = [
-        # "Oil painting of Golden Retriever",
-        "Oil painting of Golden Retriever",
-    ]
+if __name__ == "__main__":
+    with torch.no_grad():
+        torch.manual_seed(42)
+        
+        diffusion = FlipDiffusion(
+            checkpoint_path="stable-diffusion-v1-5/stable-diffusion-v1-5"
+        )
 
-    images = diffusion.sample(prompts)
-    for i, image in enumerate(images):
-        file = f"image_{i}.png"
-        fansi_print(f'SAVED: {save_image(image,file)}', 'green bold')
+        prompts = [
+             "Oil painting of Golden Retriever",
+             "Oil painting of a cat",
+            #"Pixel art sprite of a Golden Retriever",
+            #"Pixel art mario"
+        ]
+
+        images = diffusion.sample(prompts,guidance_scale=12)
+        for i, image in enumerate(images):
+            rp.display_image(image)
+            file = f"image_{i}.png"
+            rp.fansi_print(f'SAVED: {rp.save_image(image,file)}', 'green bold')
+                
