@@ -148,10 +148,6 @@ class Diffusion(nn.Module):
 
     @torch.no_grad
     def get_text_embedding(self, prompts, negative_prompt=None):
-        """
-        Embed Fucking text into Token Space
-        """
-
         if isinstance(prompts, str):
             prompts = [prompts]
 
@@ -327,7 +323,7 @@ class ImageFilterDiffusion(Diffusion):
                     timestep       = t,
                     alphas_cumprod = self.alphas_cumprod,
                 )
-                display_image(self.decode_latent(clean_pred))
+                rp.display_image(self.decode_latent(clean_pred))
                 
                 latent = self.scheduler.step(noise_pred, t, latent).prev_sample
                 latents[i] = latent
@@ -358,13 +354,13 @@ class PixelArtDiffusion(ImageFilterDiffusion):
     
 class DiffusionIllusion(Diffusion):
     
-    def reconcile_images(self, image_a, image_b):
+    def reconcile_targets(self, *images):
         """ This function is responsible for approximating any primes needed then creating their approx derived images, and returning those derived images """
         raise NotImplementedError
     
     @property
     def num_derived_images(self):
-        return len(inspect.signature(self.reconcile_images).parameters)
+        return len(inspect.signature(self.reconcile_targets).parameters)
     
     def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5):
         assert len(prompts) == self.num_derived_images, f'len(prompts)={len(prompts)}  !=  num_derived_images={self.num_derived_images}'
@@ -402,7 +398,7 @@ class DiffusionIllusion(Diffusion):
                 clean_preds.append(clean_pred)
                 image_preds.append(image_pred)
 
-            derived_images = self.reconcile_images(*image_preds)
+            derived_images = self.reconcile_targets(*image_preds)
             derived_clean_preds = self.encode_images(derived_images)
 
             noise_preds = [
@@ -427,9 +423,157 @@ class DiffusionIllusion(Diffusion):
 
         return all_images
 
+def _reconcile_hidden_overlays_initial(Ta, Tb, Tc, Td, Tz, Lz, backlight):
+    """
+    Closed-form initial estimate of A, B, C, D, Z minimizing weighted mean squared error.
+
+    Parameters
+    ----------
+    Ta, Tb, Tc, Td : float
+        Target values for A, B, C, D.
+    Tz : float
+        Target value for Z.
+    Lz : float
+        Weight for how much to prioritize Z reconstruction.
+    backlight : float
+        Multiplicative constant in the definition of Z = backlight * A * B * C * D.
+
+    Returns
+    -------
+    list of float
+        [A, B, C, D, Z] initial estimates.
+    """
+    p = Ta * Tb * Tc * Td
+    epsilon = Tz - backlight * p
+    v = [1 / Ta, 1 / Tb, 1 / Tc, 1 / Td]
+    v_dot_v = sum(vi**2 for vi in v)
+    scaling = (backlight * Lz * p * epsilon) / (
+        1 + (backlight**2) * Lz * p**2 * v_dot_v
+    )
+    delta = [scaling * vi for vi in v]
+    A = Ta + delta[0]
+    B = Tb + delta[1]
+    C = Tc + delta[2]
+    D = Td + delta[3]
+    Z = backlight * A * B * C * D
+    return [A, B, C, D, Z]
+
+
+def reconcile_hidden_overlays(Ta, Tb, Tc, Td, Tz, Lz=2, backlight=2):
+    """
+    Refined estimate of A, B, C, D, Z by gradient steps starting from closed-form initialization.
+    Math done with mathematica + chatGPT: https://chatgpt.com/share/680fbe46-239c-8006-89c7-87f32a381c5c
+    
+    Note: With a higher backlight value, you can get better accuracy for free!
+    HOWEVER: There's a tradeoff: Higher backlight values don't model real-world overlays as well, as innacuracies in the printing process are exacerbated a lot
+        A backlight value of 3 is the most you'd really want to use...backlight value of 2 is safe for real-world use
+    
+    NOTE: Lz is the Loss-coefficient for image Z. Basically, if it's higher - we prioritize the accuracy of Z more than the accuracy of A,B,C,D
+    If Lz=0, then it returns exactly A=Ta,B=Tb,C=Tc,D=Td - not useful, resulting in no change. 
+
+    Hidden overlay illusion:
+    Given 5 target images, we want to solve for prime images A,B,C,D
+    We define derived image Z = A * B * C * D * backlight (where backlight is the brightness of the light behind the overlays)
+    This solves for A,B,C,D using least squares, such that:
+        |  GIVEN:
+        |  Ta Tb Tc Td Tz, Lz (Lz is a coefficient for how much we relatively care about the Z reconstruction)
+        |  (Here, Ta for example is an atomic variable - it's not like T * a, it's just T_a shorthand)
+        | 
+        |  RELATIONSHIPS TO A,B,C,D,Z:
+        |  A = Ta
+        |  B = Tb
+        |  C = Tc
+        |  D = Td
+        |  Z = 3 * A * B * C * D
+        |
+        |  GOAL:
+        |  Solve for A, B, C, D, Z
+        |  Minimize Mean Squared Error:
+        |  (Ta - A)^2 +
+        |  (Tb - B)^2 +
+        |  (Tc - C)^2 +
+        |  (Td - D)^2 +
+        |  Lz * (Tz - Z)^2
+
+    Parameters
+    ----------
+    Ta, Tb, Tc, Td : float
+        Target values for A, B, C, D.
+    Tz : float
+        Target value for Z.
+    Lz : float, optional
+        Weight for Z reconstruction (default is 1).
+    backlight : float, optional
+        Multiplicative constant in Z = backlight * A * B * C * D (default is 3).
+
+    Returns
+    -------
+    list of float
+        [A, B, C, D, Z] refined estimates.
+    """
+    
+    #We use an initial estimate to speed it up. We could start from just A=Ta, B=Tb, C=Tc, D=Td but
+    #   that's slower than using a good first guess, provided with the below function
+    A, B, C, D, _ = _reconcile_hidden_overlays_initial(Ta, Tb, Tc, Td, Tz, Lz, backlight=backlight)
+
+    max_iter = 30
+    step_size = .01
+    for _ in range(max_iter):
+        Z = backlight * A * B * C * D
+        err = Tz - Z
+
+        loss_grad_A = -2 * (Ta - A) + (-2 * backlight * Lz * err * B * C * D)
+        loss_grad_B = -2 * (Tb - B) + (-2 * backlight * Lz * err * A * C * D)
+        loss_grad_C = -2 * (Tc - C) + (-2 * backlight * Lz * err * A * B * D)
+        loss_grad_D = -2 * (Td - D) + (-2 * backlight * Lz * err * A * B * C)
+
+        A -= step_size * loss_grad_A
+        B -= step_size * loss_grad_B
+        C -= step_size * loss_grad_C
+        D -= step_size * loss_grad_D
+        
+        #Just make sure there's no NaN pixels, or pixels outside the range [0,1]
+        A = rp.r._nan_to_num(rp.r._clip(A,0,1))
+        B = rp.r._nan_to_num(rp.r._clip(B,0,1))
+        C = rp.r._nan_to_num(rp.r._clip(C,0,1))
+        D = rp.r._nan_to_num(rp.r._clip(D,0,1))
+        
+
+    Z = backlight * A * B * C * D
+    return [A, B, C, D, Z]
+
+def demo_reconcile_hidden_overlays():
+    #Below we demo the above functions, displaying the target image on the left and the best-fit overlays on the right
+    images = [
+        "https://hips.hearstapps.com/ghk.h-cdn.co/assets/17/30/bernese-mountain-dog.jpg?crop=1.00xw:0.668xh;0,0.252xh&resize=640:*",
+        "https://www.princeton.edu/sites/default/files/styles/1x_full_2x_half_crop/public/images/2022/02/KOA_Nassau_2697x1517.jpg?itok=Bg2K7j7J",
+        "https://money.com/wp-content/uploads/2024/03/Best-Small-Dog-Breeds-Pomeranian.jpg?quality=60",
+        "https://money.com/wp-content/uploads/2024/03/Best-Small-Dog-Breeds-Maltese.jpg?quality=60",
+        "https://www.dogstrust.org.uk/images/800x600/assets/2025-03/toffee%202.jpg",
+    ]
+    images = rp.load_images(images, use_cache=True)
+    images = rp.crop_images_to_square(images)
+    images = rp.resize_images_to_min_size(images)
+    images = rp.as_float_images(images)
+    images = rp.as_rgb_images(images)
+    Ta, Tb, Tc, Td, Tz = images
+    A, B, C, D, Z = rp.gather_args_call(reconcile_hidden_overlays)
+
+    rp.display_image(
+        rp.grid_concatenated_images(
+            rp.list_transpose(
+                [
+                    rp.labeled_images([Ta, Tb, Tc, Td, Tz], ["Ta", "Tb", "Tc", "Td", "Tz"]),
+                    rp.labeled_images([A, B, C, D, Z], ["A", "B", "C", "D", "Z"]),
+                ]
+            )
+        ),
+        block=False,
+    )
+
 class FlipIllusion(DiffusionIllusion):
     
-    def reconcile_images(self, image_a, image_b):
+    def reconcile_targets(self, image_a, image_b):
         """ This function is responsible for approximating any primes needed then creating their approx derived images, and returning those derived images """
         def flip_image(image):
             return image.flip(1,2)
@@ -441,25 +585,56 @@ class FlipIllusion(DiffusionIllusion):
 
         return [new_image_a, new_image_b]
     
+
+class HiddenOverlayIllusion(DiffusionIllusion):
+    
+    def reconcile_targets(self, image_a, image_b, image_c, image_d, image_z):
+        """ This function is responsible for approximating any primes needed then creating their approx derived images, and returning those derived images """
+        output = reconcile_hidden_overlays(image_a, image_b, image_c, image_d, image_z)
+        
+        display_image(
+            tiled_images(
+                as_numpy_images(
+                    [image_a, image_b, image_c, image_d, image_z] + [*output]
+                ),
+                length=len(output),
+            )
+        )
+        
+        return output
+
     
 if __name__ == "__main__":
     with torch.no_grad():
-        torch.manual_seed(42)
+        torch.manual_seed(38)
         
-        diffusion = FlipDiffusion(
+        diffusion = FlipIllusion(
+            checkpoint_path="stable-diffusion-v1-5/stable-diffusion-v1-5"
+        )
+
+        diffusion = HiddenOverlayIllusion(
             checkpoint_path="stable-diffusion-v1-5/stable-diffusion-v1-5"
         )
 
         prompts = [
-             "Oil painting of Golden Retriever",
-             "Oil painting of a cat",
+             #"Oil painting of Golden Retriever",
+             #"Oil painting of a cat",
+             #"Oil painting of a Chicken",
+             #"professional portrait photograph of a gorgeous Norwegian girl in winter clothing with long wavy blonde hair, freckles, gorgeous symmetrical face, cute natural makeup, wearing elegant warm winter fashion clothing, ((standing outside))",
+             #"A orange cute kitten in a cardboard box in times square",
+             #"Walter white, oil painting, octane render, 8 0 s camera, portrait",
+             "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
+             "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
+             "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
+             "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
+             "Still of jean - luc picard in star trek = the next generation ( 1 9 8 7 )",
             #"Pixel art sprite of a Golden Retriever",
             #"Pixel art mario"
         ]
 
-        images = diffusion.sample(prompts,guidance_scale=12)
-        for i, image in enumerate(images):
-            rp.display_image(image)
-            file = f"image_{i}.png"
-            rp.fansi_print(f'SAVED: {rp.save_image(image,file)}', 'green bold')
-                
+        images = diffusion.sample(prompts,guidance_scale=10,num_steps=20)
+        image_paths = rp.save_images(images)
+        rp.fansi_print(
+            f'SAVED IMAGES:\n{rp.indentify(rp.line_join(image_paths), "    • ")}',
+            "green bold",
+        )
