@@ -462,6 +462,9 @@ class DiffusionIllusion:
             assert all(old.device==new.device for old, new in zip(image_preds, derived_images)), 'self.reconcile_targets should NOT change the devices of the images!'
 
             derived_clean_preds = self.encode_images_in_parallel(derived_images)
+            
+            #TRY: Shuffle noise components...what happens?
+            noise_preds = [x.to(y.device) for x,y in zip(shuffled(noise_preds),noise_preds)]
 
             noise_preds = [
                 get_epsilon(
@@ -521,7 +524,7 @@ def _reconcile_hidden_overlays_initial(Ta, Tb, Tc, Td, Tz, Lz, backlight):
     return [A, B, C, D, Z]
 
 
-def reconcile_hidden_overlays(Ta, Tb, Tc, Td, Tz, Lz=1.5, backlight=3):
+def reconcile_hidden_overlays(Ta, Tb, Tc, Td, Tz, Lz=2, backlight=3):
     """
     Refined estimate of A, B, C, D, Z by gradient steps starting from closed-form initialization.
     Math done with mathematica + chatGPT: https://chatgpt.com/share/680fbe46-239c-8006-89c7-87f32a381c5c
@@ -755,11 +758,22 @@ class FlipIllusion(DiffusionIllusion):
         def flip_image(image):
             return image.flip(1,2)
 
-        # merged_image = (image_a + flip_image(image_b).to(image_a.device)) / 2
-        merged_image = laplacian_blend(image_a , flip_image(image_b).to(image_a.device))
+        merged_image = (image_a + flip_image(image_b).to(image_a.device)) / 2
+        #merged_image = laplacian_blend(image_a , flip_image(image_b).to(image_a.device))
 
         new_image_a = merged_image
         new_image_b = flip_image(merged_image).to(image_b.device)
+
+        if toc()>5:
+            rp.display_image(
+                rp.tiled_images(
+                    rp.as_numpy_images(
+                        [new_image_a, new_image_b],
+                    ),
+                    length=2,
+                )
+            )
+            tic()
 
         return [new_image_a, new_image_b]
     
@@ -785,14 +799,16 @@ class HiddenOverlayIllusion(DiffusionIllusion):
         
         output = [new_image_a, new_image_b, new_image_c, new_image_d, new_image_z]
 
-        # rp.display_image(
-        #     rp.tiled_images(
-        #         rp.as_numpy_images(
-        #             [image_a, image_b, image_c, image_d, image_z] + [*output]
-        #         ),
-        #         length=len(output),
-        #     )
-        # )
+        if toc()>5:
+            rp.display_image(
+                rp.tiled_images(
+                    rp.as_numpy_images(
+                        [image_a, image_b, image_c, image_d, image_z] + [*output]
+                    ),
+                    length=len(output),
+                )
+            )
+            tic()
         
         return output
 
@@ -801,22 +817,22 @@ if __name__ == "__main__":
     if not 'illusion_pairs' in vars():
         illusion_pairs = []
 
-    illusion = FlipIllusion(
-        [
-            Diffusion(device="cuda:0"),
-            Diffusion(device="cuda:1"),
-        ]
-    )
-
-    # illusion = HiddenOverlayIllusion(
+    # illusion = FlipIllusion(
     #     [
     #         Diffusion(device="cuda:0"),
     #         Diffusion(device="cuda:1"),
-    #         Diffusion(device="cuda:2"),
-    #         Diffusion(device="cuda:3"),
-    #         Diffusion(device="cuda:0"),
     #     ]
     # )
+
+    illusion = HiddenOverlayIllusion(
+        [
+            Diffusion(device="cuda:0"),
+            Diffusion(device="cuda:1"),
+            Diffusion(device="cuda:2"),
+            Diffusion(device="cuda:3"),
+            Diffusion(device="cuda:0"),
+        ]
+    )
 
     for _ in range(100) :
       with torch.no_grad():
@@ -825,19 +841,23 @@ if __name__ == "__main__":
         prompts = [
              "Oil painting of a Chicken",
              "professional portrait photograph of a gorgeous Norwegian girl in winter clothing with long wavy blonde hair, freckles, gorgeous symmetrical face, cute natural makeup, wearing elegant warm winter fashion clothing, ((standing outside))",
-             "A orange cute kitten in a cardboard box in times square",
-             "Walter white, oil painting, octane render, 8 0 s camera, portrait",
+             # "A orange cute kitten in a cardboard box in times square",
+             #"Walter white, oil painting, octane render, 8 0 s camera, portrait",
              "Oil painting of a cat",
              "Oil painting of Golden Retriever",
-             # "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
              "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
-             " mario 3d nintendo video game",
-             "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
+             #"Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
+             #" mario 3d nintendo video game",
+             #"Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
              # "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
-             "Still of jean - luc picard in star trek = the next generation ( 1 9 8 7 )",
-            "Pixel art sprite of a Golden Retriever",
-            "Pixel art mario"
+             #"Still of jean - luc picard in star trek = the next generation ( 1 9 8 7 )",
+             # "An intricate HB pencil sketch of a giraffe head",
+             # "An intricate HB pencil sketch of a penguin",
+            #"Pixel art sprite of a Golden Retriever",
+            #"mario"
         ]
+        
+    
 
         prompts = random_batch(prompts, illusion.num_derived_images)
         fansi_print(f'PROMPTS:\n{indentify(line_join(prompts),"    - ")}', 'cyan gray')
@@ -850,7 +870,7 @@ if __name__ == "__main__":
 
         illusion_pairs.append(images)
         display_image(horizontally_concatenated_images(images))
-        image_paths = rp.save_images(images)
+        image_paths = rp.save_images(list(images)+[horizontally_concatenated_images(as_numpy_images(images))])
         rp.fansi_print(
             f'SAVED IMAGES:\n{rp.indentify(rp.line_join(image_paths), "    • ")}',
             "green bold",
