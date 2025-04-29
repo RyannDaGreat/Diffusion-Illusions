@@ -121,12 +121,15 @@ if not 'get_pipeline' in vars():
 
 
 class Diffusion(nn.Module):
-    def __init__(self, checkpoint_path, device="mps", pipe=None):
+    def __init__(self, checkpoint_path, device=None, pipe=None):
         super().__init__()
         self.device = torch.device(device)
 
         if pipe is None:
             pipe = get_pipeline(checkpoint_path)
+
+        if device is None:
+            device = rp.select_torch_device(prefer_used=True)
 
         self.pipe         = pipe
         self.vae          = pipe.vae.to(self.device)
