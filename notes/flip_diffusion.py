@@ -174,7 +174,7 @@ class Diffusion(nn.Module):
         return output_embeddings
 
     @torch.no_grad
-    def encode_image(self, image):
+    def _encode_image(self, image):
         """ Takes in 3HW torch tensor with values between 0 and 1, returns latent CHW tensor """
 
         image = rp.as_torch_image(
@@ -186,12 +186,17 @@ class Diffusion(nn.Module):
         image = 2 * image - 1
         image = image.to(device=self.device)
 
-        latents = self.vae.encode(image).latent_dist.sample()
-        latents = 0.18215 * latents
+        latent = self.vae.encode(image).latent_dist.sample()
+        latent = 0.18215 * latent
 
-        latents = latents[0] #1CHW -> CHW
+        latent = latent[0] #1CHW -> CHW
 
-        return latents
+        return latent
+
+    def encode_image(self, image):
+        latent = self._encode_image(image)
+        latent = self.correct_encoding_order1(latent)
+        return latent
 
     @torch.no_grad
     def decode_latent(self, latent):
@@ -214,6 +219,14 @@ class Diffusion(nn.Module):
 
     def encode_images(self, images: list):
         return [self.encode_image(x) for x in images]
+
+    def correct_encoding_order1(self, latent):
+        print("CORRECTING")
+        e1=latent
+        d1=self.decode_latent(e1)
+        e2=self._encode_image(d1)
+        e0_linear = 2*e1 - e2
+        return e0_linear
 
     def pred_noise(self, latent, t, guidance_scale, text_embedding):
         latent=latent[None] #CHW -> 1CHW
@@ -475,7 +488,7 @@ def _reconcile_hidden_overlays_initial(Ta, Tb, Tc, Td, Tz, Lz, backlight):
     return [A, B, C, D, Z]
 
 
-def reconcile_hidden_overlays(Ta, Tb, Tc, Td, Tz, Lz=1, backlight=3):
+def reconcile_hidden_overlays(Ta, Tb, Tc, Td, Tz, Lz=1.5, backlight=3):
     """
     Refined estimate of A, B, C, D, Z by gradient steps starting from closed-form initialization.
     Math done with mathematica + chatGPT: https://chatgpt.com/share/680fbe46-239c-8006-89c7-87f32a381c5c
@@ -635,18 +648,18 @@ if __name__ == "__main__":
         )
 
         prompts = [
-             "Oil painting of Golden Retriever",
-             "Oil painting of a cat",
              "Oil painting of a Chicken",
              "professional portrait photograph of a gorgeous Norwegian girl in winter clothing with long wavy blonde hair, freckles, gorgeous symmetrical face, cute natural makeup, wearing elegant warm winter fashion clothing, ((standing outside))",
              #"A orange cute kitten in a cardboard box in times square",
-             #"Walter white, oil painting, octane render, 8 0 s camera, portrait",
+             "Walter white, oil painting, octane render, 8 0 s camera, portrait",
+             "Oil painting of a cat",
+             "Oil painting of Golden Retriever",
              #"Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
              # "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
              #" mario 3d nintendo video game",
              #"Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
              #"Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
-             "Still of jean - luc picard in star trek = the next generation ( 1 9 8 7 )",
+             #"Still of jean - luc picard in star trek = the next generation ( 1 9 8 7 )",
             #"Pixel art sprite of a Golden Retriever",
             #"Pixel art mario"
         ]
