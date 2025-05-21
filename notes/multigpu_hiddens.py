@@ -262,9 +262,9 @@ class Diffusion(nn.Module):
     @torch.no_grad()
     def ddim_inversion(self, image, num_steps: int = 50) -> torch.Tensor:
         # This function is NOT thread safe if used concurrently on the same GPU due to the TemporarilySetAttr
-        with rp.TemporarilySetAttr(self.pipe, scheduler=self.inverse_scheduler):
-            latents = self.encode_image(image)[None]
+        latents = self.encode_image(image)[None]
 
+        with rp.TemporarilySetAttr(self.pipe, scheduler=self.inverse_scheduler):
             inv_latents, _ = self.pipe(
                 prompt="",
                 negative_prompt="",
@@ -277,8 +277,10 @@ class Diffusion(nn.Module):
                 latents=latents,
             )
 
-        return inv_latents
+        inv_latent = inv_latents[0]
+        return inv_latent
 
+    @torch.no_grad()
     def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5, latents=None):
         text_embeddings = [self.get_text_embedding(x) for x in prompts]
 
@@ -301,6 +303,20 @@ class Diffusion(nn.Module):
         all_images = rp.as_numpy_images(all_images)
 
         return all_images
+
+def demo_ddim_inversion():
+    diffusion=Diffusion()
+    image=load_image('https://upload.wikimedia.org/wikipedia/en/7/7d/Lenna_%28test_image%29.png')
+    latent=diffusion.ddim_inversion(image)
+    null_prompt_reconstructions = diffusion.sample(prompts=[''],                     latents=[latent], guidance_scale=3)
+    reconstructions             = diffusion.sample(prompts=['anime woman in a hat'], latents=[latent], guidance_scale=3)
+    display_image(
+        horizontally_concatenated_images(
+            image,
+            null_prompt_reconstructions[0],
+            reconstructions[0],
+        )
+    )
 
 class SeamlessGenerator(Diffusion):
 
