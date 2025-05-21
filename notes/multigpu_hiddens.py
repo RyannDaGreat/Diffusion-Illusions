@@ -5,6 +5,7 @@ import torch
 import torch.nn as nn
 from diffusers import DDIMInverseScheduler, DDIMScheduler, StableDiffusionPipeline
 from tqdm import tqdm
+
 import rp
 
 
@@ -34,7 +35,7 @@ def get_velocity(
     timestep,
     alphas_cumprod,
 ):
-    
+
     alpha_prod = alphas_cumprod[timestep]
     beta_prod  = 1 - alpha_prod
     sqrt_alpha_prod = alpha_prod**0.5
@@ -53,7 +54,7 @@ def get_epsilon(
 ):
     # Given the model might be trained on different objectives (predicting noise, clean samples, or v_prediction)
     # this function extracts the noise implicitly preidcted by it
-    
+
     alpha_prod = alphas_cumprod[timestep]
     beta_prod  = 1 - alpha_prod
     sqrt_alpha_prod = alpha_prod**0.5
@@ -77,7 +78,7 @@ def get_clean_sample(
     alphas_cumprod,
     pred_type,
 ):
-    
+
     alpha_prod = alphas_cumprod[timestep]
     beta_prod  = 1 - alpha_prod
     sqrt_alpha_prod = alpha_prod**0.5
@@ -144,11 +145,11 @@ class Diffusion(nn.Module):
 
         self.uncond_text = ""
         self.checkpoint_path = checkpoint_path
-        
+
     @property
     def timesteps(self):
         return self.scheduler.timesteps
-    
+
     @property
     def alphas_cumprod(self):
         return self.scheduler.alphas_cumprod
@@ -189,7 +190,7 @@ class Diffusion(nn.Module):
         )  # If given a numpy image or PIL image, convert it. Else, if given torch image, leaves it alone.
 
         image = image[None] # CHW -> 1CHW
-        
+
         image = 2 * image - 1
         image = image.to(device=self.device)
 
@@ -208,16 +209,16 @@ class Diffusion(nn.Module):
     @torch.no_grad
     def decode_latent(self, latent):
         """ Takes in latent CHW torch tensor, returns 3HW torch tensor with values between 0 and 1 """
-        
+
         latent = latent[None] #CHW -> 1CHW
 
         latent = latent / 0.18215
-        
+
         image = self.vae.decode(latent).sample
         image = (image / 2 + 0.5).clamp(0, 1)
-        
+
         image = image[0] #1CHW -> CHW
-        
+
         return image
 
     def decode_latents(self, latents: list):
@@ -237,7 +238,7 @@ class Diffusion(nn.Module):
 
     def pred_noise(self, latent, t, guidance_scale, text_embedding):
         latent=latent[None] #CHW -> 1CHW
-        
+
         model_input = torch.cat([latent] * 2)
         model_input = self.scheduler.scale_model_input(model_input, t)
 
@@ -248,7 +249,7 @@ class Diffusion(nn.Module):
         noise_pred_uncond, noise_pred_cond = noise_pred.chunk(2)
         noise_pred_guidance = noise_pred_cond - noise_pred_uncond
         noise_pred = noise_pred_uncond + guidance_scale * noise_pred_guidance
-        
+
         noise_pred=noise_pred[0] #1CHW -> CHW
 
         return noise_pred
@@ -290,12 +291,12 @@ class Diffusion(nn.Module):
         for t in tqdm(self.timesteps):
             for i, (latent, text_embedding) in enumerate(zip(latents, text_embeddings)):
                 noise_pred = self.pred_noise(latent, t, guidance_scale, text_embedding)
-                
+
                 latent = self.scheduler.step(noise_pred, t, latent).prev_sample
                 latents[i]=latent
 
         all_images = self.decode_latents(latents)
-        
+
         #Convert from CHW torch tensors to HWC numpy arrays
         all_images = rp.as_numpy_images(all_images)
 
@@ -326,20 +327,20 @@ class SeamlessGenerator(Diffusion):
 
         for t in tqdm(self.timesteps):
             for i, (latent, text_embedding) in enumerate(zip(latents, text_embeddings)):
-                
+
                 #Randomly shift the image
                 latent, (dx, dy) = self.random_roll(latent, do_x=do_x, do_y=do_y)
 
                 noise_pred = self.pred_noise(latent, t, guidance_scale, text_embedding)
                 latent = self.scheduler.step(noise_pred, t, latent).prev_sample
-                
+
                 #Put it back again
                 latent = self.roll_image(latent, dx=-dx, dy=-dy)
-                
+
                 latents[i]=latent
 
         all_images = self.decode_latents(latents)
-        
+
         #Convert from CHW torch tensors to HWC numpy arrays
         all_images = rp.as_numpy_images(all_images)
 
@@ -359,7 +360,7 @@ class SeamlessGenerator(Diffusion):
 
 class ImageFilterDiffusion(Diffusion):
     def apply_image_func_to_clean_latent(self, func, clean_latent):
-        """ 
+        """
         Apply an image function to a non-noisy latent (func is a function operating on a 3x512x512 torch tensor with values between 0 and 1)
         """
         image = self.decode_latent(clean_latent)
@@ -368,7 +369,7 @@ class ImageFilterDiffusion(Diffusion):
         return modified_latent
 
     def apply_image_func_to_noisy_latent(self, func, noisy_latent, noise_pred, t):
-        """ 
+        """
         Apply an image function (func is a function operating on a 3x512x512 torch tensor with values between 0 and 1)
         to a noisy latent, gracefully - only applying it to the clean portion
         """
@@ -425,12 +426,12 @@ class ImageFilterDiffusion(Diffusion):
                     alphas_cumprod = self.alphas_cumprod,
                 )
                 rp.display_image(self.decode_latent(clean_pred))
-                
+
                 latent = self.scheduler.step(noise_pred, t, latent).prev_sample
                 latents[i] = latent
 
         all_images = self.decode_latents(latents)
-        
+
         #Convert from CHW torch tensors to HWC numpy arrays
         all_images = rp.as_numpy_images(all_images)
 
@@ -452,7 +453,7 @@ class PixelArtDiffusion(ImageFilterDiffusion):
         image = (image * QUANT).round()/QUANT
         image = rp.torch_resize_image(image, PIXEL_SIZE, interp='nearest')
         return image
-    
+
 class DiffusionIllusion:
     def __init__(self, diffusions: list[Diffusion], parallel=True):
         assert len(diffusions) == self.num_derived_images, f'Expect to have one Diffusion per target, but {len(diffusions)} != {self.num_derived_images}'
@@ -463,11 +464,11 @@ class DiffusionIllusion:
     @property
     def primary_diffusion(self):
         return self.diffusions[0]
-    
+
     def reconcile_targets(self, *images):
         """ This function is responsible for approximating any primes needed then creating their approx derived images, and returning those derived images """
         raise NotImplementedError
-    
+
     @property
     def num_derived_images(self):
         return len(inspect.signature(self.reconcile_targets).parameters)
@@ -483,8 +484,8 @@ class DiffusionIllusion:
         def decode(diffusion, latent):
             return diffusion.decode_latent(latent)
         return rp.par_map(decode, self.diffusions, latents, num_threads=self.num_threads)
-    
-    
+
+
     def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5):
         assert len(prompts) == self.num_derived_images, f'len(prompts)={len(prompts)}  !=  num_derived_images={self.num_derived_images}'
 
@@ -499,14 +500,14 @@ class DiffusionIllusion:
         latents = [
             torch.randn(4, 64, 64)
         ] * len(prompts)
-        
+
         #Set the devices properly
         latents = [
             latent.to(diffusion.device, torch.float32)
             for latent, diffusion in zip(latents, self.diffusions)
         ]
 
-        
+
         for diffusion in self.diffusions:
             diffusion.scheduler.set_timesteps(num_steps)
 
@@ -536,7 +537,7 @@ class DiffusionIllusion:
                 image_pred = image_pred.clamp(0,1)
 
                 return noise_pred, clean_pred, image_pred
-            
+
             preds = rp.par_map(pred, latents, text_embeddings, self.diffusions, num_threads=self.num_threads)
 
             noise_preds, clean_preds, image_preds = zip(*preds)
@@ -545,7 +546,7 @@ class DiffusionIllusion:
             assert all(old.device==new.device for old, new in zip(image_preds, derived_images)), 'self.reconcile_targets should NOT change the devices of the images!'
 
             derived_clean_preds = self.encode_images_in_parallel(derived_images)
-            
+
             #TRY: Shuffle noise components...what happens?
             #noise_preds = [x.to(y.device) for x,y in zip(shuffled(noise_preds),noise_preds)] #For hidden overlays, shuffle noises...
 
@@ -568,7 +569,7 @@ class DiffusionIllusion:
                 latents[i]=latent
 
         all_images = self.decode_latents_in_parallel(latents)
-        
+
         #Convert from CHW torch tensors to HWC numpy arrays
         all_images = rp.as_numpy_images(all_images)
 
@@ -614,13 +615,13 @@ def reconcile_hidden_overlays(Ta, Tb, Tc, Td, Tz, Lz=3, backlight=3):
     """
     Refined estimate of A, B, C, D, Z by gradient steps starting from closed-form initialization.
     Math done with mathematica + chatGPT: https://chatgpt.com/share/680fbe46-239c-8006-89c7-87f32a381c5c
-    
+
     Note: With a higher backlight value, you can get better accuracy for free!
     HOWEVER: There's a tradeoff: Higher backlight values don't model real-world overlays as well, as innacuracies in the printing process are exacerbated a lot
         A backlight value of 3 is the most you'd really want to use...backlight value of 2 is safe for real-world use
-    
+
     NOTE: Lz is the Loss-coefficient for image Z. Basically, if it's higher - we prioritize the accuracy of Z more than the accuracy of A,B,C,D
-    If Lz=0, then it returns exactly A=Ta,B=Tb,C=Tc,D=Td - not useful, resulting in no change. 
+    If Lz=0, then it returns exactly A=Ta,B=Tb,C=Tc,D=Td - not useful, resulting in no change.
 
     Hidden overlay illusion:
     Given 5 target images, we want to solve for prime images A,B,C,D
@@ -629,7 +630,7 @@ def reconcile_hidden_overlays(Ta, Tb, Tc, Td, Tz, Lz=3, backlight=3):
         |  GIVEN:
         |  Ta Tb Tc Td Tz, Lz (Lz is a coefficient for how much we relatively care about the Z reconstruction)
         |  (Here, Ta for example is an atomic variable - it's not like T * a, it's just T_a shorthand)
-        | 
+        |
         |  RELATIONSHIPS TO A,B,C,D,Z:
         |  A = Ta
         |  B = Tb
@@ -662,7 +663,7 @@ def reconcile_hidden_overlays(Ta, Tb, Tc, Td, Tz, Lz=3, backlight=3):
     list of float
         [A, B, C, D, Z] refined estimates.
     """
-    
+
     #We use an initial estimate to speed it up. We could start from just A=Ta, B=Tb, C=Tc, D=Td but
     #   that's slower than using a good first guess, provided with the below function
     A, B, C, D, _ = _reconcile_hidden_overlays_initial(Ta, Tb, Tc, Td, Tz, Lz, backlight=backlight)
@@ -682,13 +683,13 @@ def reconcile_hidden_overlays(Ta, Tb, Tc, Td, Tz, Lz=3, backlight=3):
         B -= step_size * loss_grad_B
         C -= step_size * loss_grad_C
         D -= step_size * loss_grad_D
-        
+
         #Just make sure there's no NaN pixels, or pixels outside the range [0,1]
         A = rp.r._nan_to_num(rp.r._clip(A,0,1))
         B = rp.r._nan_to_num(rp.r._clip(B,0,1))
         C = rp.r._nan_to_num(rp.r._clip(C,0,1))
         D = rp.r._nan_to_num(rp.r._clip(D,0,1))
-        
+
 
     Z = backlight * A * B * C * D
     return [A, B, C, D, Z]
@@ -723,7 +724,7 @@ def demo_reconcile_hidden_overlays():
     )
 
 class FlipIllusion(DiffusionIllusion):
-    
+
     def reconcile_targets(self, image_a, image_b):
         """ This function is responsible for approximating any primes needed then creating their approx derived images, and returning those derived images """
         def flip_image(image):
@@ -734,7 +735,7 @@ class FlipIllusion(DiffusionIllusion):
         new_image_a = merged_image
         new_image_b = flip_image(merged_image).to(image_b.device)
 
-        if toc()>5:
+        if rp.toc()>5:
             rp.display_image(
                 rp.tiled_images(
                     rp.as_numpy_images(
@@ -743,16 +744,16 @@ class FlipIllusion(DiffusionIllusion):
                     length=2,
                 )
             )
-            tic()
+            rp.tic()
 
         return [new_image_a, new_image_b]
-    
+
 
 class HiddenOverlayIllusion(DiffusionIllusion):
-    
+
     def reconcile_targets(self, image_a, image_b, image_c, image_d, image_z):
         """ This function is responsible for approximating any primes needed then creating their approx derived images, and returning those derived images """
-        
+
         new_image_a, new_image_b, new_image_c, new_image_d, new_image_z = reconcile_hidden_overlays(
             image_a.to(image_a.device),
             image_b.to(image_a.device),
@@ -766,10 +767,10 @@ class HiddenOverlayIllusion(DiffusionIllusion):
         new_image_c = new_image_c.to(image_c.device)
         new_image_d = new_image_d.to(image_d.device)
         new_image_z = new_image_z.to(image_z.device)
-        
+
         output = [new_image_a, new_image_b, new_image_c, new_image_d, new_image_z]
 
-        if toc()>5:
+        if rp.toc()>5:
             rp.display_image(
                 rp.tiled_images(
                     rp.as_numpy_images(
@@ -778,11 +779,11 @@ class HiddenOverlayIllusion(DiffusionIllusion):
                     length=len(output),
                 )
             )
-            tic()
-        
+            rp.tic()
+
         return output
 
-    
+
 if __name__ == "__main__":
     if not 'illusion_pairs' in vars():
         illusion_pairs = []
@@ -833,11 +834,11 @@ if __name__ == "__main__":
             #"Pixel art sprite of a Golden Retriever",
             #"mario"
         ]
-        
-    
 
-        prompts = random_batch(prompts, illusion.num_derived_images)
-        fansi_print(f'PROMPTS:\n{indentify(line_join(prompts),"    - ")}', 'cyan gray')
+
+
+        prompts = rp.random_batch(prompts, illusion.num_derived_images)
+        rp.fansi_print(f'PROMPTS:\n{rp.indentify(rp.line_join(prompts),"    - ")}', 'cyan gray')
 
         images = illusion.sample(
             prompts,
@@ -846,9 +847,11 @@ if __name__ == "__main__":
         )
 
         illusion_pairs.append(images)
-        display_image(horizontally_concatenated_images(images))
-        image_paths = rp.save_images(list(images)+[horizontally_concatenated_images(as_numpy_images(images))])
+        rp.display_image(rp.horizontally_concatenated_images(images))
+        image_paths = rp.save_images(list(images)+[rp.horizontally_concatenated_images(rp.as_numpy_images(images))])
         rp.fansi_print(
             f'SAVED IMAGES:\n{rp.indentify(rp.line_join(image_paths), "    • ")}',
             "green bold",
         )
+
+
