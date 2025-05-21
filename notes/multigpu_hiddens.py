@@ -1,8 +1,9 @@
-from diffusers import StableDiffusionPipeline
-from diffusers import DDIMScheduler
+import inspect
+from functools import cached_property
+
 import torch
 import torch.nn as nn
-import inspect
+from diffusers import DDIMInverseScheduler, DDIMScheduler, StableDiffusionPipeline
 from tqdm import tqdm
 import rp
 
@@ -251,6 +252,31 @@ class Diffusion(nn.Module):
         noise_pred=noise_pred[0] #1CHW -> CHW
 
         return noise_pred
+
+
+    @cached_property
+    def inverse_scheduler(self):
+        return DDIMInverseScheduler.from_pretrained(self.checkpoint_path, subfolder='scheduler')
+
+    @torch.no_grad()
+    def ddim_inversion(self, image, num_steps: int = 50) -> torch.Tensor:
+        # This function is NOT thread safe if used concurrently on the same GPU due to the TemporarilySetAttr
+        with rp.TemporarilySetAttr(self.pipe, scheduler=self.inverse_scheduler):
+            latents = self.encode_image(image)
+
+            inv_latents, _ = self.pipe(
+                prompt="",
+                negative_prompt="",
+                guidance_scale=1.0,
+                width=rp.get_image_width(image),
+                height=rp.get_image_height(image),
+                output_type="latent",
+                return_dict=False,
+                num_inference_steps=num_steps,
+                latents=latents,
+            )
+
+        return inv_latents
 
     def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5):
         text_embeddings = [self.get_text_embedding(x) for x in prompts]
