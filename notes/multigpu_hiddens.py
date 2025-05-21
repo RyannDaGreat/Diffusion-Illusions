@@ -372,10 +372,11 @@ class PixelArtDiffusion(ImageFilterDiffusion):
         return image
     
 class DiffusionIllusion:
-    def __init__(self, diffusions: list[Diffusion]):
+    def __init__(self, diffusions: list[Diffusion], parallel=True):
         assert len(diffusions) == self.num_derived_images, f'Expect to have one Diffusion per target, but {len(diffusions)} != {self.num_derived_images}'
 
         self.diffusions = diffusions
+        self.num_threads = len(diffusions) if parallel else 0
 
     @property
     def primary_diffusion(self):
@@ -393,13 +394,13 @@ class DiffusionIllusion:
         assert len(images) == self.num_derived_images
         def encode(diffusion, image):
             return diffusion.encode_image(image)
-        return rp.par_map(encode, self.diffusions, images)
+        return rp.par_map(encode, self.diffusions, images, num_threads=self.num_threads)
 
     def decode_latents_in_parallel(self, latents):
         assert len(latents) == self.num_derived_images
         def decode(diffusion, latent):
             return diffusion.decode_latent(latent)
-        return rp.par_map(decode, self.diffusions, latents)
+        return rp.par_map(decode, self.diffusions, latents, num_threads=self.num_threads)
     
     
     def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5):
@@ -454,7 +455,7 @@ class DiffusionIllusion:
 
                 return noise_pred, clean_pred, image_pred
             
-            preds = rp.par_map(pred, latents, text_embeddings, self.diffusions)
+            preds = rp.par_map(pred, latents, text_embeddings, self.diffusions, num_threads=self.num_threads)
 
             noise_preds, clean_preds, image_preds = zip(*preds)
 
@@ -705,6 +706,7 @@ if __name__ == "__main__":
     if not 'illusion_pairs' in vars():
         illusion_pairs = []
 
+    ##FLIPPY ILLUSIONS
     # illusion = FlipIllusion(
     #     [
     #         Diffusion(device="cuda:0"),
@@ -712,14 +714,18 @@ if __name__ == "__main__":
     #     ]
     # )
 
+    #HIDDEN OVERLAY ILLUSIONS
+    devices = ['cuda:0', 'cuda:1', 'cuda:2', 'cuda:3', 'cuda:0'] ; parallel=True  #RLab GPU's
+    devices = ['mps'   , 'mps'   , 'mps'   , 'mps'   , 'mps'   ] ; parallel=False #Macbook
     illusion = HiddenOverlayIllusion(
         [
-            Diffusion(device="cuda:0"),
-            Diffusion(device="cuda:1"),
-            Diffusion(device="cuda:2"),
-            Diffusion(device="cuda:3"),
-            Diffusion(device="cuda:0"),
-        ]
+            Diffusion(device=devices[0]),
+            Diffusion(device=devices[1]),
+            Diffusion(device=devices[2]),
+            Diffusion(device=devices[3]),
+            Diffusion(device=devices[4]),
+        ],
+        parallel=parallel,
     )
 
     for _ in range(100) :
@@ -755,7 +761,7 @@ if __name__ == "__main__":
         images = illusion.sample(
             prompts,
             guidance_scale=10,
-            num_steps=100,
+            num_steps=20,
         )
 
         illusion_pairs.append(images)
@@ -764,5 +770,4 @@ if __name__ == "__main__":
         rp.fansi_print(
             f'SAVED IMAGES:\n{rp.indentify(rp.line_join(image_paths), "    • ")}',
             "green bold",
-
         )
