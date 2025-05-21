@@ -275,6 +275,62 @@ class Diffusion(nn.Module):
 
         return all_images
 
+class SeamlessGenerator(Diffusion):
+
+    @staticmethod
+    def roll_image(image, *, dx, dy):
+        return image.roll(dy, 1).roll(dx, 2)
+
+    @staticmethod
+    def random_roll(image, *, do_x:bool, do_y:bool):
+        C, H, W = image.shape
+        dx = rp.random_index(W) * do_x
+        dy = rp.random_index(H) * do_y
+        return SeamlessGenerator.roll_image(image, dx=dx, dy=dy), (dx, dy)
+
+    @torch.no_grad
+    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5, do_x:bool=True, do_y:bool=True):
+        text_embeddings = [self.get_text_embedding(x) for x in prompts]
+
+        latents = [
+            torch.randn(4, 64, 64).to(self.device, torch.float32) for x in prompts
+        ]
+
+        self.scheduler.set_timesteps(num_steps, device=self.device)
+
+        for t in tqdm(self.timesteps):
+            for i, (latent, text_embedding) in enumerate(zip(latents, text_embeddings)):
+                
+                #Randomly shift the image
+                latent, (dx, dy) = self.random_roll(latent, do_x=do_x, do_y=do_y)
+
+                noise_pred = self.pred_noise(latent, t, guidance_scale, text_embedding)
+                latent = self.scheduler.step(noise_pred, t, latent).prev_sample
+                
+                #Put it back again
+                latent = self.roll_image(latent, dx=-dx, dy=-dy)
+                
+                latents[i]=latent
+
+        all_images = self.decode_latents(latents)
+        
+        #Convert from CHW torch tensors to HWC numpy arrays
+        all_images = rp.as_numpy_images(all_images)
+
+        #TODO: Decode the image with multiple shifts, and use laplacian blending to stitch them together
+        #Becuase, right now most of the seams come from the decoder
+
+        return all_images
+
+    @staticmethod
+    def demo():
+        g=SeamlessGenerator()
+        ans=g.sample(['wood texture'],do_y=True,do_x=True,num_steps=10)
+        image=grid_concatenated_images([list(ans)*3]*3)
+        print(save_image(image))
+        display_image(image)
+
+
 class ImageFilterDiffusion(Diffusion):
     def apply_image_func_to_clean_latent(self, func, clean_latent):
         """ 
@@ -640,7 +696,6 @@ def demo_reconcile_hidden_overlays():
         block=False,
     )
 
-import torch
 class FlipIllusion(DiffusionIllusion):
     
     def reconcile_targets(self, image_a, image_b):
