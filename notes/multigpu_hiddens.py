@@ -263,7 +263,7 @@ class Diffusion(nn.Module):
     def ddim_inversion(self, image, num_steps: int = 50) -> torch.Tensor:
         # This function is NOT thread safe if used concurrently on the same GPU due to the TemporarilySetAttr
         with rp.TemporarilySetAttr(self.pipe, scheduler=self.inverse_scheduler):
-            latents = self.encode_image(image)
+            latents = self.encode_image(image)[None]
 
             inv_latents, _ = self.pipe(
                 prompt="",
@@ -279,10 +279,10 @@ class Diffusion(nn.Module):
 
         return inv_latents
 
-    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5):
+    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5, latents=None):
         text_embeddings = [self.get_text_embedding(x) for x in prompts]
 
-        latents = [
+        latents = latents if latents is not None else [
             torch.randn(4, 64, 64).to(self.device, torch.float32) for x in prompts
         ]
 
@@ -316,10 +316,10 @@ class SeamlessGenerator(Diffusion):
         return SeamlessGenerator.roll_image(image, dx=dx, dy=dy), (dx, dy)
 
     @torch.no_grad
-    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5, do_x:bool=True, do_y:bool=True):
+    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5, latents=None, do_x:bool=True, do_y:bool=True):
         text_embeddings = [self.get_text_embedding(x) for x in prompts]
 
-        latents = [
+        latents = latents if latents is not None else [
             torch.randn(4, 64, 64).to(self.device, torch.float32) for x in prompts
         ]
 
@@ -397,10 +397,10 @@ class ImageFilterDiffusion(Diffusion):
         #Basic filter - should be overridden
         return image
 
-    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5):
+    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5, latents=None):
         text_embeddings = [self.get_text_embedding(x) for x in prompts]
 
-        latents = [
+        latents = latents if latents is not None else [
             torch.randn(4, 64, 64).to(self.device, torch.float32) for x in prompts
         ]
 
@@ -486,18 +486,18 @@ class DiffusionIllusion:
         return rp.par_map(decode, self.diffusions, latents, num_threads=self.num_threads)
 
 
-    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5):
+    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5, latents=None):
         assert len(prompts) == self.num_derived_images, f'len(prompts)={len(prompts)}  !=  num_derived_images={self.num_derived_images}'
 
         text_embeddings = [diffusion.get_text_embedding(prompt) for diffusion, prompt in zip(self.diffusions, prompts)] #This is vary fast
 
         #UNCOMMENT TO USE DIFFERENT INITIAL NOISES
-        # latents = [
+        # latents = latents if latents is not None else [
         #     torch.randn(4, 64, 64) for x in prompts
         # ]
 
         #UNCOMMENT TO USE SAME INITIAL NOISES
-        latents = [
+        latents = latents if latents is not None else [
             torch.randn(4, 64, 64)
         ] * len(prompts)
 
