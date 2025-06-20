@@ -306,12 +306,12 @@ class Diffusion(nn.Module):
 
 def demo_ddim_inversion():
     diffusion=Diffusion()
-    image=load_image('https://upload.wikimedia.org/wikipedia/en/7/7d/Lenna_%28test_image%29.png')
+    image=rp.load_image('https://upload.wikimedia.org/wikipedia/en/7/7d/Lenna_%28test_image%29.png')
     latent=diffusion.ddim_inversion(image)
     null_prompt_reconstructions = diffusion.sample(prompts=[''],                     latents=[latent], guidance_scale=3)
     reconstructions             = diffusion.sample(prompts=['anime woman in a hat'], latents=[latent], guidance_scale=3)
-    display_image(
-        horizontally_concatenated_images(
+    rp.display_image(
+        rp.horizontally_concatenated_images(
             image,
             null_prompt_reconstructions[0],
             reconstructions[0],
@@ -369,9 +369,9 @@ class SeamlessGenerator(Diffusion):
     def demo():
         g=SeamlessGenerator()
         ans=g.sample(['wood texture'],do_y=True,do_x=True,num_steps=10)
-        image=grid_concatenated_images([list(ans)*3]*3)
-        print(save_image(image))
-        display_image(image)
+        image=rp.grid_concatenated_images([list(ans)*3]*3)
+        print(rp.save_image(image))
+        rp.display_image(image)
 
 
 class ImageFilterDiffusion(Diffusion):
@@ -482,8 +482,11 @@ class DiffusionIllusion:
         return self.diffusions[0]
 
     def reconcile_targets(self, *images):
-        """ This function is responsible for approximating any primes needed then creating their approx derived images, and returning those derived images """
-        raise NotImplementedError
+        """ 
+        This function is responsible for approximating any primes needed then creating their approx derived images, and returning those derived images 
+        This default, null-illusion implementation simply returns the input images with no changes
+        """
+        return list(images)
 
     @property
     def num_derived_images(self):
@@ -804,70 +807,82 @@ if __name__ == "__main__":
     if not 'illusion_pairs' in vars():
         illusion_pairs = []
 
-    ##FLIPPY ILLUSIONS
+    #FOR ITERM2 REMOTE ACCESS
+    rp.display_image = rp.display_image_in_terminal_imgcat
+
+    ##SELECT DEVICES BASED ON YOUR SYSTEM
+    devices = ['cuda:0', 'cuda:1', 'cuda:2', 'cuda:3', 'cuda:0'] ; parallel=True  #RLab GPU's
+    #devices = ['mps'   , 'mps'   , 'mps'   , 'mps'   , 'mps'   ] ; parallel=False #Macbook
+
+    #REGULAR DIFFUSION
+    illusion = DiffusionIllusion(
+        [
+            Diffusion(device=devices[0]),
+        ]
+    )
+
+    # #FLIPPY ILLUSIONS
     # illusion = FlipIllusion(
     #     [
-    #         Diffusion(device="cuda:0"),
-    #         Diffusion(device="cuda:1"),
+    #         Diffusion(device=devices[0]),
+    #         Diffusion(device=devices[1]),
     #     ]
     # )
 
-    #HIDDEN OVERLAY ILLUSIONS
-    devices = ['cuda:0', 'cuda:1', 'cuda:2', 'cuda:3', 'cuda:0'] ; parallel=True  #RLab GPU's
-    devices = ['mps'   , 'mps'   , 'mps'   , 'mps'   , 'mps'   ] ; parallel=False #Macbook
-    illusion = HiddenOverlayIllusion(
-        [
-            Diffusion(device=devices[0]),
-            Diffusion(device=devices[1]),
-            Diffusion(device=devices[2]),
-            Diffusion(device=devices[3]),
-            Diffusion(device=devices[4]),
-        ],
-        parallel=parallel,
-    )
+    # #HIDDEN OVERLAY ILLUSIONS
+    # illusion = HiddenOverlayIllusion(
+    #     [
+    #         Diffusion(device=devices[0]),
+    #         Diffusion(device=devices[1]),
+    #         Diffusion(device=devices[2]),
+    #         Diffusion(device=devices[3]),
+    #         Diffusion(device=devices[4]),
+    #     ],
+    #     parallel=parallel,
+    # )
 
-    for _ in range(100) :
-      with torch.no_grad():
-        torch.manual_seed(38)
-        rp.random.seed(30)
+    for _ in range(100):
+        with torch.no_grad():
 
+            prompts = [
+                "Oil painting of a Chicken",
+                "professional portrait photograph of a gorgeous Norwegian girl in winter clothing with long wavy blonde hair, freckles, gorgeous symmetrical face, cute natural makeup, wearing elegant warm winter fashion clothing, ((standing outside))",
+                # "A orange cute kitten in a cardboard box in times square",
+                # "Walter white, oil painting, octane render, 8 0 s camera, portrait",
+                "Oil painting of a cat",
+                "Oil painting of Golden Retriever",
+                "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
+                # "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
+                # " mario 3d nintendo video game",
+                # "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
+                # "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
+                # "Still of jean - luc picard in star trek = the next generation ( 1 9 8 7 )",
+                # "An intricate HB pencil sketch of a giraffe head",
+                # "An intricate HB pencil sketch of a penguin",
+                # "Pixel art sprite of a Golden Retriever",
+                # "mario"
+            ]
 
-        prompts = [
-             "Oil painting of a Chicken",
-             "professional portrait photograph of a gorgeous Norwegian girl in winter clothing with long wavy blonde hair, freckles, gorgeous symmetrical face, cute natural makeup, wearing elegant warm winter fashion clothing, ((standing outside))",
-             # "A orange cute kitten in a cardboard box in times square",
-             #"Walter white, oil painting, octane render, 8 0 s camera, portrait",
-             "Oil painting of a cat",
-             "Oil painting of Golden Retriever",
-             "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
-             #"Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
-             #" mario 3d nintendo video game",
-             #"Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
-             # "Hatsune miku, gorgeous, amazing, elegant, intricate, highly detailed, digital painting, artstation, concept art, sharp focus, illustration, art by ross tran",
-             #"Still of jean - luc picard in star trek = the next generation ( 1 9 8 7 )",
-             # "An intricate HB pencil sketch of a giraffe head",
-             # "An intricate HB pencil sketch of a penguin",
-            #"Pixel art sprite of a Golden Retriever",
-            #"mario"
-        ]
+            prompts = rp.random_batch(prompts, illusion.num_derived_images)
+            rp.fansi_print(
+                f'PROMPTS:\n{rp.indentify(rp.line_join(prompts),"    - ")}', "cyan gray"
+            )
 
+            images = illusion.sample(
+                prompts,
+                guidance_scale=10,
+                num_steps=20,
+            )
 
-
-        prompts = rp.random_batch(prompts, illusion.num_derived_images)
-        rp.fansi_print(f'PROMPTS:\n{rp.indentify(rp.line_join(prompts),"    - ")}', 'cyan gray')
-
-        images = illusion.sample(
-            prompts,
-            guidance_scale=10,
-            num_steps=20,
-        )
-
-        illusion_pairs.append(images)
-        rp.display_image(rp.horizontally_concatenated_images(images))
-        image_paths = rp.save_images(list(images)+[rp.horizontally_concatenated_images(rp.as_numpy_images(images))])
-        rp.fansi_print(
-            f'SAVED IMAGES:\n{rp.indentify(rp.line_join(image_paths), "    • ")}',
-            "green bold",
-        )
+            illusion_pairs.append(images)
+            rp.display_image(rp.horizontally_concatenated_images(images))
+            image_paths = rp.save_images(
+                list(images)
+                + [rp.horizontally_concatenated_images(rp.as_numpy_images(images))]
+            )
+            rp.fansi_print(
+                f'SAVED IMAGES:\n{rp.indentify(rp.line_join(image_paths), "    • ")}',
+                "green bold",
+            )
 
 
