@@ -986,31 +986,31 @@ class DiffusionIllusion:
             assert len(diffusion.scheduler.timesteps) == num_steps
             # diffusion.scheduler.timesteps = rp.resize_list(rp.resize_list(diffusion.scheduler.timesteps, num_steps//4),num_steps)
 
-            # N=3
-            # diffusion.scheduler.timesteps = torch.cat(
-            #     tuple(
-            #         x.flip(0) if i!=N-1 else x
-            #         for i,x in enumerate(rp.split_into_n_sublists(diffusion.scheduler.timesteps, N))
-            #     )
-            # )
+            N=7
+            diffusion.scheduler.timesteps = torch.cat(
+                tuple(
+                    x.flip(0) if i!=N-1 else x
+                    for i,x in enumerate(rp.split_into_n_sublists(diffusion.scheduler.timesteps, N))
+                )
+            )
 
 
 
-            zigzag=[0,1] #Default
-            zigzag=[0,.5,0,1] #Halfway Zigzag
-            zigzag = [
-                0 / 4,
-                1 / 4,
-                0 / 4,
-                2 / 4,
-                1 / 4,
-                3 / 4,
-                2 / 4,
-                4 / 4,
-            ]  # Halfway Zigzag
-            # zigzag=[1,0,1] #Weirdness - its bad
-            # zigzag=[0,1,0,1] #Complete Zigzag
-            diffusion.scheduler.timesteps = diffusion.scheduler.timesteps[index_linterp(num_steps,zigzag)]
+            # zigzag=[0,1] #Default
+            # zigzag=[0,.5,0,1] #Halfway Zigzag
+            # # zigzag = [
+            # #     0 / 4,
+            # #     1 / 4,
+            # #     0 / 4,
+            # #     2 / 4,
+            # #     1 / 4,
+            # #     3 / 4,
+            # #     2 / 4,
+            # #     4 / 4,
+            # # ]  # Halfway Zigzag
+            # # zigzag=[1,0,1] #Weirdness - its bad
+            # # zigzag=[0,1,0,1] #Complete Zigzag
+            # diffusion.scheduler.timesteps = diffusion.scheduler.timesteps[index_linterp(num_steps,zigzag)]
 
             assert len(diffusion.scheduler.timesteps) == num_steps
 
@@ -1311,32 +1311,32 @@ if __name__ == "__main__":
     devices = ['cuda:0', 'cuda:1', 'cuda:2', 'cuda:3', 'cuda:0'] ; parallel=True  #RLab GPU's
     #devices = ['mps'   , 'mps'   , 'mps'   , 'mps'   , 'mps'   ] ; parallel=False #Macbook
 
-    # #REGULAR DIFFUSION
-    # illusion = DiffusionIllusion(
-    #     [
-    #         Diffusion(device=devices[0]),
-    #     ]
-    # )
-
-    #FLIPPY ILLUSIONS
-    illusion = FlipIllusion(
+    #REGULAR DIFFUSION
+    illusion = DiffusionIllusion(
         [
             Diffusion(device=devices[0]),
-            Diffusion(device=devices[1]),
         ]
     )
 
-    # #HIDDEN OVERLAY ILLUSIONS
-    # illusion = HiddenOverlayIllusion(
+    # #FLIPPY ILLUSIONS
+    # illusion = FlipIllusion(
     #     [
     #         Diffusion(device=devices[0]),
     #         Diffusion(device=devices[1]),
-    #         Diffusion(device=devices[2]),
-    #         Diffusion(device=devices[3]),
-    #         Diffusion(device=devices[4]),
-    #     ],
-    #     parallel=parallel,
+    #     ]
     # )
+
+    #HIDDEN OVERLAY ILLUSIONS
+    illusion = HiddenOverlayIllusion(
+        [
+            Diffusion(device=devices[0]),
+            Diffusion(device=devices[1]),
+            Diffusion(device=devices[2]),
+            Diffusion(device=devices[3]),
+            Diffusion(device=devices[4]),
+        ],
+        parallel=parallel,
+    )
 
     for _ in range(100):
         with torch.no_grad():
@@ -1368,9 +1368,9 @@ if __name__ == "__main__":
             images = illusion.sample(
                 prompts,
                 guidance_scale=10,
-                # num_steps=20,
+                num_steps=20,
                 # num_steps=40,
-                num_steps=80,
+                # num_steps=80,
             )
 
             illusion_pairs.append(images)
