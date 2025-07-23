@@ -281,6 +281,95 @@ class Diffusion(nn.Module):
         return inv_latent
 
     @torch.no_grad()
+    def edict_inversion(self, image, prompt: str="", num_steps: int = 20, guidance_scale: float = 1.001) -> torch.Tensor:
+        """
+        Performs EDICT inversion using methods internal to this class.
+        Assumes self.pipe is a standard Diffusers pipeline.
+        MADE WITH GEMINI
+        """
+        # Add these methods to your class
+        import torch
+
+        #SETTINGS
+        self.mixing_coeff = 0.93
+        self.leapfrog_steps = True
+
+        def noise_mixing_layer(self, x: torch.Tensor, y: torch.Tensor):
+            """EDICT mixing operation for the reverse (inversion) process."""
+            y = (y - (1 - self.mixing_coeff) * x) / self.mixing_coeff
+            x = (x - (1 - self.mixing_coeff) * y) / self.mixing_coeff
+            return [x, y]
+
+        def _get_alpha_and_beta(self, t: torch.Tensor):
+            """Gets the cumulative alpha and beta for a given timestep t."""
+            # Assumes self.pipe.scheduler exists and is a DDIMScheduler
+            t_int = int(t)
+            alpha_prod = self.pipe.scheduler.alphas_cumprod[t_int] if t_int >= 0 else self.pipe.scheduler.final_alpha_cumprod
+            return alpha_prod, 1 - alpha_prod
+
+        def noise_step(self, base: torch.Tensor, model_input: torch.Tensor, model_output: torch.Tensor, timestep: torch.Tensor):
+            """Performs one step of the reverse ODE solve for EDICT."""
+            # Assumes self.pipe.scheduler exists
+            prev_timestep = timestep - self.pipe.scheduler.config.num_train_timesteps / self.pipe.scheduler.num_inference_steps
+            alpha_prod_t, beta_prod_t = _get_alpha_and_beta(self, timestep)
+            alpha_prod_t_prev, beta_prod_t_prev = _get_alpha_and_beta(self, prev_timestep)
+
+            a_t = (alpha_prod_t_prev / alpha_prod_t) ** 0.5
+            b_t = -a_t * (beta_prod_t**0.5) + beta_prod_t_prev**0.5
+
+            next_model_input = (base - b_t * model_output) / a_t
+            return model_input, next_model_input.to(base.dtype)
+
+
+        # 1. Setup
+        device = self.pipe.device
+        do_classifier_free_guidance = guidance_scale > 1.0
+
+        # 2. Encode image into latents
+        image_latents = self.encode_image(image)[None] # Using your existing encode_image method
+
+        # 3. Encode prompt
+        text_embeds = self.pipe._encode_prompt(
+            prompt, device, 1, do_classifier_free_guidance
+        )
+
+        # 4. Prepare timesteps for inversion
+        self.pipe.scheduler.set_timesteps(num_steps, device)
+        timesteps = self.pipe.scheduler.timesteps.flip(0) # Invert from T to 0
+
+        # 5. The EDICT inversion loop
+        coupled_latents = [image_latents.clone(), image_latents.clone()]
+        for i, t in enumerate(rp.eta(timesteps)):
+            coupled_latents = noise_mixing_layer(self, x=coupled_latents[0], y=coupled_latents[1])
+
+            # Leapfrog steps for stability
+            for j in range(2):
+                k = j ^ 1
+                if self.leapfrog_steps and i % 2 == 0:
+                    k, j = j, k
+                
+                model_input = coupled_latents[j]
+                base = coupled_latents[k]
+
+                # Predict the noise
+                latent_model_input = torch.cat([model_input] * 2) if do_classifier_free_guidance else model_input
+                noise_pred = self.pipe.unet(latent_model_input, t, encoder_hidden_states=text_embeds).sample
+
+                # Perform guidance
+                if do_classifier_free_guidance:
+                    noise_pred_uncond, noise_pred_text = noise_pred.chunk(2)
+                    noise_pred = noise_pred_uncond + guidance_scale * (noise_pred_text - noise_pred_uncond)
+                
+                # Perform the reverse EDICT step
+                base, model_input = noise_step(self,
+                    base=base, model_input=model_input, model_output=noise_pred, timestep=t,
+                )
+                coupled_latents[k] = model_input
+
+        # Return one of the resulting coupled latents
+        return coupled_latents[0][0]
+
+    @torch.no_grad()
     def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5, latents=None):
         text_embeddings = [self.get_text_embedding(x) for x in prompts]
 
@@ -886,3 +975,19 @@ if __name__ == "__main__":
             )
 
 
+@rp.globalize_locals
+def edict_inversion_demo():
+    diffusion=Diffusion()
+    image=load_image('https://upload.wikimedia.org/wikipedia/en/7/7d/Lenna_%28test_image%29.png')
+    #image=load_image('/Users/ryan/Downloads/download.jpeg')
+    #latent=diffusion.ddim_inversion(image,20)
+    latent=diffusion.edict_inversion(image,"",20)
+    null_prompt_reconstructions = diffusion.sample(prompts=[''],                     latents=[latent], guidance_scale=3)
+    reconstructions             = diffusion.sample(prompts=['anime woman in a hat'], latents=[latent], guidance_scale=3)
+    display_image(
+        horizontally_concatenated_images(
+            image,
+            null_prompt_reconstructions[0],
+            reconstructions[0],
+        )
+    )
