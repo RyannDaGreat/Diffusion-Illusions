@@ -410,6 +410,23 @@ def demo_ddim_inversion():
         )
     )
 
+@rp.globalize_locals
+def edict_inversion_demo():
+    diffusion=Diffusion()
+    image=load_image('https://upload.wikimedia.org/wikipedia/en/7/7d/Lenna_%28test_image%29.png')
+    #image=load_image('/Users/ryan/Downloads/download.jpeg')
+    #latent=diffusion.ddim_inversion(image,20)
+    latent=diffusion.edict_inversion(image,"",20)
+    null_prompt_reconstructions = diffusion.sample(prompts=[''],                     latents=[latent], guidance_scale=3)
+    reconstructions             = diffusion.sample(prompts=['anime woman in a hat'], latents=[latent], guidance_scale=3)
+    display_image(
+        horizontally_concatenated_images(
+            image,
+            null_prompt_reconstructions[0],
+            reconstructions[0],
+        )
+    )
+
 class SeamlessGenerator(Diffusion):
 
     @staticmethod
@@ -910,26 +927,28 @@ if __name__ == "__main__":
         illusion_pairs = []
 
     #FOR ITERM2 REMOTE ACCESS
-    rp.display_image = rp.display_image_in_terminal_imgcat
+    #rp.display_image = rp.display_image_in_terminal_imgcat
 
     ##SELECT DEVICES BASED ON YOUR SYSTEM
-    devices = ['cuda:0', 'cuda:1', 'cuda:2', 'cuda:3', 'cuda:0'] ; parallel=True  #RLab GPU's
-    #devices = ['mps'   , 'mps'   , 'mps'   , 'mps'   , 'mps'   ] ; parallel=False #Macbook
+    # devices = ['cuda:0', 'cuda:1', 'cuda:2', 'cuda:3', 'cuda:0'] ; parallel=True  #RLab GPU's
+    devices = ['mps'   , 'mps'   , 'mps'   , 'mps'   , 'mps'   ] ; parallel=False #Macbook
 
-    #REGULAR DIFFUSION
-    illusion = DiffusionIllusion(
-        [
-            Diffusion(device=devices[0]),
-        ]
-    )
-
-    # #FLIPPY ILLUSIONS
-    # illusion = FlipIllusion(
+    # #REGULAR DIFFUSION
+    # illusion = DiffusionIllusion(
     #     [
     #         Diffusion(device=devices[0]),
-    #         Diffusion(device=devices[1]),
-    #     ]
+    #     ],
+    #     parallel=parallel,
     # )
+
+    #FLIPPY ILLUSIONS
+    illusion = FlipIllusion(
+        [
+            Diffusion(device=devices[0]),
+            Diffusion(device=devices[1]),
+        ],
+        parallel=parallel,
+    )
 
     # #HIDDEN OVERLAY ILLUSIONS
     # illusion = HiddenOverlayIllusion(
@@ -942,7 +961,7 @@ if __name__ == "__main__":
     #     ],
     #     parallel=parallel,
     # )
-
+    
     for _ in range(100):
         with torch.no_grad():
 
@@ -986,21 +1005,3 @@ if __name__ == "__main__":
                 f'SAVED IMAGES:\n{rp.indentify(rp.line_join(image_paths), "    • ")}',
                 "green bold",
             )
-
-
-@rp.globalize_locals
-def edict_inversion_demo():
-    diffusion=Diffusion()
-    image=load_image('https://upload.wikimedia.org/wikipedia/en/7/7d/Lenna_%28test_image%29.png')
-    #image=load_image('/Users/ryan/Downloads/download.jpeg')
-    #latent=diffusion.ddim_inversion(image,20)
-    latent=diffusion.edict_inversion(image,"",20)
-    null_prompt_reconstructions = diffusion.sample(prompts=[''],                     latents=[latent], guidance_scale=3)
-    reconstructions             = diffusion.sample(prompts=['anime woman in a hat'], latents=[latent], guidance_scale=3)
-    display_image(
-        horizontally_concatenated_images(
-            image,
-            null_prompt_reconstructions[0],
-            reconstructions[0],
-        )
-    )
