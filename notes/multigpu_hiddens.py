@@ -1,3 +1,4 @@
+# 2025-07-23 17:13:20.349332
 import inspect
 from functools import cached_property
 
@@ -281,7 +282,7 @@ class Diffusion(nn.Module):
         return inv_latent
 
     @torch.no_grad()
-    def edict_inversion(self, image, prompt: str="", num_steps: int = 20, guidance_scale: float = 1.001) -> torch.Tensor:
+    def edict_inversion(self, image, num_steps: int = 20, prompt: str="", guidance_scale: float = 1.001) -> torch.Tensor:
         """
         Performs EDICT inversion using methods internal to this class.
         Assumes self.pipe is a standard Diffusers pipeline.
@@ -989,11 +990,23 @@ if __name__ == "__main__":
                 f'PROMPTS:\n{rp.indentify(rp.line_join(prompts),"    - ")}', "cyan gray"
             )
 
-            images = illusion.sample(
-                prompts,
-                guidance_scale=10,
-                num_steps=20,
-            )
+            num_steps=10
+            num_repeats=4
+            for repeat in range(num_repeats):
+                latents = illusion.sample(
+                    prompts,
+                    guidance_scale=10,
+                    latents = None if repeat==0 else latents,
+                    num_steps=num_steps,
+                    decode=False,
+                )
+                
+                if repeat < num_repeats-1:
+                    latents = [
+                        illusion.diffusions[0].edict_inversion(latent, num_steps)
+                        for latent in rp.eta(latents,'Inverting')
+                    ]  # Should done in parallel TODO
+                
 
             illusion_pairs.append(images)
             rp.display_image(rp.horizontally_concatenated_images(images))
