@@ -207,6 +207,14 @@ class Diffusion(nn.Module):
         latent = self.correct_encoding_order1(latent)
         return latent
 
+    def encode_if_image(self, image):
+        latent_num_channels = 4
+        if rp.is_torch_tensor(image) and image.ndim==3 and image.shape[0]==latent_num_channels:
+            latent = image #It is already an image latent
+        else:
+            latent = self.encode_image(image)
+        return latent
+
     @torch.no_grad
     def decode_latent(self, latent):
         """ Takes in latent CHW torch tensor, returns 3HW torch tensor with values between 0 and 1 """
@@ -261,17 +269,17 @@ class Diffusion(nn.Module):
         return DDIMInverseScheduler.from_pretrained(self.checkpoint_path, subfolder='scheduler')
 
     @torch.no_grad()
-    def ddim_inversion(self, image, num_steps: int = 50) -> torch.Tensor:
+    def ddim_inversion(self, image_or_latent, num_steps: int = 50) -> torch.Tensor:
         # This function is NOT thread safe if used concurrently on the same GPU due to the TemporarilySetAttr
-        latents = self.encode_image(image)[None]
+        latents = self.encode_if_image(image_or_latent)[None]
 
         with rp.TemporarilySetAttr(self.pipe, scheduler=self.inverse_scheduler):
             inv_latents, _ = self.pipe(
                 prompt="",
                 negative_prompt="",
                 guidance_scale=1.0,
-                width=rp.get_image_width(image),
-                height=rp.get_image_height(image),
+                height=latents.shape[1]*8,
+                width=latents.shape[2]*8,
                 output_type="latent",
                 return_dict=False,
                 num_inference_steps=num_steps,
@@ -282,11 +290,15 @@ class Diffusion(nn.Module):
         return inv_latent
 
     @torch.no_grad()
-    def edict_inversion(self, image, num_steps: int = 20, prompt: str="", guidance_scale: float = 1.001) -> torch.Tensor:
+    def edict_inversion(self, image_or_latent, num_steps: int = 20) -> torch.Tensor:
         """
         Performs EDICT inversion using methods internal to this class.
         Assumes self.pipe is a standard Diffusers pipeline.
         MADE WITH GEMINI
+
+        TODO: Make this func more uniform with other funcs in this file
+
+        NOTE: The number of inversion steps used should MATCH the number of forward steps you use later or it wont work right! I found that out empirically...not theoretical at all...
         """
         # Add these methods to your class
         import torch
@@ -294,7 +306,10 @@ class Diffusion(nn.Module):
         #SETTINGS
         self.mixing_coeff = 0.93
         self.leapfrog_steps = True
+        prompt=""
+        guidance_scale=1.001#eh i need it to trigger 2 latents cause im too lazy to debug the non-guidance case
 
+        #Three functions that are only ever used in edict_inversion
         def noise_mixing_layer(self, x: torch.Tensor, y: torch.Tensor):
             """EDICT mixing operation for the reverse (inversion) process."""
             y = (y - (1 - self.mixing_coeff) * x) / self.mixing_coeff
@@ -327,7 +342,7 @@ class Diffusion(nn.Module):
         do_classifier_free_guidance = guidance_scale > 1.0
 
         # 2. Encode image into latents
-        image_latents = self.encode_image(image)[None] # Using your existing encode_image method
+        image_latents = self.encode_if_image(image_or_latent)[None]
 
         # 3. Encode prompt
         text_embeds = self.pipe._encode_prompt(
@@ -990,9 +1005,14 @@ if __name__ == "__main__":
                 f'PROMPTS:\n{rp.indentify(rp.line_join(prompts),"    - ")}', "cyan gray"
             )
 
-            num_steps=10
+
+            #TODO: Maybe mix a bit of pure noise back in again?
+            num_steps=20
             num_repeats=4
+            renoise_alpha=0
+            
             for repeat in range(num_repeats):
+            
                 latents = illusion.sample(
                     prompts,
                     guidance_scale=10,
@@ -1000,13 +1020,42 @@ if __name__ == "__main__":
                     num_steps=num_steps,
                     decode=False,
                 )
-                
+
+                """
+                TODO:
+                    Some questions:
+                        is the CFG compounded after each inversion? by how much, perhaps measure repeated CFG/inversions variance and plot against variance of different CFG's?
+                            If we use lower CFG's at the beginning repeats, maybe we can make more elegant merges? cause its super biased towards making cat with particular eyes in particular place for example...maybe better diffusion model would handle that better tho...
+                        EDICT vs DDIM inversion...is EDICT better for this case? Does it matter? (cause it IS slower...)
+                        Can we start inversion from maybe the middle step instead of going all the way to the end? 
+                        Can we do 5, 10, 20, then 40 diffusion steps (then would be O(n) computation, 2n to be specific)
+                             could do that via first 1/4, first 1/2, then 1 of steps...
+                        Does tiny renoise alpha really destroy it that badly? (seems so...) what if we add renoise alpha to later diffusion steps an not earlier ones, where the tweedies are able to sync better (adding just to the noise component)? (would have to do it ONCE at some step because DDIM...)\
+                        What if we increase CFG at every repeat?
+                        What if we do inversion properly, i.e. with the prompts and CFG and everything it supports?
+                """
                 if repeat < num_repeats-1:
                     latents = [
-                        illusion.diffusions[0].edict_inversion(latent, num_steps)
+                        # illusion.diffusions[0].edict_inversion(latent, num_steps)
+                        illusion.diffusions[0].ddim_inversion(latent, num_steps)
                         for latent in rp.eta(latents,'Inverting')
                     ]  # Should done in parallel TODO
-                
+                    
+
+                    def blend_noise(noise_background, noise_foreground, alpha):
+                        """ Variance-preserving blend """
+                        return (noise_foreground * alpha + noise_background * (1-alpha))/(alpha ** 2 + (1-alpha) ** 2)**.5
+
+                    def mix_new_noise(noise, alpha):
+                        """As alpha --> 1, noise is destroyed"""
+                        if isinstance(noise, torch.Tensor): return blend_noise(noise, torch.randn_like(noise)      , alpha)
+                        elif isinstance(noise, np.ndarray): return blend_noise(noise, np.random.randn(*noise.shape), alpha)
+                        else: raise TypeError(f"Unsupported input type: {type(noise)}. Expected PyTorch Tensor or NumPy array.")
+                    latents = [mix_new_noise(latent, renoise_alpha) for latent in latents]
+
+    
+            images = illusion.decode_latents_in_parallel(latents)
+            images = rp.as_numpy_images(images)
 
             illusion_pairs.append(images)
             rp.display_image(rp.horizontally_concatenated_images(images))
