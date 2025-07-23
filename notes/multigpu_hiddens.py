@@ -370,7 +370,7 @@ class Diffusion(nn.Module):
         return coupled_latents[0][0]
 
     @torch.no_grad()
-    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5, latents=None):
+    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5, latents=None, decode=True):
         text_embeddings = [self.get_text_embedding(x) for x in prompts]
 
         latents = latents if latents is not None else [
@@ -385,6 +385,9 @@ class Diffusion(nn.Module):
 
                 latent = self.scheduler.step(noise_pred, t, latent).prev_sample
                 latents[i]=latent
+
+        if not decode:
+            return latents
 
         all_images = self.decode_latents(latents)
 
@@ -421,7 +424,7 @@ class SeamlessGenerator(Diffusion):
         return SeamlessGenerator.roll_image(image, dx=dx, dy=dy), (dx, dy)
 
     @torch.no_grad
-    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5, latents=None, do_x:bool=True, do_y:bool=True):
+    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5, latents=None, do_x:bool=True, do_y:bool=True, decode=True):
         text_embeddings = [self.get_text_embedding(x) for x in prompts]
 
         latents = latents if latents is not None else [
@@ -443,6 +446,10 @@ class SeamlessGenerator(Diffusion):
                 latent = self.roll_image(latent, dx=-dx, dy=-dy)
 
                 latents[i]=latent
+
+
+        if not decode:
+            return latents
 
         all_images = self.decode_latents(latents)
 
@@ -502,7 +509,7 @@ class ImageFilterDiffusion(Diffusion):
         #Basic filter - should be overridden
         return image
 
-    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5, latents=None):
+    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5, latents=None, decode=True):
         text_embeddings = [self.get_text_embedding(x) for x in prompts]
 
         latents = latents if latents is not None else [
@@ -534,6 +541,9 @@ class ImageFilterDiffusion(Diffusion):
 
                 latent = self.scheduler.step(noise_pred, t, latent).prev_sample
                 latents[i] = latent
+
+        if not decode:
+            return latents
 
         all_images = self.decode_latents(latents)
 
@@ -594,7 +604,7 @@ class DiffusionIllusion:
         return rp.par_map(decode, self.diffusions, latents, num_threads=self.num_threads)
 
 
-    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5, latents=None):
+    def sample(self, prompts: list[str], num_steps=20, guidance_scale=7.5, latents=None, decode=True):
         assert len(prompts) == self.num_derived_images, f'len(prompts)={len(prompts)}  !=  num_derived_images={self.num_derived_images}'
 
         text_embeddings = [diffusion.get_text_embedding(prompt) for diffusion, prompt in zip(self.diffusions, prompts)] #This is vary fast
@@ -675,6 +685,9 @@ class DiffusionIllusion:
             for i, (latent, noise_pred, diffusion) in enumerate(zip(latents, noise_preds, self.diffusions)):
                 latent = diffusion.scheduler.step(noise_pred, t, latent).prev_sample
                 latents[i]=latent
+
+        if not decode:
+            return latents
 
         all_images = self.decode_latents_in_parallel(latents)
 
