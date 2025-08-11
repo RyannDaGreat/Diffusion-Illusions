@@ -14,3 +14,4 @@ transformers
 diffusers
 rp
 easydict
+oldest-supported-numpy
